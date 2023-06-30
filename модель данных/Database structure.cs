@@ -224,6 +224,90 @@ namespace MyInvestCompanies.модель_данных
             Date = null;
         }
 
+    /// <summary>
+    ///  Объем инвестиций, произведенных в проектную компанию с указанием даты,  
+    ///  способа и источника инвестиций, а также документов, послуживших основанием для 
+    ///  инвестиций и документов подтверждающих совершение инвестиций;
+    ///  Документы идут через Link +
+    /// </summary>
+
+    public class Investition
+    {
+        [Key]
+        public string Id { get; set; }
+
+        float Sum { set; get; }
+
+        /// <summary>
+        /// Дата инвестирования
+        /// </summary>
+        DateTime Date { get; set; }
+
+        /// <summary>
+        /// Способ инвестирования
+        /// </summary>
+        public string Method { get; set; }
+
+        /// <summary>
+        /// Источник финансирования
+        /// </summary>
+        public string Source { get; set; }
+
+        /// <summary>
+        /// Жесткая связка с компанией
+        /// </summary>
+        public string Id_company { get; set; }
+
+
+        public Investition()
+        {
+            Id = Guid.NewGuid().ToString();
+            Sum = 0;
+            Method = "IPO,POS(покупка доли)";
+            Source = "деньги инвесторов|деньги государства";
+        }
+
+        public Investition(string id_company)
+        {
+            Id = Guid.NewGuid().ToString();
+            Sum = 0;
+            Method = "IPO,POS(покупка доли)";
+            Source = "деньги инвесторов|деньги государства";
+            Id_company = id_company;
+        }
+
+
+
+    }
+
+
+    /// <summary>
+    /// Информация о размере уставного капитала проектной компании
+    /// </summary>
+     public class Capital
+    {
+        [Key]
+        public string Id { get; set; }
+        public string? Id_company { get; set; }
+        public  float? Sum { set; get; }
+        public DateTime? Date { get; set; }
+
+        public Capital()
+        {
+            Id = Guid.NewGuid().ToString();
+        }
+        /// <summary>
+        /// Создает строку по компании
+        /// </summary>
+        /// <param name="id_company"></param>
+        public Capital(string id_company)
+        {
+            Id = Guid.NewGuid().ToString();
+            Id_company = id_company;
+            Sum = 10000;
+            Date = null;
+        }
+
     }
 
 
@@ -293,6 +377,47 @@ namespace MyInvestCompanies.модель_данных
             Cost = 0;
             
         }
+
+    }//
+
+
+    /// <summary>
+    /// Информация об основных условиях сделки (ОУС) проектной компании 
+    /// с указанием реквизитов документа об одобрении ОУС и даты одобрения ОУС;
+    ///</summary>
+
+    public class Deal
+    {
+        [Key]
+        public string Id { get; set; }
+
+        public string Id_company { get; set; }
+
+        /// <summary>
+        /// Дата одобрение сделки
+        /// </summary>
+        public DateTime? Date { get; set; }
+        
+        /// <summary>
+        /// Описание сделки
+        /// </summary>
+        public string Description { get; set; }
+
+        public Deal()
+        { 
+            Id = Guid.NewGuid().ToString();
+            Description = "описание сделки";
+        
+        }
+
+        public Deal(string id_company)
+        {
+            Id = Guid.NewGuid().ToString();
+            Id_company = id_company;
+            Description = "описание сделки";
+
+        }
+    }//Deals
 
     }//
 

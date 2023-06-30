@@ -1,0 +1,3 @@
+{
+  "Connection string": "port=5432;server=127.0.0.1;database=companies;User ID=postgres;Password=1231;"
+}

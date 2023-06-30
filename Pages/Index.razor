@@ -3,11 +3,45 @@
 
 @page "/"
 @code{
-    Database_structure db = new Database_structure();
-    
+   public Database_structure db_index = new Database_structure();
+}
+
+Компании
+<button @onclick="Add_company">Добавить компанию </button> <br/>
+
+@foreach (Company c in db_index.Companies)
+        {
+            <input type='text' value=@c.Name > <input type='text' value=@c.Address > 
+            <br />
+        }
+
+@code{
+    static public void Add_company()
+    {
+        Database_structure db = new Database_structure();
+        Company c = new Company();
+        c.Name = "???";
+        db.Companies.Add(c);
+        db.SaveChanges();
+        db.Dispose();
+    }
+
+
+    static public string Show_companies(string id)
+    {
+        Database_structure db = new Database_structure();
+        string HTML = "";
+      
+        db.Dispose();
+        return HTML;
+    }//Show_companies
+
+
+
 
 }
 
 
+@code{
 
-<h1>Hello, world!</h1>
+}

@@ -4,9 +4,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.EntityFrameworkCore.Query;
 using Npgsql;
 using NpgsqlTypes;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Xml.Linq;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace MyInvestCompanies.модель_данных
@@ -19,8 +21,15 @@ namespace MyInvestCompanies.модель_данных
         public DbSet<Company> Companies { set; get; }
         public DbSet<Link> Links { set; get; }
         public DbSet<Owner> Owners { set; get; }
+        public DbSet<Document> Documents     { set; get; }
+        public DbSet<Investition> Investitions { set; get; }
+        public DbSet<Capital> Capitals { set; get; }
+        public DbSet<HolderReestr> HolderReestrs { set; get; }
+        public DbSet<Deal> Deals { set; get; }
+        public DbSet<Acquisition> Acquisitions { set; get; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+
+       protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
            //Считываем конфигурацию
             var doc = JsonDocument.Parse(System.IO.File.ReadAllText("Properties\\config-db.json"));
@@ -40,6 +49,10 @@ namespace MyInvestCompanies.модель_данных
 
     }
 
+
+    /// <summary>
+    /// Проектная компания
+    /// </summary>
     public class Company
     {
         [Key]
@@ -50,7 +63,9 @@ namespace MyInvestCompanies.модель_данных
         public string KPP { get; set; }
         public string Address { get; set; }
         public string Fact_Address { get; set; }
-        
+
+        public string Description { get; set; }
+
         public Company()
         {
             Id = Guid.NewGuid().ToString();
@@ -59,6 +74,7 @@ namespace MyInvestCompanies.модель_данных
             KPP = "000000000";
             Address = "г. Ая ул. Ленина д. 00";
             Fact_Address = "г. Ая ул. Ленина д. 00";
+            Description = "Описание";
 
         }
 
@@ -87,10 +103,129 @@ namespace MyInvestCompanies.модель_данных
             Id      = Guid.NewGuid().ToString();
             Name    = "Иван Иванович";
             Inn     = "0000000";
+            KPP = "000000";
+            Address = "г. ул.  д. 00";
+            PhoneNumber = "+790900112233";
+        }
 
+    }//Owner
+
+
+    /// <summary>
+    /// Документ
+    /// </summary>
+    public class Document
+    {
+        // id
+        [Key]
+        public string Id { get; set; }
+        // Номер документа
+        public string Num { get; set; }
+      
+        
+        // Дата утверждения
+        public DateTime Date { get; set; }
+        
+        //имя
+        public string Name { get; set; }
+        
+        // путь хранения
+        public string Url { get; set; }
+
+
+        public Document()
+        { 
+            Id = Guid.NewGuid().ToString();
+            Num = "000/2023";
+            Name = "документ о ";
+        }
+    }
+
+    /// <summary>
+    ///  Объем инвестиций, произведенных в проектную компанию с указанием даты,  
+    ///  способа и источника инвестиций, а также документов, послуживших основанием для 
+    ///  инвестиций и документов подтверждающих совершение инвестиций;
+    ///  Документы идут через Link +
+    /// </summary>
+
+    public class Investition
+    {
+        [Key]
+        public string Id { get; set; }
+
+        float Sum { set; get; }
+
+        /// <summary>
+        /// Дата инвестирования
+        /// </summary>
+        DateTime Date { get; set; }
+
+        /// <summary>
+        /// Способ инвестирования
+        /// </summary>
+        public string Method { get; set; }
+
+        /// <summary>
+        /// Источник финансирования
+        /// </summary>
+        public string Source { get; set; }
+
+        /// <summary>
+        /// Жесткая связка с компанией
+        /// </summary>
+        public string Id_company { get; set; }
+
+
+        public Investition()
+        {
+            Id = Guid.NewGuid().ToString();
+            Sum = 0;
+            Method = "IPO,POS(покупка доли)";
+            Source = "деньги инвесторов|деньги государства";
+        }
+
+        public Investition(string id_company)
+        {
+            Id = Guid.NewGuid().ToString();
+            Sum = 0;
+            Method = "IPO,POS(покупка доли)";
+            Source = "деньги инвесторов|деньги государства";
+            Id_company = id_company;
+        }
+
+
+
+    }
+
+    /// <summary>
+    /// Информация о размере уставного капитала проектной компании
+    /// </summary>
+     public class Capital
+    {
+        [Key]
+        public string Id { get; set; }
+        public string? Id_company { get; set; }
+        public  float? Sum { set; get; }
+        public DateTime? Date { get; set; }
+
+        public Capital()
+        {
+            Id = Guid.NewGuid().ToString();
+        }
+        /// <summary>
+        /// Создает строку по компании
+        /// </summary>
+        /// <param name="id_company"></param>
+        public Capital(string id_company)
+        {
+            Id = Guid.NewGuid().ToString();
+            Id_company = id_company;
+            Sum = 10000;
+            Date = null;
         }
 
     }
+
 
 
     /// <summary>
@@ -159,7 +294,76 @@ namespace MyInvestCompanies.модель_данных
             
         }
 
-    }//Link
+    }//
 
 
-}
+    /// <summary>
+    /// Информация об основных условиях сделки (ОУС) проектной компании 
+    /// с указанием реквизитов документа об одобрении ОУС и даты одобрения ОУС;
+    ///</summary>
+
+    public class Deal
+    {
+        [Key]
+        public string Id { get; set; }
+
+        public string Id_company { get; set; }
+
+        /// <summary>
+        /// Дата одобрение сделки
+        /// </summary>
+        public DateTime? Date { get; set; }
+        
+        /// <summary>
+        /// Описание сделки
+        /// </summary>
+        public string Description { get; set; }
+
+        public Deal()
+        { 
+            Id = Guid.NewGuid().ToString();
+            Description = "описание сделки";
+        
+        }
+
+        public Deal(string id_company)
+        {
+            Id = Guid.NewGuid().ToString();
+            Id_company = id_company;
+            Description = "описание сделки";
+
+        }
+    }//Deals
+
+    /// <summary>
+    /// Основания для приобретения
+    /// </summary>
+    public   class Acquisition
+    {
+        [Key]
+        public string Id { get; set; }
+
+        public string Id_company { get; set; }
+
+      
+        /// <summary>
+        /// Описание сделки
+        /// </summary>
+        public string Description { get; set; }
+
+        public Acquisition()
+        {
+            Id = Guid.NewGuid().ToString();
+            Description = "описание сделки";
+
+        }
+
+        public Acquisition(string id_company)
+        {
+            Id = Guid.NewGuid().ToString();
+            Id_company = id_company;
+            Description = "описание сделки";
+        }
+    }//Acquisition
+
+}//class

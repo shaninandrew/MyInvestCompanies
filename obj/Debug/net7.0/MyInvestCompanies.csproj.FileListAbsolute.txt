@@ -35,3 +35,40 @@ C:\проекты\база компаний\MyInvestCompanies\bin\Debug\net7.0\M
 C:\проекты\база компаний\MyInvestCompanies\bin\Debug\net7.0\Npgsql.dll
 C:\проекты\база компаний\MyInvestCompanies\bin\Debug\net7.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
 C:\проекты\база компаний\MyInvestCompanies\obj\Debug\net7.0\MyInvestCompanies.csproj.CopyComplete
+C:\Users\hedge\Source\Repos\shaninandrew\MyInvestCompanies\obj\Debug\net7.0\MyInvestCompanies.csproj.AssemblyReference.cache
+C:\Users\hedge\Source\Repos\shaninandrew\MyInvestCompanies\obj\Debug\net7.0\MyInvestCompanies.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\hedge\Source\Repos\shaninandrew\MyInvestCompanies\obj\Debug\net7.0\MyInvestCompanies.AssemblyInfoInputs.cache
+C:\Users\hedge\Source\Repos\shaninandrew\MyInvestCompanies\obj\Debug\net7.0\MyInvestCompanies.AssemblyInfo.cs
+C:\Users\hedge\Source\Repos\shaninandrew\MyInvestCompanies\obj\Debug\net7.0\MyInvestCompanies.csproj.CoreCompileInputs.cache
+C:\Users\hedge\Source\Repos\shaninandrew\MyInvestCompanies\obj\Debug\net7.0\MyInvestCompanies.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\hedge\Source\Repos\shaninandrew\MyInvestCompanies\obj\Debug\net7.0\MyInvestCompanies.RazorAssemblyInfo.cache
+C:\Users\hedge\Source\Repos\shaninandrew\MyInvestCompanies\obj\Debug\net7.0\MyInvestCompanies.RazorAssemblyInfo.cs
+C:\Users\hedge\Source\Repos\shaninandrew\MyInvestCompanies\obj\Debug\net7.0\MyInvestCompanies.dll
+C:\Users\hedge\Source\Repos\shaninandrew\MyInvestCompanies\obj\Debug\net7.0\refint\MyInvestCompanies.dll
+C:\Users\hedge\Source\Repos\shaninandrew\MyInvestCompanies\obj\Debug\net7.0\MyInvestCompanies.pdb
+C:\Users\hedge\Source\Repos\shaninandrew\MyInvestCompanies\bin\Debug\net7.0\.filenesting.json
+C:\Users\hedge\Source\Repos\shaninandrew\MyInvestCompanies\bin\Debug\net7.0\appsettings.Development.json
+C:\Users\hedge\Source\Repos\shaninandrew\MyInvestCompanies\bin\Debug\net7.0\appsettings.json
+C:\Users\hedge\Source\Repos\shaninandrew\MyInvestCompanies\bin\Debug\net7.0\MyInvestCompanies.staticwebassets.runtime.json
+C:\Users\hedge\Source\Repos\shaninandrew\MyInvestCompanies\bin\Debug\net7.0\MyInvestCompanies.exe
+C:\Users\hedge\Source\Repos\shaninandrew\MyInvestCompanies\bin\Debug\net7.0\Properties\config-db.json
+C:\Users\hedge\Source\Repos\shaninandrew\MyInvestCompanies\bin\Debug\net7.0\MyInvestCompanies.deps.json
+C:\Users\hedge\Source\Repos\shaninandrew\MyInvestCompanies\bin\Debug\net7.0\MyInvestCompanies.runtimeconfig.json
+C:\Users\hedge\Source\Repos\shaninandrew\MyInvestCompanies\bin\Debug\net7.0\MyInvestCompanies.dll
+C:\Users\hedge\Source\Repos\shaninandrew\MyInvestCompanies\bin\Debug\net7.0\MyInvestCompanies.pdb
+C:\Users\hedge\Source\Repos\shaninandrew\MyInvestCompanies\bin\Debug\net7.0\Microsoft.EntityFrameworkCore.dll
+C:\Users\hedge\Source\Repos\shaninandrew\MyInvestCompanies\bin\Debug\net7.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+C:\Users\hedge\Source\Repos\shaninandrew\MyInvestCompanies\bin\Debug\net7.0\Microsoft.EntityFrameworkCore.Relational.dll
+C:\Users\hedge\Source\Repos\shaninandrew\MyInvestCompanies\bin\Debug\net7.0\Npgsql.dll
+C:\Users\hedge\Source\Repos\shaninandrew\MyInvestCompanies\bin\Debug\net7.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:\Users\hedge\Source\Repos\shaninandrew\MyInvestCompanies\obj\Debug\net7.0\staticwebassets\msbuild.MyInvestCompanies.Microsoft.AspNetCore.StaticWebAssets.props
+C:\Users\hedge\Source\Repos\shaninandrew\MyInvestCompanies\obj\Debug\net7.0\staticwebassets\msbuild.build.MyInvestCompanies.props
+C:\Users\hedge\Source\Repos\shaninandrew\MyInvestCompanies\obj\Debug\net7.0\staticwebassets\msbuild.buildMultiTargeting.MyInvestCompanies.props
+C:\Users\hedge\Source\Repos\shaninandrew\MyInvestCompanies\obj\Debug\net7.0\staticwebassets\msbuild.buildTransitive.MyInvestCompanies.props
+C:\Users\hedge\Source\Repos\shaninandrew\MyInvestCompanies\obj\Debug\net7.0\staticwebassets.pack.json
+C:\Users\hedge\Source\Repos\shaninandrew\MyInvestCompanies\obj\Debug\net7.0\staticwebassets.build.json
+C:\Users\hedge\Source\Repos\shaninandrew\MyInvestCompanies\obj\Debug\net7.0\staticwebassets.development.json
+C:\Users\hedge\Source\Repos\shaninandrew\MyInvestCompanies\obj\Debug\net7.0\scopedcss\bundle\MyInvestCompanies.styles.css
+C:\Users\hedge\Source\Repos\shaninandrew\MyInvestCompanies\obj\Debug\net7.0\MyInvestCompanies.csproj.CopyComplete
+C:\Users\hedge\Source\Repos\shaninandrew\MyInvestCompanies\obj\Debug\net7.0\MyInvestCompanies.genruntimeconfig.cache
+C:\Users\hedge\Source\Repos\shaninandrew\MyInvestCompanies\obj\Debug\net7.0\ref\MyInvestCompanies.dll

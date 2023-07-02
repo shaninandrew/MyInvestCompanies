@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "OK5+LNNjDhN3HWTVnnlytj8IPP6CT++IpL9e0h4uRKw=",
+  "Hash": "bTmDVZO2JXGnDqCzOL+QOtCLKn6j+M7aV1CHz+4Q9uw=",
   "Source": "MyInvestCompanies",
   "BasePath": "_content/MyInvestCompanies",
   "Mode": "Default",
@@ -10,17 +10,17 @@
     {
       "Name": "MyInvestCompanies\\wwwroot",
       "Source": "MyInvestCompanies",
-      "ContentRoot": "C:\\проекты\\база компаний\\MyInvestCompanies\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\hedge\\Source\\Repos\\shaninandrew\\MyInvestCompanies\\wwwroot\\",
       "BasePath": "_content/MyInvestCompanies",
       "Pattern": "**"
     }
   ],
   "Assets": [
     {
-      "Identity": "C:\\проекты\\база компаний\\MyInvestCompanies\\wwwroot\\css\\site.css",
+      "Identity": "C:\\Users\\hedge\\Source\\Repos\\shaninandrew\\MyInvestCompanies\\wwwroot\\css\\site.css",
       "SourceId": "MyInvestCompanies",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\проекты\\база компаний\\MyInvestCompanies\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\hedge\\Source\\Repos\\shaninandrew\\MyInvestCompanies\\wwwroot\\",
       "BasePath": "_content/MyInvestCompanies",
       "RelativePath": "css/site.css",
       "AssetKind": "All",

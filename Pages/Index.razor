@@ -1,7 +1,9 @@
-﻿@using MyInvestCompanies;
+﻿@page "/"
+
+@using MyInvestCompanies;
 @using MyInvestCompanies.модель_данных;
 
-@page "/"
+
 @code{
    public Database_structure db_index = new Database_structure();
 }
@@ -10,34 +12,31 @@
 <button @onclick="Add_company">Добавить компанию </button> <br/>
 @code{ 
         List<string> NameX=new List<string>(); 
-    
-    
     }
+<div>
 @foreach  (Company c in db_index.Companies)
         {
-            NameX.Add("Name");
-            <input type="text" value="@c.Name"             @onchange="(e=> {  Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e);  })" />
-            NameX.Add("Founded");
-            <input type="date" value="@c.Founded"           @onchange="(e=> {  Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e);  })"/>      
-            NameX.Add("Address");
-            <input type="text" value="@c.Address"           @onchange="(e=> {  Set_value(NameX[2], c.Id.ToString(), e.Value.ToString() , e);  })"/>     
-            NameX.Add("Fact_Address");
-            <input type="text" value="@c.Fact_Address"     @onchange="(e=> {  Set_value(NameX[3], c.Id.ToString(), e.Value.ToString() , e);  })" />
-            NameX.Add("Description");
-            <input type="text" value="@c.Description"      @onchange="(e=> {  Set_value(NameX[4], c.Id.ToString(), e.Value.ToString() , e);  })" />
-            NameX.Add("Inn");
-            <input type="text" value="@c.Inn"              @onchange="(e=> {  Set_value(NameX[5], c.Id.ToString(), e.Value.ToString() , e);  })"/>          
-            NameX.Add("KPP");
-            <input type="text" value="@c.KPP"              @onchange="(e=> {  Set_value(NameX[6], c.Id.ToString(), e.Value.ToString() , e);  })" />         
             
-            <!--
-                Редактор полей
-             -->
 
-
-
+    
+            NameX.Add("Name");
+            <input type="text" value="@c.Name"                  @onchange="(e=> {  Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e);  })" />
+            NameX.Add("Founded");
+            <input type="date" value="@c.Founded.ToString()"    @onchange="(e=> {  Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e);  })"/>      
+            NameX.Add("Address");
+            <input type="text" value="@c.Address"               @onchange="(e=> {  Set_value(NameX[2], c.Id.ToString(), e.Value.ToString() , e);  })"/>     
+            NameX.Add("Fact_Address");
+            <input type="text" value="@c.Fact_Address"          @onchange="(e=> {  Set_value(NameX[3], c.Id.ToString(), e.Value.ToString() , e);  })" />
+            NameX.Add("Description");
+            <input type="text" value="@c.Description"           @onchange="(e=> {  Set_value(NameX[4], c.Id.ToString(), e.Value.ToString() , e);  })" />
+            NameX.Add("Inn");
+            <input type="text" value="@c.Inn"                   @onchange="(e=> {  Set_value(NameX[5], c.Id.ToString(), e.Value.ToString() , e);  })"/>          
+            NameX.Add("KPP");
+            <input type="text" value="@c.KPP"                   @onchange="(e=> {  Set_value(NameX[6], c.Id.ToString(), e.Value.ToString() , e);  })" />         
+           
         <br />
         }
+</div>
 @code{
         static public async void  Add_company()
         {

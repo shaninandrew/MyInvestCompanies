@@ -1,3 +1,4 @@
 {
-  "Connection string": "port=5444;server=127.0.0.1;database=companies;User ID=postgres;Password=!passw123;"
+  "pg": "port=5444;server=127.0.0.1;database=companies;User ID=postgres;Password=!passw123;",
+  "mssql": "SERVER=ANDREWS-COMP\\SQLEXPRESS;Database=companies;Trusted_Connection=True;User=hedge;TrustServerCertificate=True"
 }

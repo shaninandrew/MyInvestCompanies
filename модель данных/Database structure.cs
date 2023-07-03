@@ -34,11 +34,25 @@ namespace MyInvestCompanies.модель_данных
         {
             //Считываем конфигурацию
             var doc = JsonDocument.Parse(System.IO.File.ReadAllText("Properties\\config-db.json"));
-            string connection_string = doc.RootElement.GetProperty("Connection string").ToString();
-            
+
+            bool at_home = true;
+
+
+
+            string connection_string = "";
+            if (!at_home) 
+            { 
+                connection_string = doc.RootElement.GetProperty("pg").ToString();
+                optionsBuilder.UseNpgsql(connection_string);
+            }
+            else
+            { 
+                connection_string = doc.RootElement.GetProperty("mssql").ToString();
+                optionsBuilder.UseSqlServer(connection_string);
+            }
+
             //настройка подключения
-            optionsBuilder.UseNpgsql(connection_string);
-  
+            
             base.OnConfiguring(optionsBuilder);
         }
 

@@ -26,3 +26,21 @@
     .blazor-error-boundary::after {
         content: "An error has occurred."
     }
+
+.scroll {
+    scroll-behavior: smooth;
+    scrollbar-3dlight-color: blueviolet;
+    overflow-y: scroll;
+    overflow-x: auto;
+    overflow: auto;
+    align-content: space-between;
+    background: #f1c20bbe padding: 5px;
+}
+
+.inside-scroll {
+    height: 100 px;
+    width:auto;
+
+    overscroll-behavior:contain;
+    overflow:hidden;
+}

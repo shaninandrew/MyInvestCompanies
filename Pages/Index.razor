@@ -26,8 +26,12 @@
         <input type="text" value="@c.Name" @onchange="(e=>  { Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e);  })" />
         @{NameX.Add("Founded");}
 
-        @{string tmp_date = c.Founded.Date.ToUniversalTime().ToString("YYYY-MM-DD"); }
-        <input type="date"   value="@tmp_date"  @onchange="(e=> {  Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e);  })" />
+            @{
+                string tmp_date = c.Founded.Date.ToUniversalTime().ToString("yyyy-MM-dd");
+                Console.WriteLine(tmp_date); 
+            }
+
+        <input type=date value="@tmp_date"   @onchange="(e=> {  Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e);  })" />
         
         @{NameX.Add("Address");}
         <input type="text" value="@c.Address" @onchange="(e=> {  Set_value(NameX[2], c.Id.ToString(), e.Value.ToString() , e);  })" />

@@ -6,7 +6,10 @@
 @code 
 {
     public Database_structure db_index = new Database_structure();
-    public string query_string = "";
+    [Parameter]
+    public string query_string { get; set;} = "";
+
+    
 }
 
 
@@ -131,7 +134,9 @@
             if (name == "KPP")
             { t.KPP = e.Value.ToString(); }
 
-            db.SaveChanges();
+            db.Update<Company>(t);
+            await db.SaveChangesAsync();
+
         } catch (Exception ex)
         {
             Console.WriteLine(ex.Message);

@@ -1,7 +1,7 @@
 {
   "version": 3,
   "targets": {
-    "net7.0": {
+    "net7.0-windows7.0": {
       "Azure.Core/1.24.0": {
         "type": "package",
         "dependencies": {
@@ -3251,7 +3251,7 @@
     }
   },
   "projectFileDependencyGroups": {
-    "net7.0": [
+    "net7.0-windows7.0": [
       "Microsoft.EntityFrameworkCore >= 7.0.8",
       "Microsoft.EntityFrameworkCore.Relational >= 7.0.8",
       "Microsoft.EntityFrameworkCore.SqlServer >= 7.0.8",
@@ -3259,23 +3259,28 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\hedge\\.nuget\\packages\\": {}
+    "C:\\Users\\Шанин\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\hedge\\Source\\Repos\\shaninandrew\\MyInvestCompanies\\MyInvestCompanies.csproj",
+      "projectUniqueName": "C:\\Users\\Шанин\\Source\\Repos\\shaninandrew\\MyInvestCompanies\\MyInvestCompanies.csproj",
       "projectName": "MyInvestCompanies",
-      "projectPath": "C:\\Users\\hedge\\Source\\Repos\\shaninandrew\\MyInvestCompanies\\MyInvestCompanies.csproj",
-      "packagesPath": "C:\\Users\\hedge\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\hedge\\Source\\Repos\\shaninandrew\\MyInvestCompanies\\obj\\",
+      "projectPath": "C:\\Users\\Шанин\\Source\\Repos\\shaninandrew\\MyInvestCompanies\\MyInvestCompanies.csproj",
+      "packagesPath": "C:\\Users\\Шанин\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Шанин\\Source\\Repos\\shaninandrew\\MyInvestCompanies\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\hedge\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Шанин\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
-        "net7.0"
+        "net7.0-windows"
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
@@ -3283,8 +3288,8 @@
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
-        "net7.0": {
-          "targetAlias": "net7.0",
+        "net7.0-windows7.0": {
+          "targetAlias": "net7.0-windows",
           "projectReferences": {}
         }
       },
@@ -3295,8 +3300,8 @@
       }
     },
     "frameworks": {
-      "net7.0": {
-        "targetAlias": "net7.0",
+      "net7.0-windows7.0": {
+        "targetAlias": "net7.0-windows",
         "dependencies": {
           "Microsoft.EntityFrameworkCore": {
             "target": "Package",

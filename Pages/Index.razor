@@ -16,29 +16,31 @@
 
 
 @{
-   void ShowRowEditor_company(Company c)
+    async void ShowRowEditor_company(Company c)
     {
+
         List<string> NameX = new List<string>();
         NameX.Add("Name");
-        <input type="text" value="@c.Name" @onchange="(e=>  { Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e);  })" />
-        NameX.Add("Founded");
+        <div class="Editor">
 
-        string tmp_date = c.Founded.Date.ToUniversalTime().ToString("YYYY-MM-DD");
-        <input type="date"   value='@tmp_date'  @onchange="(e=> {  Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e);  })" />
+        <input type="text" value="@c.Name" @onchange="(e=>  { Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e);  })" />
+        @{NameX.Add("Founded");}
+
+        @{string tmp_date = c.Founded.Date.ToUniversalTime().ToString("YYYY-MM-DD"); }
+        <input type="date"   value="@tmp_date"  @onchange="(e=> {  Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e);  })" />
         
-        NameX.Add("Address");
+        @{NameX.Add("Address");}
         <input type="text" value="@c.Address" @onchange="(e=> {  Set_value(NameX[2], c.Id.ToString(), e.Value.ToString() , e);  })" />
-        NameX.Add("Fact_Address");
+        @{NameX.Add("Fact_Address"); }
         <input type="text" value="@c.Fact_Address" @onchange="(e=> {  Set_value(NameX[3], c.Id.ToString(), e.Value.ToString() , e);  })" />
-        NameX.Add("Description");
+        @{NameX.Add("Description"); }
         <input type="text" value="@c.Description" @onchange="(e=> {  Set_value(NameX[4], c.Id.ToString(), e.Value.ToString() , e);  })" />
-        NameX.Add("Inn");
+        @{NameX.Add("Inn"); } 
         <input type="text" value="@c.Inn" @onchange="(e=> {  Set_value(NameX[5], c.Id.ToString(), e.Value.ToString() , e);  })" />
-        NameX.Add("KPP");
+        @{NameX.Add("KPP"); }
         <input type="text" value="@c.KPP" @onchange="(e=> {  Set_value(NameX[6], c.Id.ToString(), e.Value.ToString() , e);  })" />
-        <button title="Удалить запись" @onclick="(e=> {Delete_company(c.Id.ToString()) ;} )">-</button>
-        <br>
-        
+        <button title="Удалить запись @c.Name @c.Address" @onclick="(e=> {Delete_company(c.Id.ToString()) ;} )">-</button>
+        </div>
     }
 }
 

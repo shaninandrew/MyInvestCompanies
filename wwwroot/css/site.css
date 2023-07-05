@@ -52,6 +52,16 @@ input:focus
 
 input {
     background: white;
-    border:0 px;
-    border-color:darkgreen;
+    border: 0 px;
+    border-color: darkgreen;
+    padding: 2px 1em 0 1em;
+}
+
+.Editor:focus {
+    background: #f19191;
+
+}
+
+.Editor {
+    padding: 2px 1em 0 1em;
 }

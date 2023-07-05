@@ -13,7 +13,7 @@
 
 
 @{
-   async void ShowRowEditor_company(Company c)
+   void ShowRowEditor_company(Company c)
     {
         List<string> NameX = new List<string>();
         NameX.Add("Name");
@@ -39,9 +39,8 @@
     }
 }
 
-Компании
-<input type="text" @bind-value=query_string width="300px" @bind-value:event="oninput" />
-
+Компании <input title="Поисковая строка" type="text" @bind-value=query_string width="500px" @bind-value:event="oninput" />
+<br/>
 <button @onclick="Add_company">Добавить компанию </button> <br/>
 
 <div class="scroll">
@@ -64,8 +63,6 @@
 
                     }
                 }
-                
-              
             }
             else
             {
@@ -74,7 +71,9 @@
             }
         }
 
-        @foreach (Company c in list_of_companies )
+        <!-- вывод списка -->
+        list_of_companies.Sort();
+        @foreach (Company c in list_of_companies)
                 {
                    ShowRowEditor_company(c); 
                 }

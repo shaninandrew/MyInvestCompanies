@@ -44,3 +44,14 @@
     overscroll-behavior:contain;
     overflow:hidden;
 }
+
+input:focus 
+{
+    background: #f25d5d;
+}
+
+input {
+    background: white;
+    border:0 px;
+    border-color:darkgreen;
+}

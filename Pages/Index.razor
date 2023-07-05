@@ -88,25 +88,25 @@
 
 
 @code{
-    static public  EventCallback Delete_company(string id)
+    static public async void Delete_company(string id)
     {
         Database_structure db = new Database_structure();
         Company c = db.Companies.Where<Company>(i => i.Id == id).Single<Company>();
         db.Companies.Remove(c);
-        db.SaveChanges();
+        int i= await db.SaveChangesAsync ();
         db.Dispose();
 
-        return (new EventCallback());
+       
     }
 
-    static public void  Add_company()
+    static public async void  Add_company()
     {
 
         Database_structure db = new Database_structure();
         Company c = new Company();
         c.Name = "???";
         db.Companies.Add(c);
-        db.SaveChanges();
+        int i= await db.SaveChangesAsync();
         db.Dispose();
     }
 

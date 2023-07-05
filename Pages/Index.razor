@@ -20,7 +20,7 @@
         <input type="text" value="@c.Name" @onchange="(e=>  { Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e);  })" />
         NameX.Add("Founded");
 
-        string tmp_date = c.Founded.Date.ToUniversalTime().ToString("yyyy-mm-dd");
+        string tmp_date = c.Founded.Date.ToUniversalTime().ToString("YYYY-MM-DD");
         <input type="date"   value='@tmp_date'  @onchange="(e=> {  Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e);  })" />
         
         NameX.Add("Address");
@@ -66,13 +66,15 @@
             }
             else
             {
-                list_of_companies = db_index.Companies.ToList<Company>();
+                list_of_companies = db_index.Companies.ToList<Company>(  );
 
             }
+
+            //list_of_companies.Sort(Comparison);
         }
 
         <!-- вывод списка -->
-        list_of_companies.Sort();
+        
         @foreach (Company c in list_of_companies)
                 {
                    ShowRowEditor_company(c); 

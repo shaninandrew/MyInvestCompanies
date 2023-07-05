@@ -3,8 +3,8 @@
 @using MyInvestCompanies;
 @using MyInvestCompanies.модель_данных;
 
-
-@code{
+@code 
+{
     public Database_structure db_index = new Database_structure();
     public string query_string = "";
 }
@@ -54,9 +54,9 @@
                 list_of_companies = new List<Company>();
                 list_of_companies.Clear();
 
-                foreach (Company c in db_index.Companies.AsParallel())
+                foreach (Company c in db_index.Companies)
                 {
-                    string t = c.Inn + c.Name + c.Address + c.KPP + c.Description;
+                    string t = c.Inn + c.Name + c.Address + c.KPP + c.Description + c.Fact_Address;
                     if (t.IndexOf(query_string, StringComparison.OrdinalIgnoreCase) > -1)
                     {
                         list_of_companies.Add(c);
@@ -70,7 +70,7 @@
 
             }
 
-            //list_of_companies.Sort(Comparison);
+            list_of_companies.Distinct<Company>();
         }
 
         <!-- вывод списка -->

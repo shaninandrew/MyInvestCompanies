@@ -157,6 +157,7 @@ namespace MyInvestCompanies.модель_данных
             Id = Guid.NewGuid().ToString();
             Num = "000/2023";
             Name = "документ о ";
+            Url = "";
         }
     }
 

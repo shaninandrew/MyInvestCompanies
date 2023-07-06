@@ -14,31 +14,32 @@
 
 
 @{
-     void ShowRowEditor_company(Company c)
+    void ShowRowEditor_company(Company c)
     {
         
         List<string> NameX = new List<string>();
         NameX.Add("Name");
-        <div class="Editor" @onmouseover="(e=> { Company_id = c.Id; } )">
+        <!--  @onmouseover="(e=> { Company_id = c.Id; } -->
+        <div class="Editor">
 
-             <input type="text" value="@c.Name"             @onfocus="(e=> { Company_id = c.Id; })" @onmouseover="(e=> { Company_id = c.Id; })"  @onchange="(e=>  { Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e, null);  })" />
+            <input type="text" value="@c.Name" @onfocus="(e=> { Company_id = c.Id; })" @onclick="(e=> { Company_id = c.Id; })" @onchange="(e=>  { Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e, null);  })" />
             
              @{
                  NameX.Add("Founded");
                  string tmp_date = c.Founded.Date.ToUniversalTime().ToString("yyyy-MM-dd");
                 }
 
-                <input type=date value="@tmp_date"          @onfocus="(e=> { Company_id = c.Id; })" @onmouseover="(e=> { Company_id = c.Id; })" @onchange="(e=> {  Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null);  })" />
+                <input type=date value="@tmp_date"          @onfocus="(e=> { Company_id = c.Id; })" @onclick="(e=> { Company_id = c.Id; })" @onchange="(e=> {  Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null);  })" />
             @{NameX.Add("Address");}
-                <input type="text" value="@c.Address"       @onfocus="(e=> { Company_id = c.Id; })" @onmouseover="(e=> { Company_id = c.Id; })" @onchange="(e=> {  Set_value(NameX[2], c.Id.ToString(), e.Value.ToString() , e, null );  })" />
+            <input type="text" value="@c.Address" @onfocus="(e=> { Company_id = c.Id; })" @onclick="(e=> { Company_id = c.Id; })" @onchange="(e=> {  Set_value(NameX[2], c.Id.ToString(), e.Value.ToString() , e, null );  })" />
             @{NameX.Add("Fact_Address"); }
-                <input type="text" value="@c.Fact_Address"  @onfocus="(e=> { Company_id = c.Id; })" @onmouseover="(e=> { Company_id = c.Id; })" @onchange="(e=> {  Set_value(NameX[3], c.Id.ToString(), e.Value.ToString() , e, null);  })" />
+            <input type="text" value="@c.Fact_Address" @onfocus="(e=> { Company_id = c.Id; })" @onclick="(e=> { Company_id = c.Id; })" @onchange="(e=> {  Set_value(NameX[3], c.Id.ToString(), e.Value.ToString() , e, null);  })" />
             @{NameX.Add("Description"); }
-                <input type="text" value="@c.Description"   @onfocus="(e=> { Company_id = c.Id; })" @onmouseover="(e=> { Company_id = c.Id; })" @onchange="(e=> {  Set_value(NameX[4], c.Id.ToString(), e.Value.ToString() , e, null);  })" />
+            <input type="text" value="@c.Description" @onfocus="(e=> { Company_id = c.Id; })" @onclick="(e=> { Company_id = c.Id; })" @onchange="(e=> {  Set_value(NameX[4], c.Id.ToString(), e.Value.ToString() , e, null);  })" />
             @{NameX.Add("Inn"); }
-                <input type="number" value="@c.Inn"           @onfocus="(e=> { Company_id = c.Id; })" @onmouseover="(e=> { Company_id = c.Id; })" @onchange="(e=> {  Set_value(NameX[5], c.Id.ToString(), e.Value.ToString() , e, null);  })" />
+            <input type="number" value="@c.Inn" @onfocus="(e=> { Company_id = c.Id; })" @onclick="(e=> { Company_id = c.Id; })" @onchange="(e=> {  Set_value(NameX[5], c.Id.ToString(), e.Value.ToString() , e, null);  })" />
             @{NameX.Add("KPP"); }
-            <input type="number" value="@c.KPP"               @onfocus="(e=> { Company_id = c.Id; })" @onmouseover="(e=> { Company_id = c.Id; })" @onchange="(e=> {  Set_value(NameX[6], c.Id.ToString(), e.Value.ToString() , e, null );  })" />
+            <input type="number" value="@c.KPP" @onfocus="(e=> { Company_id = c.Id; })" @onclick="(e=> { Company_id = c.Id; })" @onchange="(e=> {  Set_value(NameX[6], c.Id.ToString(), e.Value.ToString() , e, null );  })" />
              <button title="Удалить запись @c.Name @c.Address" @onclick="(e=> {Delete_company(c.Id.ToString(), null) ;} )">-</button>
         </div>
     }
@@ -58,6 +59,47 @@
 
             }
         </div>
+
+        ds.Dispose();
+    }
+
+    /// Показ любой таблицы
+    void Show_Table (string company_id, string table_name)
+    {
+        Database_structure ds = new Database_structure();
+        string id = company_id;
+        //спиоск связей
+        List<Link> links = ds.Links.Where<Link>(L => L.Parent_Id == id).ToList<Link>();
+
+        <div>
+            @foreach (Link l in links)
+            {
+                @l.Child_Id @l.Child_table
+
+                <br />
+
+            }
+        </div>
+
+        if (table_name == "Capitals")
+        {
+            List<Capital> list_of_capital =  ds.Capitals.Where<Capital>(C => C.Id_company == company_id).ToList<Capital>();
+            
+            <div class="Control">
+                <input type="button" value="Добавить капитал" />
+            </div>
+
+            <div>
+                @foreach (Capital c in list_of_capital)
+                {
+                    @c.Sum  @c.Date
+
+                    <br />
+
+                }
+            </div>
+        }
+
 
         ds.Dispose();
     }
@@ -131,6 +173,9 @@
         }
 
  </div>
+
+    @Show_Table(Company_id,"Capitals");
+
 
 </div>
 

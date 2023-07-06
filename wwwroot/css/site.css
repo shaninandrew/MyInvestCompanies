@@ -55,8 +55,10 @@ input {
     border: 0 px;
     border-color: darkgreen;
     padding: 2px 2px 2px 2px;
-    height:5 mm;
-    width:15 mm;
+    height: 7 mm;
+    width: 25 mm auto;
+    font: Tahoma;
+    font-size: 5 mm;
 }
 
 .Editor:hover {
@@ -65,11 +67,30 @@ input {
 }
 
 .Editor {
-    padding: 3px 3px 3px 3px;
+    padding: 2px 2px 2px 2px;
 }
 
 
 .Control {
-    padding: 3px 3px 3px 3px;
+    padding: 2px 2px 2px 2px;
     background: #f2c15bd9;
+}
+
+.Search {
+    padding: 2px 2px 2px 2px;
+    background:black;
+    color:white;
+
+}
+
+.search_string {
+    width:500px;
+}
+
+body 
+{
+    font:Tahoma;
+    font-size:5 mm;
+    color:white;
+    background:black;
 }

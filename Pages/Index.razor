@@ -42,8 +42,10 @@
     }
 }
 
-Компании <input title="Поисковая строка" type="text" @bind-value=query_string @bind-value:event="oninput" />
-<br/>
+<div class="Search">
+Поиск компаний  <input class="search_string" title="Поисковая строка" type="text" @bind-value=query_string @bind-value:event="oninput" />
+</div>
+
 
 <div class="Control">
 <!--- делаем через лябмду - иначе кнопка запускается автоматом -->

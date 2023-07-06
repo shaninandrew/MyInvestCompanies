@@ -123,7 +123,7 @@
                 Уставный капитал
                 </div>
                 <div class="Control">
-                    <input type="button" value="Добавить капитал" @onclick="(e=>{ AddCapital(id); })"/>
+                <Button @onclick="(e=>{ AddCapital(id); })" value="Добавить капитал" />
                 </div>
 
 
@@ -165,7 +165,7 @@
                Инвестиции
             </div>
             <div class="Control">
-                <input type="button" value="Добавить инвестицию" @onclick="(e=>{ AddInvestitions(id); })" />
+                <Button value="Добавить инвестицию" @onclick="(e=>{ AddInvestitions(id); })" />
             </div>
 
 

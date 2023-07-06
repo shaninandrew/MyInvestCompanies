@@ -78,7 +78,7 @@
 
 
     /// Показ любой таблицы
-    void Show_Table (string company_id, string table_name)
+    async void Show_Table (string company_id, string table_name)
     {
         
         string id = company_id;
@@ -98,7 +98,9 @@
 
         if (table_name == "Capitals")
         {
-
+            <div>
+            Уставный капитал
+            </div>
             <div class="Control">
                 <input type="button" value="Добавить капитал" @onclick="(e=>{ AddCapital(id); })"/>
             </div>
@@ -108,15 +110,28 @@
                 List<Capital> list_of_capital = ds.Capitals.Where<Capital>(C => C.Id_company == company_id).ToList<Capital>();
                 ds.Dispose();
            
-            <div>
+            
                 @foreach (Capital c in list_of_capital)
                 {
-                  Значения  @c.Sum  @c.Date
 
-                    <br />
 
-                }
-            </div>
+                        string tmp_date = "";
+
+                            if (c.Date.HasValue)
+                            { 
+                            c.Date.Value.ToString("yyyy-MM-dd");
+                            }
+
+                        <div>
+                            <input value="@c.Sum"> 
+                            <input type="date" value="@tmp_date"/> 
+                        </div>
+                    
+                    
+                        
+
+                } //foreach
+            
          
         }
 
@@ -195,7 +210,11 @@
  </div>
 
     @{
-        Show_Table(Company_id,"Capitals"); 
+        if (Company_id != null)
+        {
+            if (Company_id!="")
+                Show_Table(Company_id, "Capitals");
+        }
     }
 
 

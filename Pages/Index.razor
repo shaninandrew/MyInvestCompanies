@@ -80,6 +80,20 @@
         ds.Dispose();
     }
 
+    async void  AddInvestitions( string company_id)
+    {
+        Database_structure ds = new Database_structure();
+
+        Invest i_new = new Invest();
+        i_new.Id_company = company_id;
+        ds.Investitions.Add(i_new);
+        int i = await ds.SaveChangesAsync();
+        ds.Dispose();
+        
+    }
+
+
+
 
     /// Показ любой таблицы
     async void Show_Table (string company_id, string table_name)
@@ -107,41 +121,64 @@
                 </div>
                 <div class="Control">
                     <input type="button" value="Добавить капитал" @onclick="(e=>{ AddCapital(id); })"/>
-            </div>
+                </div>
 
 
-            Database_structure ds = new Database_structure();
-            List<Capital> list_of_capital = ds.Capitals.Where<Capital>(C => C.Id_company == company_id).ToList<Capital>();
-            ds.Dispose();
+                Database_structure ds = new Database_structure();
+                List<Capital> list_of_capital = ds.Capitals.Where<Capital>(C => C.Id_company == company_id).ToList<Capital>();
+                ds.Dispose();
 
-            string table = "Capitals";
-            List<string> NameX = new List<string > ();
-            NameX.Add("Sum");
-            NameX.Add("Date");
+                string table = "Capitals";
+                List<string> NameX = new List<string > ();
+                NameX.Add("Sum");
+                NameX.Add("Date");
 
             
                 @foreach (Capital c in list_of_capital)
                 {
+                    string tmp_date = "";
 
+                    if (c.Date.HasValue)
+                    { 
+                    tmp_date= c.Date.Value.ToString(__DATE_MASK);
+                    }
 
-                        string tmp_date = "";
-
-                            if (c.Date.HasValue)
-                            { 
-                            tmp_date= c.Date.Value.ToString(__DATE_MASK);
-                            }
-
-                        <div>
-                            <input type="number" value="@c.Sum"     @onchange="(e=> {  Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
-                            <input type="date"  value="@tmp_date"    @onchange="(e=> {  Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
-                        </div>
-                    
-                    
-                        
-
+                <div>
+                    <input type="number" value="@c.Sum"     @onchange="(e=> {  Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
+                    <input type="date"  value="@tmp_date"    @onchange="(e=> {  Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
+                </div>
                 } //foreach
-            
          
+        }
+
+        if (table_name == "Investitions")
+        {
+            <div>
+               Инвестиции
+            </div>
+            <div class="Control">
+                <input type="button" value="Добавить инвестицию" @onclick="(e=>{ AddInvestitions(id); })" />
+            </div>
+
+
+            Database_structure ds = new Database_structure();
+            List<Invest> list_of_Investitions = ds.Investitions.Where<Invest>(c => c.Id_company == company_id).ToList();
+            ds.Dispose();
+
+            string table = "Investitions";
+            List<string> NameX = new List<string>();
+            NameX.Add("Method");
+            NameX.Add("Source");
+
+
+            @foreach (Invest c in list_of_Investitions)
+            {
+                <div>
+                    <input type="text" value="@c.Method" @onchange="(e=> {  Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
+                    <input type="text" value="@c.Source" @onchange="(e=> {  Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
+                </div>
+            }   //foreach
+
         }
 
 
@@ -201,13 +238,27 @@
                 {
                    ShowRowEditor_company(c); 
                 }
-        @{ Console.WriteLine("Оk ..."); }
+        @{
+            Console.WriteLine("Оk ...");
+        }
     </div>
 </div>
 
 
 
- <div class="Control"> Связанные таблицы</div>
+<div class="Header"> Связанные данные для
+    @{
+        // показ имени связанной строики
+        if (Company_id != "")
+        {
+            db_index = new Database_structure();
+            Company selected = db_index.Companies.Where(i => i.Id == Company_id).Single();
+            db_index.Dispose();
+            @("«" + selected.Name +" | ИНН"+ selected.Inn +"»")
+        }
+    }
+    
+</div>
 
 <div class="card_layout">
  <div>
@@ -220,36 +271,23 @@
 
  <div style="card" >
        @{
-            if (Company_id != "")
-            {
-                db_index = new Database_structure();
-                Company selected = db_index.Companies.Where(i => i.Id == Company_id).Single();
-                <div> @selected.Name @selected.Inn           </div>
-                db_index.Dispose();
-            }
 
             if (Company_id != null)
             {
                 if (Company_id!="")
                     Show_Table(Company_id, "Capitals");
             }
-    }
+        }
 </div>
 
  <div style="Card">
         @{
-            if (Company_id != "")
-            {
-                db_index = new Database_structure();
-                Company selected = db_index.Companies.Where(i => i.Id == Company_id).Single();
-                <div> @selected.Name @selected.Inn           </div>
-                db_index.Dispose();
-            }
+          
 
             if (Company_id != null)
             {
                 if (Company_id != "")
-                    Show_Table(Company_id, "Capitals");
+                    Show_Table(Company_id, "Investitions");
             }
         }
     </div>
@@ -416,7 +454,36 @@
                 Console.WriteLine(ex.Message);
                 Console.WriteLine(ex.InnerException.Message);
             }
-        } // Comapnies
+        } // Capitals
+
+
+        if (table_name == "Investitions")
+        {
+            Console.WriteLine($"Установка значения {name} id={id}: {value}");
+
+            var t = db.Investitions.Where<Invest>(i => i.Id == id).Single<Invest>();
+
+            Console.WriteLine($"Установка значения -> ");
+
+            try
+            {
+
+                if (name == "Method")
+                { t.Method = e.Value.ToString() ; }
+                if (name == "Source")
+                { t.Source= e.Value.ToString(); }
+
+                db.Update<Invest>(t);
+                db.SaveChanges();
+
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.InnerException.Message);
+            }
+        } // Capitals
 
 
         //чистим память если автономно

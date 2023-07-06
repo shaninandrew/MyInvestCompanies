@@ -63,45 +63,65 @@
         ds.Dispose();
     }
 
+
+    /// Добавляет сведения о капитале
+    async void AddCapital(string company_id)
+    {
+        Database_structure ds = new Database_structure();
+
+        Capital c_new = new Capital();
+        c_new.Id_company = company_id;
+        ds.Capitals.Add(c_new);
+        int i= await ds.SaveChangesAsync();
+        ds.Dispose();
+    }
+
+
     /// Показ любой таблицы
     void Show_Table (string company_id, string table_name)
     {
-        Database_structure ds = new Database_structure();
+        
         string id = company_id;
         //спиоск связей
-        List<Link> links = ds.Links.Where<Link>(L => L.Parent_Id == id).ToList<Link>();
+        /* List<Link> links = ds.Links.Where<Link>(L => L.Parent_Id == id).ToList<Link>();
 
-        <div>
-            @foreach (Link l in links)
-            {
-                @l.Child_Id @l.Child_table
+         <div>
+             @foreach (Link l in links)
+             {
+                 @l.Child_Id @l.Child_table
 
-                <br />
+                 <br />
 
-            }
-        </div>
+             }
+         </div>
+         */
 
         if (table_name == "Capitals")
         {
-            List<Capital> list_of_capital =  ds.Capitals.Where<Capital>(C => C.Id_company == company_id).ToList<Capital>();
-            
+
             <div class="Control">
-                <input type="button" value="Добавить капитал" />
+                <input type="button" value="Добавить капитал" @onclick="(e=>{ AddCapital(id); })"/>
             </div>
 
+           
+                Database_structure ds = new Database_structure();
+                List<Capital> list_of_capital = ds.Capitals.Where<Capital>(C => C.Id_company == company_id).ToList<Capital>();
+                ds.Dispose();
+           
             <div>
                 @foreach (Capital c in list_of_capital)
                 {
-                    @c.Sum  @c.Date
+                  Значения  @c.Sum  @c.Date
 
                     <br />
 
                 }
             </div>
+         
         }
 
 
-        ds.Dispose();
+        
     }
 
 
@@ -174,7 +194,9 @@
 
  </div>
 
-    @Show_Table(Company_id,"Capitals");
+    @{
+        Show_Table(Company_id,"Capitals"); 
+    }
 
 
 </div>

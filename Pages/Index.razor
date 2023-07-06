@@ -123,7 +123,7 @@
                 Уставный капитал
                 </div>
                 <div class="Control">
-                <Button @onclick="(e=>{ AddCapital(id); })" value="Добавить капитал" />
+                <Button title="Добавляет размер уставного капитал" @onclick="(e=>{ AddCapital(id); })"> Добавить капитал </Button>
                 </div>
 
 
@@ -165,7 +165,7 @@
                Инвестиции
             </div>
             <div class="Control">
-                <Button value="Добавить инвестицию" @onclick="(e=>{ AddInvestitions(id); })" />
+                <Button title="Добавляет размер вложенных инвестиций" @onclick="(e=>{ AddInvestitions(id); })">Добавить инвестицию</Button>
             </div>
 
 
@@ -234,6 +234,9 @@
 </div>
 
 
+<div class="Header">
+Список компаний в базе данных
+</div>
 <div class="Control">
 <!--- делаем через лябмду - иначе кнопка запускается автоматом -->
 <button  @onclick="(e)=>{  Add_company(null); }">Добавить компанию </button> 

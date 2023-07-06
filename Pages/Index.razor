@@ -44,7 +44,7 @@
             <input type="number" value="@c.Inn" @onfocus="(e=> { Company_id = c.Id; })" @onclick="(e=> { Company_id = c.Id; })" @onchange="(e=> {  Set_value(NameX[5], c.Id.ToString(), e.Value.ToString() , e, null, table);  })" />
             @{NameX.Add("KPP"); }
             <input type="number" value="@c.KPP" @onfocus="(e=> { Company_id = c.Id; })" @onclick="(e=> { Company_id = c.Id; })" @onchange="(e=> {  Set_value(NameX[6], c.Id.ToString(), e.Value.ToString() , e, null , table );  })" />
-             <button title="Удалить запись @c.Name @c.Address" @onclick="(e=> {Delete_company(c.Id.ToString(), null) ;} )">-</button>
+            <button  class="button" title="Удалить запись @c.Name @c.Address" @onclick="(e=> {Delete_company(c.Id.ToString(), null) ;} )">-</button>
         </div>
     }
 
@@ -111,6 +111,31 @@
         ds.Dispose();
     }
 
+    //AddDeal(id)
+    /// Добавляет сделку
+    async void Add_Deal (string company_id)
+    {
+        Database_structure ds = new Database_structure();
+
+        Deal i_new = new Deal();
+        i_new.Id_company = company_id;
+        ds.Deals.Add(i_new);
+        int i = await ds.SaveChangesAsync();
+        ds.Dispose();
+    }
+
+    async void Delete_Deal(string _id)
+    {
+        Database_structure ds = new Database_structure();
+        ds.Deals.Remove(ds.Deals.Where(i => i.Id == _id).Single());
+        int i = await ds.SaveChangesAsync();
+        ds.Dispose();
+    }
+
+
+
+
+
 
     /// Показ любой таблицы
     async void Show_Table (string company_id, string table_name)
@@ -123,7 +148,7 @@
                 Уставный капитал
                 </div>
                 <div class="Control">
-                <Button title="Добавляет размер уставного капитал" @onclick="(e=>{ AddCapital(id); })"> Добавить капитал </Button>
+                <Button class="button" title="Добавляет размер уставного капитал" @onclick="(e=>{ AddCapital(id); })"> Добавить капитал </Button>
                 </div>
 
 
@@ -153,7 +178,7 @@
                 <div>
                     <input type="number" value="@c.Sum"     @onchange="(e=> {  Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
                     <input type="date"  value="@tmp_date"    @onchange="(e=> {  Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
-                    <button title="Удалить запись @c.Sum @c.Date" @onclick="(e=> {Delete_capital(c.Id.ToString()) ;} )">-</button>
+                    <button class="button" title="Удалить запись @c.Sum @c.Date" @onclick="(e=> {Delete_capital(c.Id.ToString()) ;} )">-</button>
                 </div>
                 } //foreach
          
@@ -165,7 +190,7 @@
                Инвестиции
             </div>
             <div class="Control">
-                <Button title="Добавляет размер вложенных инвестиций" @onclick="(e=>{ AddInvestitions(id); })">Добавить инвестицию</Button>
+                <Button class="button" title="Добавляет размер вложенных инвестиций" @onclick="(e=>{ AddInvestitions(id); })">Добавить инвестицию</Button>
             </div>
 
 
@@ -187,15 +212,55 @@
                 <div>
                     <input type="text" value="@c.Method" @onchange="(e=> {  Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
                     <input type="text" value="@c.Source" @onchange="(e=> {  Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
-                    <button title="Удалить запись @c.Method @c.Source" @onclick="(e=> { Delete_Investitions(c.Id.ToString()) ;} )">-</button>
+                    <button class="button" title="Удалить запись @c.Method @c.Source" @onclick="(e=> { Delete_Investitions(c.Id.ToString()) ;} )">-</button>
                     
                     </div>
             }   //foreach
+        }
 
+        //Deals
+        if (table_name == "Deals")
+        {
+            <div>
+                Сделки
+            </div>
+            <div class="Control">
+                <Button class="button" title="Добавляет список сделок" @onclick="(e=>{ Add_Deal(id); })">Добавить сделку</Button>
+            </div>
+
+
+            Database_structure ds = new Database_structure();
+            List<Deal> list_of_Deals = ds.Deals.Where<Deal>(c => c.Id_company == company_id).ToList();
+            Comparison<Deal> x_comp = new Comparison<Deal>(delegate (Deal x, Deal y) { return (x.Id.CompareTo(y.Id)); });
+            list_of_Deals.Sort(x_comp);
+
+            ds.Dispose();
+
+            string table = "Deals";
+            List<string> NameX = new List<string>();
+            NameX.Add("Date");
+            NameX.Add("Description");
+
+
+            @foreach (Deal c in list_of_Deals)
+            {
+                string tmp_date = "";
+
+                if (c.Date.HasValue)
+                {
+                    tmp_date = c.Date.Value.ToString(__DATE_MASK);
+                }
+
+                <div>
+                    <input type="date" value="@tmp_date" @onchange="(e=> {  Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
+                    <input type="text" value="@c.Description" @onchange="(e=> {  Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
+                    <button class="button" title="Удалить запись @c.Date @c.Description" @onclick="(e=> { Delete_Deal(c.Id.ToString()) ;} )">-</button>
+
+                </div>
+            }       //foreach
         }
 
 
-        
     }
 
 
@@ -239,8 +304,8 @@
 </div>
 <div class="Control">
 <!--- делаем через лябмду - иначе кнопка запускается автоматом -->
-<button  @onclick="(e)=>{  Add_company(null); }">Добавить компанию </button> 
- Тестовая инфа: @Company_id
+    <button class="button" @onclick="(e)=>{  Add_company(null); }">Добавить компанию </button>
+    Тестовая инфа: @Company_id
 <br/> 
 </div>
 
@@ -281,12 +346,10 @@
         {
             Show_Linx(Company_id);
         }
-
  </div>
 
- <div style="card" >
+ <div style="Сard" >
        @{
-
             if (Company_id != null)
             {
                 if (Company_id!="")
@@ -297,15 +360,25 @@
 
  <div style="Card">
         @{
-          
-
             if (Company_id != null)
             {
                 if (Company_id != "")
                     Show_Table(Company_id, "Investitions");
             }
         }
-    </div>
+ </div>
+
+
+<div style="Card">
+    @{
+        if (Company_id != null)
+        {
+            if (Company_id != "")
+                    Show_Table(Company_id, "Deals");
+        }
+    }
+</div>
+
 
 </div>
 
@@ -499,6 +572,66 @@
                 Console.WriteLine(ex.InnerException.Message);
             }
         } // Capitals
+
+
+        if (table_name == "Capitals")
+        {
+            Console.WriteLine($"Установка значения {name} id={id}: {value}");
+
+            var t = db.Capitals.Where<Capital>(i => i.Id == id).Single<Capital>();
+
+            Console.WriteLine($"Установка значения -> ");
+
+            try
+            {
+
+                if (name == "Date")
+                { t.Date = DateTime.Parse(e.Value.ToString()).ToUniversalTime(); }
+                if (name == "Sum")
+                { t.Sum = float.Parse(e.Value.ToString()); }
+
+                db.Update<Capital>(t);
+                db.SaveChanges();
+
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.InnerException.Message);
+            }
+        } // Capitals
+
+
+        if (table_name == "Deals")
+        {
+            Console.WriteLine($"Установка значения {name} id={id}: {value}");
+
+            var t = db.Deals.Where<Deal>(i => i.Id == id).Single();
+
+            Console.WriteLine($"Установка значения -> ");
+
+            try
+            {
+
+                if (name == "Date")
+                    { t.Date = DateTime.Parse( e.Value.ToString()).ToUniversalTime(); }
+
+                                
+                if (name == "Description")
+                { t.Description = e.Value.ToString(); }
+
+                db.Update<Deal>(t);
+                db.SaveChanges();
+
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.InnerException.Message);
+            }
+        } // Сделки
 
 
         //чистим память если автономно

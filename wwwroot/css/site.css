@@ -54,14 +54,22 @@ input {
     background: white;
     border: 0 px;
     border-color: darkgreen;
-    padding: 2px 1em 0 1em;
+    padding: 2px 2px 2px 2px;
+    height:5 mm;
+    width:15 mm;
 }
 
-.Editor:focus {
+.Editor:hover {
     background: #f19191;
 
 }
 
 .Editor {
-    padding: 2px 1em 0 1em;
+    padding: 3px 3px 3px 3px;
+}
+
+
+.Control {
+    padding: 3px 3px 3px 3px;
+    background: #f2c15bd9;
 }

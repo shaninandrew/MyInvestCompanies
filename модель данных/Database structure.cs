@@ -53,7 +53,7 @@ namespace MyInvestCompanies.модель_данных
 
             //настройка подключения
             
-            optionsBuilder.EnableServiceProviderCaching(false);
+           // optionsBuilder.EnableServiceProviderCaching(false);
             
 
             base.OnConfiguring(optionsBuilder);

@@ -80,6 +80,17 @@
         ds.Dispose();
     }
 
+
+    
+    async void Delete_capital (string capital_id)
+    {
+        Database_structure ds = new Database_structure();
+        ds.Capitals.Remove(ds.Capitals.Where(i => i.Id == capital_id).Single());
+        int i = await ds.SaveChangesAsync();
+        ds.Dispose();
+    }
+
+
     async void  AddInvestitions( string company_id)
     {
         Database_structure ds = new Database_structure();
@@ -98,21 +109,7 @@
     /// Показ любой таблицы
     async void Show_Table (string company_id, string table_name)
     {
-        
         string id = company_id;
-        //спиоск связей
-        /* List<Link> links = ds.Links.Where<Link>(L => L.Parent_Id == id).ToList<Link>();
-
-         <div>
-             @foreach (Link l in links)
-             {
-                 @l.Child_Id @l.Child_table
-
-                 <br />
-
-             }
-         </div>
-         */
 
         if (table_name == "Capitals")
         {
@@ -126,6 +123,10 @@
 
                 Database_structure ds = new Database_structure();
                 List<Capital> list_of_capital = ds.Capitals.Where<Capital>(C => C.Id_company == company_id).ToList<Capital>();
+                
+                Comparison<Capital> x_comp = new Comparison<Capital>(delegate (Capital x, Capital y) { return (x.Id.CompareTo(y.Id)); });
+                list_of_capital.Sort(x_comp);
+
                 ds.Dispose();
 
                 string table = "Capitals";
@@ -146,6 +147,7 @@
                 <div>
                     <input type="number" value="@c.Sum"     @onchange="(e=> {  Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
                     <input type="date"  value="@tmp_date"    @onchange="(e=> {  Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
+                    <button title="Удалить запись @c.Sum @c.Date" @onclick="(e=> {Delete_capital(c.Id.ToString()) ;} )">-</button>
                 </div>
                 } //foreach
          
@@ -163,6 +165,9 @@
 
             Database_structure ds = new Database_structure();
             List<Invest> list_of_Investitions = ds.Investitions.Where<Invest>(c => c.Id_company == company_id).ToList();
+            Comparison<Invest> x_comp = new Comparison<Invest>(delegate (Invest x, Invest y) { return (x.Id.CompareTo(y.Id)); });
+            list_of_Investitions.Sort(x_comp);
+
             ds.Dispose();
 
             string table = "Investitions";
@@ -211,7 +216,6 @@
     }
 
     Comparison<Company> x_comp = new Comparison<Company>(delegate( Company x, Company y) { return (x.Id.CompareTo(y.Id)); });
-
     list_of_companies.Sort(x_comp);
     db_index.Dispose();
 

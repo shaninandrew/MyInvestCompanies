@@ -79,7 +79,7 @@ input {
 
 .Header {
     padding: 2px 2px 2px 2px;
-    background: blueviolet;
+    background: #ffad1a;
     color:white;
 }
 
@@ -107,19 +107,26 @@ body
 }
 
 .card {
-    min-width: 300px;
+    min-width: 400px;
     background: #d36c09ef;
     display: flex;
     flex: 1 1 auto;
-    width: 33.3%;
+    
+    width: 400px;
     margin-bottom: 10px;
     border-radius: 10px;
     border: 1px #706e6e;
     padding: 2px 2px 2px 2px;
+    box-shadow:10px 10px #f6e78b;
 }
 
 .card:hover 
 {
     background:#f19191;
     border-box: 2px #f19191;
+}
+
+button {
+
+    cursor:pointer;
 }

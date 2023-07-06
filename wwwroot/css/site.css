@@ -34,15 +34,16 @@
     overflow-x: auto;
     overflow: auto;
     align-content: space-between;
-    background: #f1c20bbe padding: 5px;
+    background:#706e6e ; 
+    padding: 1px;
 }
 
 .inside-scroll {
     height: 100 px;
-    width:auto;
-
-    overscroll-behavior:contain;
-    overflow:hidden;
+    width: auto;
+    overscroll-behavior: contain;
+    overflow: hidden;
+    
 }
 
 input:focus 
@@ -73,7 +74,7 @@ input {
 
 .Control {
     padding: 2px 2px 2px 2px;
-    background: #f2c15bd9;
+    background: #d36c09ef;
 }
 
 .Search {

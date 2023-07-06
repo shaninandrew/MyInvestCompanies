@@ -6,40 +6,94 @@
 @code 
 {
     [Parameter]
-    public string query_string { get; set;} = "";
+    public string query_string  { get; set;} = "";
+
+    public string Company_id    { get; set ; } = "";
+
 }
 
 
 @{
      void ShowRowEditor_company(Company c)
     {
-
         
         List<string> NameX = new List<string>();
         NameX.Add("Name");
-        <div class="Editor">
+        <div class="Editor" @onmouseover="(e=> { Company_id = c.Id; } )">
 
-        <input type="text" value="@c.Name" @onchange="(e=>  { Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e, null);  })" />
-        @{NameX.Add("Founded");}
+             <input type="text" value="@c.Name"             @onfocus="(e=> { Company_id = c.Id; })" @onmouseover="(e=> { Company_id = c.Id; })"  @onchange="(e=>  { Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e, null);  })" />
+            
+             @{
+                 NameX.Add("Founded");
+                 string tmp_date = c.Founded.Date.ToUniversalTime().ToString("yyyy-MM-dd");
+                }
 
-            @{
-                string tmp_date = c.Founded.Date.ToUniversalTime().ToString("yyyy-MM-dd");
-            }
-
-        <input type=date value="@tmp_date"   @onchange="(e=> {  Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null);  })" />
-        @{NameX.Add("Address");}
-        <input type="text" value="@c.Address" @onchange="(e=> {  Set_value(NameX[2], c.Id.ToString(), e.Value.ToString() , e, null );  })" />
-        @{NameX.Add("Fact_Address"); }
-            <input type="text" value="@c.Fact_Address" @onchange="(e=> {  Set_value(NameX[3], c.Id.ToString(), e.Value.ToString() , e, null);  })" />
-        @{NameX.Add("Description"); }
-            <input type="text" value="@c.Description" @onchange="(e=> {  Set_value(NameX[4], c.Id.ToString(), e.Value.ToString() , e, null);  })" />
-        @{NameX.Add("Inn"); }
-            <input type="text" value="@c.Inn" @onchange="(e=> {  Set_value(NameX[5], c.Id.ToString(), e.Value.ToString() , e, null);  })" />
-        @{NameX.Add("KPP"); }
-            <input type="text" value="@c.KPP" @onchange="(e=> {  Set_value(NameX[6], c.Id.ToString(), e.Value.ToString() , e, null );  })" />
-            <button title="Удалить запись @c.Name @c.Address" @onclick="(e=> {Delete_company(c.Id.ToString(), null) ;} )">-</button>
+                <input type=date value="@tmp_date"          @onfocus="(e=> { Company_id = c.Id; })" @onmouseover="(e=> { Company_id = c.Id; })" @onchange="(e=> {  Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null);  })" />
+            @{NameX.Add("Address");}
+                <input type="text" value="@c.Address"       @onfocus="(e=> { Company_id = c.Id; })" @onmouseover="(e=> { Company_id = c.Id; })" @onchange="(e=> {  Set_value(NameX[2], c.Id.ToString(), e.Value.ToString() , e, null );  })" />
+            @{NameX.Add("Fact_Address"); }
+                <input type="text" value="@c.Fact_Address"  @onfocus="(e=> { Company_id = c.Id; })" @onmouseover="(e=> { Company_id = c.Id; })" @onchange="(e=> {  Set_value(NameX[3], c.Id.ToString(), e.Value.ToString() , e, null);  })" />
+            @{NameX.Add("Description"); }
+                <input type="text" value="@c.Description"   @onfocus="(e=> { Company_id = c.Id; })" @onmouseover="(e=> { Company_id = c.Id; })" @onchange="(e=> {  Set_value(NameX[4], c.Id.ToString(), e.Value.ToString() , e, null);  })" />
+            @{NameX.Add("Inn"); }
+                <input type="number" value="@c.Inn"           @onfocus="(e=> { Company_id = c.Id; })" @onmouseover="(e=> { Company_id = c.Id; })" @onchange="(e=> {  Set_value(NameX[5], c.Id.ToString(), e.Value.ToString() , e, null);  })" />
+            @{NameX.Add("KPP"); }
+            <input type="number" value="@c.KPP"               @onfocus="(e=> { Company_id = c.Id; })" @onmouseover="(e=> { Company_id = c.Id; })" @onchange="(e=> {  Set_value(NameX[6], c.Id.ToString(), e.Value.ToString() , e, null );  })" />
+             <button title="Удалить запись @c.Name @c.Address" @onclick="(e=> {Delete_company(c.Id.ToString(), null) ;} )">-</button>
         </div>
     }
+
+
+    void Show_Linx (string company_id)
+    {
+        Database_structure ds = new Database_structure();
+        string id = company_id;
+        //спиоск связей
+        List<Link> links =  ds.Links.Where<Link>(L => L.Parent_Id == id).ToList<Link>();
+
+        <div>
+            @foreach (Link l in links)
+            {
+                @l.Child_Id @l.Child_table<br />
+
+            }
+        </div>
+
+        ds.Dispose();
+    }
+
+
+   // --- Загрузка  данных ---
+    Database_structure db_index = new Database_structure();
+    List<Company> list_of_companies = null;
+    Console.Write("Отображение редактора ...");
+
+    if ((query_string != "") && (query_string.Length > 0)  )
+    {
+        list_of_companies = new List<Company>();
+        list_of_companies.Clear();
+
+        foreach (Company c in db_index.Companies.ToList<Company>())
+        {
+            string t = c.Inn + c.Name + c.Address + c.KPP + c.Description + c.Fact_Address;
+            if (t.IndexOf(query_string, StringComparison.OrdinalIgnoreCase) > -1)
+            {
+                list_of_companies.Add(c);
+            }
+        }
+    }
+    else
+    {
+        list_of_companies = db_index.Companies.ToList<Company>(  );
+    }
+
+    Comparison<Company> x_comp = new Comparison<Company>(delegate( Company x, Company y) { return (x.Id.CompareTo(y.Id)); });
+
+    list_of_companies.Sort(x_comp);
+    db_index.Dispose();
+
+
+
 }
 
 <div class="Search">
@@ -49,42 +103,13 @@
 
 <div class="Control">
 <!--- делаем через лябмду - иначе кнопка запускается автоматом -->
-<button  @onclick="(e)=>{  Add_company(null); }">Добавить компанию </button> <br/> 
+<button  @onclick="(e)=>{  Add_company(null); }">Добавить компанию </button> 
+ Тестовая инфа: @Company_id
+<br/> 
 </div>
 
 <div class="scroll">
-    <div style="height:300px;">
-
-        @{
-            Database_structure db_index = new Database_structure();
-            List<Company> list_of_companies = null;
-            Console.Write("Отображение редактора ...");
-
-            if ((query_string != "") && (query_string.Length > 0)  )
-            {
-                list_of_companies = new List<Company>();
-                list_of_companies.Clear();
-
-                foreach (Company c in db_index.Companies.ToList<Company>())
-                {
-                    string t = c.Inn + c.Name + c.Address + c.KPP + c.Description + c.Fact_Address;
-                    if (t.IndexOf(query_string, StringComparison.OrdinalIgnoreCase) > -1)
-                    {
-                        list_of_companies.Add(c);
-                    }
-                }
-            }
-            else
-            {
-                list_of_companies = db_index.Companies.ToList<Company>(  );
-            }
-
-            Comparison<Company> x_comp = new Comparison<Company>(delegate( Company x, Company y) { return (x.Id.CompareTo(y.Id)); });
-
-             list_of_companies.Sort(x_comp);
-            db_index.Dispose();
-        }
-
+    <div style="height:300px;  background:#00000068 ; ">
         <!-- вывод списка -->
         
         @foreach (Company c in list_of_companies)
@@ -92,7 +117,21 @@
                    ShowRowEditor_company(c); 
                 }
         @{ Console.WriteLine("Оk ..."); }
+
+        
     </div>
+</div>
+
+<div>
+ <div class="Control"> Связанные таблицы</div>
+ <div>
+        @if (Company_id != null)
+        {
+            Show_Linx(Company_id);
+        }
+
+ </div>
+
 </div>
 
 

@@ -103,7 +103,13 @@
         
     }
 
-
+    async void Delete_Investitions(string invest_id)
+    {
+        Database_structure ds = new Database_structure();
+        ds.Investitions.Remove(ds.Investitions.Where(i => i.Id == invest_id).Single());
+        int i = await ds.SaveChangesAsync();
+        ds.Dispose();
+    }
 
 
     /// Показ любой таблицы
@@ -181,7 +187,9 @@
                 <div>
                     <input type="text" value="@c.Method" @onchange="(e=> {  Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
                     <input type="text" value="@c.Source" @onchange="(e=> {  Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
-                </div>
+                    <button title="Удалить запись @c.Method @c.Source" @onclick="(e=> { Delete_Investitions(c.Id.ToString()) ;} )">-</button>
+                    
+                    </div>
             }   //foreach
 
         }

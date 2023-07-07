@@ -167,7 +167,7 @@
 
         if (table_name == "Capitals")
         {
-                <div>
+            <div class="Header">
                 Уставный капитал
                 </div>
                 <div class="Control">
@@ -209,7 +209,7 @@
 
         if (table_name == "Investitions")
         {
-            <div>
+            <div class="Header">
                Инвестиции
             </div>
             <div class="Control">
@@ -244,7 +244,7 @@
         //Deals
         if (table_name == "Deals")
         {
-            <div>
+            <div class="Header">
                 Сделки
             </div>
             <div class="Control">
@@ -279,6 +279,52 @@
                     <input type="text" value="@c.Description" @onchange="(e=> {  Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
                     <button class="button" title="Удалить запись @c.Date @c.Description" @onclick="(e=> { Delete_Deal(c.Id.ToString()) ;} )">-</button>
 
+                </div>
+            }       //foreach
+        }
+
+
+        //Deals
+        if (table_name == "Documents")
+        {
+            <div class="Header">
+                Документы
+            </div>
+            <div class="Control">
+                <Button class="button" title="Добавляет список сделок" @onclick="(e=>{ Add_Deal(id); })">Добавить сделку</Button>
+            </div>
+
+
+            Database_structure ds = new Database_structure();
+            List<Document> list_of_docs = new List<Document>();
+            foreach (Link l in ds.Links.Where<Link>(i => i.Parent_Id == company_id).ToList<Link>())
+                {  list_of_docs.AddRange( ds.Documents.Where<Document>(c => c.Id == l.Child_Id  ).ToArray<Document>()); }
+
+
+            Comparison<Document> x_comp = new Comparison<Document>(delegate (Document x, Document y) { return (x.Id.CompareTo(y.Id)); });
+            list_of_docs.Sort(x_comp);
+
+            ds.Dispose();
+
+            string table = table_name;
+            List<string> NameX = new List<string>();
+
+            NameX.Add("Num");
+            NameX.Add("Date");
+            NameX.Add("Name");
+            NameX.Add("Url");
+
+            @foreach (Document c in list_of_docs)
+            {
+                string tmp_date = "";
+                tmp_date = c.Date.ToString(__DATE_MASK);
+
+                <div>
+                    <input type="text" value="@c.Num"       @onchange="(e=> {  Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
+                    <input type="date" value="@tmp_date"    @onchange="(e=> {  Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
+                    <input type="text" value="@c.Name"      @onchange="(e=> {  Set_value(NameX[2], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
+                    <input type="text" value="@c.Url"       @onchange="(e=> {  Set_value(NameX[3], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
+                    <button class="button" title="Удалить запись @c.Num @tmp_date" @onclick="(e=> { Delete_Deal(c.Id.ToString()) ;} )">-</button>
                 </div>
             }       //foreach
         }

@@ -76,12 +76,18 @@
         Capital c_new = new Capital();
         c_new.Id_company = company_id;
         ds.Capitals.Add(c_new);
+        
+        //добавление связки
+        Link  lnk = new Link(company_id, c_new.Id); ;
+        ds.Links.Add(lnk);
+
+
         int i= await ds.SaveChangesAsync();
         ds.Dispose();
     }
 
 
-    
+
     async void Delete_capital (string capital_id)
     {
         Database_structure ds = new Database_structure();
@@ -98,15 +104,22 @@
         Invest i_new = new Invest();
         i_new.Id_company = company_id;
         ds.Investitions.Add(i_new);
+
+        Link lnk = new Link(company_id, i_new.Id); ;
+        ds.Links.Add(lnk);
+
         int i = await ds.SaveChangesAsync();
         ds.Dispose();
-        
+
     }
 
     async void Delete_Investitions(string invest_id)
     {
         Database_structure ds = new Database_structure();
         ds.Investitions.Remove(ds.Investitions.Where(i => i.Id == invest_id).Single());
+
+        
+
         int i = await ds.SaveChangesAsync();
         ds.Dispose();
     }
@@ -120,6 +133,10 @@
         Deal i_new = new Deal();
         i_new.Id_company = company_id;
         ds.Deals.Add(i_new);
+
+        Link  lnk = new Link(company_id, i_new.Id); ;
+        ds.Links.Add(lnk);
+
         int i = await ds.SaveChangesAsync();
         ds.Dispose();
     }

@@ -51,30 +51,40 @@
     border-spacing: 2px 2px;
 }
 
-input:focus 
-{
+input:focus {
     background: #f25d5d;
-}
-
-input {
-    background: white;
-    border: 0 px;
+    
+    border: 1 px;
     border-color: darkgreen;
     padding: 2px 2px 2px 2px;
     height: 1 rem;
     width: 4 rem auto;
     font: Tahoma;
     font-size: 12pt;
+    border-radius: 3 px 3 px;
+}
+
+input {
+    background: white;
+    border: 1 px;
+    border-color: darkgreen;
+    padding: 2px 2px 2px 2px;
+    height: 1 rem;
+    width: 4 rem auto;
+    font: Tahoma;
+    font-size: 12pt;
+    border-radius: 3 px 3 px;
+    margin: 2px;
 }
 
 .Editor:hover {
-    background: #f19191; 
-
+    background: #f25d5d;
 }
 
 .Editor {
     padding: 2px 2px 2px 2px;
     border-spacing: 2px 5px;
+    background: white;
 }
 
 
@@ -114,23 +124,24 @@ body {
 
 .card 
 {
-    min-width: 400px;
+    min-width: 300px;
     background: #d36c09ef;
     display: flex;
     flex: 1 1 auto;
-    width: 400px;
-    margin: 10px 4px 4px 4px;
-    border-radius: 10px;
-    border: 1px #706e6e;
+    width: auto;
+    margin: 6px 6px 6px 6px;
+    border-radius: 5px;
+    border: 2px #706e6e;
     padding: 2px 2px 2px 2px;
-    box-shadow: 10px 10px #f6e78b;
-    border-spacing: 2px 5px;
+    border-spacing: 2px 2px;
+    
 }
 
 .card:hover 
 {
-    background:#f19191;
-    border: 2px #f19191;
+        background: #f25d5d;
+        border: 2px #f25d5d;
+        box-shadow: 4px 4px #f25d5d;
 }
 
 .button {
@@ -151,3 +162,11 @@ button:hover {
         color: black;
         box-shadow: red 2 px 2px;
     }
+
+
+.card_editor 
+{
+    min-width:120 px;
+    width:auto;
+
+}

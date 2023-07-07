@@ -96,9 +96,6 @@
         ds.SaveChanges();
         ds.Dispose();
 
-        
-
-
     }
 
 
@@ -123,7 +120,7 @@
         Database_structure ds = new Database_structure();
         ds.Investitions.Remove(ds.Investitions.Where(i => i.Id == invest_id).Single());
         ds.Links.RemoveRange(ds.Links.Where<Link>(i => i.Parent_Id == invest_id).ToArray());
-        
+
 
         ds.SaveChanges();
         ds.Dispose();
@@ -156,6 +153,33 @@
     }
 
 
+
+    //AddDeal(id)
+    /// Добавляет документа
+    async void Add_Document(string company_id)
+    {
+        Database_structure ds = new Database_structure();
+
+        Document i_new = new Document();
+        string Child_id = i_new.Id;
+        ds.Documents.Add(i_new);
+
+        Link lnk = new Link(company_id, Child_id); ;
+        ds.Links.Add(lnk);
+
+        ds.SaveChanges();
+        ds.Dispose();
+    }
+
+
+    async void Delete_Document (string _id)
+    {
+        Database_structure ds = new Database_structure();
+        ds.Documents.Remove(ds.Documents.Where(i => i.Id == _id).Single());
+        ds.Links.RemoveRange(ds.Links.Where<Link>(i => i.Parent_Id == _id).ToArray());
+        ds.SaveChanges();
+        ds.Dispose();
+    }
 
 
 
@@ -198,7 +222,7 @@
                     tmp_date= c.Date.Value.ToString(__DATE_MASK);
                     }
 
-                <div>
+                <div class="card">
                     <input type="number" value="@c.Sum"     @onchange="(e=> {  Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
                     <input type="date"  value="@tmp_date"    @onchange="(e=> {  Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
                     <button class="button" title="Удалить запись @c.Sum @c.Date" @onclick="(e=> {Delete_capital(c.Id.ToString()) ;} )">-</button>
@@ -232,12 +256,11 @@
 
             @foreach (Invest c in list_of_Investitions)
             {
-                <div>
+                <div class="card">
                     <input type="text" value="@c.Method" @onchange="(e=> {  Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
-                    <input type="text" value="@c.Source" @onchange="(e=> {  Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
+                    <textarea class="card_editor" type="text" rows="2" value="@c.Source" @onchange="(e=> {  Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
                     <button class="button" title="Удалить запись @c.Method @c.Source" @onclick="(e=> { Delete_Investitions(c.Id.ToString()) ;} )">-</button>
-                    
-                    </div>
+                 </div>
             }   //foreach
         }
 
@@ -274,9 +297,9 @@
                     tmp_date = c.Date.Value.ToString(__DATE_MASK);
                 }
 
-                <div>
+                 <div class="card">
                     <input type="date" value="@tmp_date" @onchange="(e=> {  Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
-                    <input type="text" value="@c.Description" @onchange="(e=> {  Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
+                    <textarea class="card_editor" type="text" rows="2" value="@c.Description" @onchange="(e=> {  Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
                     <button class="button" title="Удалить запись @c.Date @c.Description" @onclick="(e=> { Delete_Deal(c.Id.ToString()) ;} )">-</button>
 
                 </div>
@@ -291,7 +314,7 @@
                 Документы
             </div>
             <div class="Control">
-                <Button class="button" title="Добавляет список сделок" @onclick="(e=>{ Add_Deal(id); })">Добавить сделку</Button>
+                <Button class="button" title="Добавляет документ" @onclick="(e=>{ Add_Document (id); })">+Документ</Button>
             </div>
 
 
@@ -319,12 +342,12 @@
                 string tmp_date = "";
                 tmp_date = c.Date.ToString(__DATE_MASK);
 
-                <div>
-                    <input type="text" value="@c.Num"       @onchange="(e=> {  Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
-                    <input type="date" value="@tmp_date"    @onchange="(e=> {  Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
-                    <input type="text" value="@c.Name"      @onchange="(e=> {  Set_value(NameX[2], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
-                    <input type="text" value="@c.Url"       @onchange="(e=> {  Set_value(NameX[3], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
-                    <button class="button" title="Удалить запись @c.Num @tmp_date" @onclick="(e=> { Delete_Deal(c.Id.ToString()) ;} )">-</button>
+                <div class="card">
+                    <input  type="text" value="@c.Num"       @onchange="(e=> {  Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
+                    <input  type="date" value="@tmp_date"    @onchange="(e=> {  Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
+                    <textarea class="card_editor" type="text" rows="2" value="@c.Name" @onchange="(e=> {  Set_value(NameX[2], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
+                    <input  type="url" value="@c.Url"       @onchange="(e=> {  Set_value(NameX[3], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
+                    <button class="button" title="Удалить запись @c.Num @tmp_date" @onclick="(e=> { Delete_Document(c.Id.ToString()) ;} )">-</button>
                 </div>
             }       //foreach
         }
@@ -712,6 +735,43 @@
                 Console.WriteLine(ex.InnerException.Message);
             }
         } // Сделки
+
+
+        if (table_name == "Documents")
+        {
+            Console.WriteLine($"Установка значения {name} id={id}: {value}");
+
+            var t = db.Documents.Where<Document>(i => i.Id == id).Single();
+
+            Console.WriteLine($"Установка значения -> ");
+
+            try
+            {
+
+                if (name == "Date")
+                { t.Date = DateTime.Parse(e.Value.ToString()).ToUniversalTime(); }
+
+
+                if (name == "Name")
+                { t.Name = e.Value.ToString(); }
+                
+                if (name == "Num")
+                { t.Num = e.Value.ToString(); }
+
+                if (name == "Url")
+                { t.Url = e.Value.ToString(); }
+
+                db.Update<Document>(t);
+                db.SaveChanges();
+
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.InnerException.Message);
+            }
+        } // Документы
 
 
         //чистим память если автономно

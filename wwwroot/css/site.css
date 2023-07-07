@@ -37,7 +37,7 @@
     /* background: #706e6e; */
     
     padding: 2px 2px 2px 2px;
-    box-shadow: 10px 10px #f6e78b;
+    
     border-spacing: 2px 5px;
 }
 
@@ -155,13 +155,24 @@ body {
     text-align: center;
 }
 
+.delete_button 
+{
+    cursor: pointer;
+    background: black;
+    color: #ffad1a;
+    height: 60 px;
+    width: 60 px;
+    border-radius: 3 px 3 px 3 px 3 px;
+    font-size: 12pt;
+    text-align: center;
+}
 
 button:hover {
-        cursor: pointer;
-        background: #ffad1a;
-        color: black;
-        box-shadow: red 2 px 2px;
-    }
+    cursor: pointer;
+    background: #ffad1a;
+    color: black;
+    box-shadow: red 2 px 2px;
+}
 
 
 .card_editor 

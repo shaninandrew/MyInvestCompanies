@@ -44,7 +44,7 @@
             <input type="number" value="@c.Inn" @onfocus="(e=> { Company_id = c.Id; })" @onclick="(e=> { Company_id = c.Id; })" @onchange="(e=> {  Set_value(NameX[5], c.Id.ToString(), e.Value.ToString() , e, null, table);  })" />
             @{NameX.Add("KPP"); }
             <input type="number" value="@c.KPP" @onfocus="(e=> { Company_id = c.Id; })" @onclick="(e=> { Company_id = c.Id; })" @onchange="(e=> {  Set_value(NameX[6], c.Id.ToString(), e.Value.ToString() , e, null , table );  })" />
-            <button  class="button" title="Удалить запись @c.Name @c.Address" @onclick="(e=> {Delete_company(c.Id.ToString(), null) ;} )">-</button>
+            <button  class="delete_button" title="Удалить запись @c.Name @c.Address" @onclick="(e=> {Delete_company(c.Id.ToString(), null) ;} )">-</button>
         </div>
     }
 
@@ -81,7 +81,6 @@
         Link  lnk = new Link(company_id, c_new.Id); ;
         ds.Links.Add(lnk);
 
-
         ds.SaveChanges();
         ds.Dispose();
     }
@@ -95,7 +94,6 @@
         ds.Links.RemoveRange(ds.Links.Where<Link>(i => i.Parent_Id == capital_id).ToArray());
         ds.SaveChanges();
         ds.Dispose();
-
     }
 
 
@@ -152,8 +150,6 @@
         ds.Dispose();
     }
 
-
-
     //AddDeal(id)
     /// Добавляет документа
     async void Add_Document(string company_id)
@@ -183,7 +179,6 @@
 
 
 
-
     /// Показ любой таблицы
     async void Show_Table (string company_id, string table_name)
     {
@@ -191,11 +186,11 @@
 
         if (table_name == "Capitals")
         {
-            <div class="Header">
+                <div class="Header">
                 Уставный капитал
                 </div>
                 <div class="Control">
-                <Button class="button" title="Добавляет размер уставного капитал" @onclick="(e=>{ AddCapital(id); })"> Добавить капитал </Button>
+                     <Button class="button" title="Добавляет размер уставного капитал" @onclick="(e=>{ AddCapital(id); })"> Добавить капитал </Button>
                 </div>
 
 
@@ -225,7 +220,7 @@
                 <div class="card">
                     <input type="number" value="@c.Sum"     @onchange="(e=> {  Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
                     <input type="date"  value="@tmp_date"    @onchange="(e=> {  Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
-                    <button class="button" title="Удалить запись @c.Sum @c.Date" @onclick="(e=> {Delete_capital(c.Id.ToString()) ;} )">-</button>
+                    <button class="delete_button" title="Удалить запись @c.Sum @c.Date" @onclick="(e=> {Delete_capital(c.Id.ToString()) ;} )">-</button>
                 </div>
                 } //foreach
          
@@ -259,7 +254,7 @@
                 <div class="card">
                     <input type="text" value="@c.Method" @onchange="(e=> {  Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
                     <textarea class="card_editor" type="text" rows="2" value="@c.Source" @onchange="(e=> {  Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
-                    <button class="button" title="Удалить запись @c.Method @c.Source" @onclick="(e=> { Delete_Investitions(c.Id.ToString()) ;} )">-</button>
+                    <button class="delete_button" title="Удалить запись @c.Method @c.Source" @onclick="(e=> { Delete_Investitions(c.Id.ToString()) ;} )">-</button>
                  </div>
             }   //foreach
         }
@@ -270,6 +265,7 @@
             <div class="Header">
                 Сделки
             </div>
+
             <div class="Control">
                 <Button class="button" title="Добавляет список сделок" @onclick="(e=>{ Add_Deal(id); })">Добавить сделку</Button>
             </div>
@@ -300,7 +296,7 @@
                  <div class="card">
                     <input type="date" value="@tmp_date" @onchange="(e=> {  Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
                     <textarea class="card_editor" type="text" rows="2" value="@c.Description" @onchange="(e=> {  Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
-                    <button class="button" title="Удалить запись @c.Date @c.Description" @onclick="(e=> { Delete_Deal(c.Id.ToString()) ;} )">-</button>
+                    <button class="delete_button" title="Удалить запись @c.Date @c.Description" @onclick="(e=> { Delete_Deal(c.Id.ToString()) ;} )">-</button>
 
                 </div>
             }       //foreach
@@ -347,7 +343,7 @@
                     <input  type="date" value="@tmp_date"    @onchange="(e=> {  Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
                     <textarea class="card_editor" type="text" rows="2" value="@c.Name" @onchange="(e=> {  Set_value(NameX[2], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
                     <input  type="url" value="@c.Url"       @onchange="(e=> {  Set_value(NameX[3], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
-                    <button class="button" title="Удалить запись @c.Num @tmp_date" @onclick="(e=> { Delete_Document(c.Id.ToString()) ;} )">-</button>
+                    <button class="delete_button" title="Удалить запись @c.Num @tmp_date" @onclick="(e=> { Delete_Document(c.Id.ToString()) ;} )">-</button>
                 </div>
             }       //foreach
         }
@@ -394,12 +390,13 @@
 <div class="Header">
 Список компаний в базе данных
 </div>
+
 <div class="Control">
 <!--- делаем через лябмду - иначе кнопка запускается автоматом -->
     <button class="button" @onclick="(e)=>{  Add_company(null); }">Добавить компанию </button>
     Тестовая инфа: @Company_id
-<br/> 
 </div>
+<br />
 
 <!-- компании -->
 <div class="scroll">
@@ -408,83 +405,104 @@
         
         @foreach (Company c in list_of_companies)
                 {
-                   ShowRowEditor_company(c); 
+                    ShowRowEditor_company(c); 
                 }
         @{
             Console.WriteLine("Оk ...");
+            GC.Collect()          ;
         }
     </div>
 </div>
 
 
+<br/>
 
-<div class="Header"> Связанные данные для
-    @{
-        // показ имени связанной строики
-        if (Company_id != "")
-        {
-            db_index = new Database_structure();
-            Company selected = db_index.Companies.Where(i => i.Id == Company_id).Single();
-            db_index.Dispose();
-            @("«" + selected.Name +" | ИНН"+ selected.Inn +"»")
-        }
-    }
-    
+    <div class="menu">
+            <div class="menu_header">
+                <button class="button" onclick=""> Данные о фирме</button>
+                <button class="button"> Данные о об учредителях</button>
+            </div>
+
+            <div id="menu_about_firm">
+                    <div class="Header"> Связанные данные для
+                        @{
+                            // показ имени связанной строики
+                            if (Company_id != "")
+                            {
+                                db_index = new Database_structure();
+                                Company selected = db_index.Companies.Where(i => i.Id == Company_id).Single();
+                                db_index.Dispose();
+                                @("«" + selected.Name +" | ИНН"+ selected.Inn +"»")
+                            }
+                        }
+                    </div>
+
+                <div class="card_layout">
+                     <div>
+                            @if (Company_id != null)
+                            {
+                                Show_Linx(Company_id);
+                            }
+                     </div>
+
+                    <div style="Сard" >
+                           @{
+                                if (Company_id != null)
+                                {
+                                    if (Company_id!="")
+                                        Show_Table(Company_id, "Capitals");
+                                }
+                            }
+                    </div>
+
+                     <div style="Card">
+                            @{
+                                if (Company_id != null)
+                                {
+                                    if (Company_id != "")
+                                        Show_Table(Company_id, "Investitions");
+                                }
+                            }
+                     </div>
+
+
+                    <div style="Card">
+                        @{
+                            if (Company_id != null)
+                            {
+                                if (Company_id != "")
+                                        Show_Table(Company_id, "Deals");
+                            }
+                        }
+                    </div>
+
+                    <div style="Card">
+                        @{
+                            if (Company_id != null)
+                            {
+                                if (Company_id != "")
+                                    Show_Table(Company_id, "Documents");
+                            }
+                        }
+                    </div>
+                </div>
+        </div>
 </div>
 
-<div class="card_layout">
- <div>
-        @if (Company_id != null)
-        {
-            Show_Linx(Company_id);
-        }
- </div>
+<script>
+function Menu(item)
+{
+   var menu_about_firm = document.getElementsById("menu_about_firm");
+   var menu_holders_firm = document.getElementsById("menu_holders_firm");
+   
+   menu_about_firm.style.display = 'none';
+   menu_holders_firm.style.display = 'none';
 
- <div style="Сard" >
-       @{
-            if (Company_id != null)
-            {
-                if (Company_id!="")
-                    Show_Table(Company_id, "Capitals");
-            }
-        }
-</div>
+   document.getElementsById(item).style.display='visible';
 
- <div style="Card">
-        @{
-            if (Company_id != null)
-            {
-                if (Company_id != "")
-                    Show_Table(Company_id, "Investitions");
-            }
-        }
- </div>
+}
 
-
-<div style="Card">
-    @{
-        if (Company_id != null)
-        {
-            if (Company_id != "")
-                    Show_Table(Company_id, "Deals");
-        }
-    }
-</div>
-
-<div style="Card">
-    @{
-        if (Company_id != null)
-        {
-            if (Company_id != "")
-                Show_Table(Company_id, "Documents");
-        }
-    }
-</div>
-
-
-
-</div>
-
+</script>
 
 <!--- ВЕБ МОРДА ЗАКОНЧИЛАСЬ --->
 

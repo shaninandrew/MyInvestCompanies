@@ -55,7 +55,7 @@
         string id = company_id;
         //спиоск связей
         List<Link> links =  ds.Links.Where<Link>(L => L.Parent_Id == id).ToList<Link>();
-
+        <!--
         <div>
             @foreach (Link l in links)
             {
@@ -63,7 +63,7 @@
 
             }
         </div>
-
+        -->
         ds.Dispose();
     }
 
@@ -76,13 +76,13 @@
         Capital c_new = new Capital();
         c_new.Id_company = company_id;
         ds.Capitals.Add(c_new);
-        
+
         //добавление связки
         Link  lnk = new Link(company_id, c_new.Id); ;
         ds.Links.Add(lnk);
 
 
-        int i= await ds.SaveChangesAsync();
+        ds.SaveChanges();
         ds.Dispose();
     }
 
@@ -92,8 +92,13 @@
     {
         Database_structure ds = new Database_structure();
         ds.Capitals.Remove(ds.Capitals.Where(i => i.Id == capital_id).Single());
-        int i = await ds.SaveChangesAsync();
+        ds.Links.RemoveRange(ds.Links.Where<Link>(i => i.Parent_Id == capital_id).ToArray());
+        ds.SaveChanges();
         ds.Dispose();
+
+        
+
+
     }
 
 
@@ -108,7 +113,7 @@
         Link lnk = new Link(company_id, i_new.Id); ;
         ds.Links.Add(lnk);
 
-        int i = await ds.SaveChangesAsync();
+        ds.SaveChanges();
         ds.Dispose();
 
     }
@@ -117,10 +122,10 @@
     {
         Database_structure ds = new Database_structure();
         ds.Investitions.Remove(ds.Investitions.Where(i => i.Id == invest_id).Single());
-
+        ds.Links.RemoveRange(ds.Links.Where<Link>(i => i.Parent_Id == invest_id).ToArray());
         
 
-        int i = await ds.SaveChangesAsync();
+        ds.SaveChanges();
         ds.Dispose();
     }
 
@@ -137,7 +142,7 @@
         Link  lnk = new Link(company_id, i_new.Id); ;
         ds.Links.Add(lnk);
 
-        int i = await ds.SaveChangesAsync();
+        ds.SaveChanges();
         ds.Dispose();
     }
 
@@ -145,7 +150,8 @@
     {
         Database_structure ds = new Database_structure();
         ds.Deals.Remove(ds.Deals.Where(i => i.Id == _id).Single());
-        int i = await ds.SaveChangesAsync();
+        ds.Links.RemoveRange(ds.Links.Where<Link>(i => i.Parent_Id == _id).ToArray());
+        ds.SaveChanges();
         ds.Dispose();
     }
 
@@ -395,6 +401,17 @@
         }
     }
 </div>
+
+<div style="Card">
+    @{
+        if (Company_id != null)
+        {
+            if (Company_id != "")
+                Show_Table(Company_id, "Documents");
+        }
+    }
+</div>
+
 
 
 </div>

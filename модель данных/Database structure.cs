@@ -102,7 +102,7 @@ namespace MyInvestCompanies.модель_данных
     {
         [Key]
         public string Id { get; set; }
-        public string Name { get; set  }
+        public string Name { get; set; }
         public string Inn { get; set; }
         public string KPP { get; set; }
         public string Address { get; set; }

@@ -49,7 +49,7 @@
             <input type="number" value="@c.KPP" @onfocus="(e=> { Company_id = c.Id; })" @onclick="(e=> { Company_id = c.Id; })" @onchange="(e=> {  Set_value(NameX[6], c.Id.ToString(), e.Value.ToString() , e, null , table );  })" />
             <button  class="delete_button" title="Удалить запись @c.Name @c.Address" @onclick="(e=> {Delete_company(c.Id.ToString(), null) ;} )">-</button>
         </div>
-    }
+}
 
     /// Показывает связи
     void Show_Linx (string company_id)
@@ -427,7 +427,7 @@
 
     @if (query_sub_page=="main")
     {
-     <div id="menu_about_firm">
+         <div id="menu_about_firm">
                     <div class="Header"> Связанные данные для
                         @{
                             // показ имени связанной строики
@@ -442,15 +442,15 @@
                     </div>
 
                 <div class="card_layout">
-                     <div>
+                        <div>
                             @if (Company_id != null)
                             {
                                 Show_Linx(Company_id);
                             }
-                     </div>
+                        </div>
 
                     <div style="Сard" >
-                           @{
+                            @{
                                 if (Company_id != null)
                                 {
                                     if (Company_id!="")
@@ -459,7 +459,7 @@
                             }
                     </div>
 
-                     <div style="Card">
+                        <div style="Card">
                             @{
                                 if (Company_id != null)
                                 {
@@ -467,7 +467,7 @@
                                         Show_Table(Company_id, "Investitions");
                                 }
                             }
-                     </div>
+                        </div>
 
 
                     <div style="Card">
@@ -490,7 +490,7 @@
                         }
                     </div>
                 </div>
-     </div>
+         </div>
      }
 
     @if (query_sub_page == "holders")
@@ -511,34 +511,53 @@
             </div>
 
             <div class="Control">
-                <button @onclick="Add_new_holder(Company_id)">Добавить нового владельца</button>
-                <button @onclick="Add_exist_holder(Company_id)">Добавить существующего владельца</button>
+                <button class="button" @onclick="(e=> { Add_new_holder(Company_id); })">Добавить нового владельца</button>
+                <button class="button" @onclick="(e => { Add_exist_holder(Company_id); })">Добавить существующего владельца</button>
 
             </div>
 
-            <div class="card_layout">
-              <table>
+            <div class="scroll">
+               
+                      <table>
+                    @{
+                         
+                        List<string> NameX = new List<string>();
+                        List<string> TableX = new List<string>();
+                       
 
-                @{
-                  
-                    foreach (HolderReestr h in db_index.HolderReestrs.Where<HolderReestr>(h => h.Company_Id == Company_id))
-                    {
-                        foreach (Owner o in db_index.Owners.Where<Owner>(oi => oi.Id == h.Owner_Id))
+                        NameX.Add("Name"); TableX.Add("Owners");
+                        NameX.Add("PhoneNumber");   TableX.Add("Owners");
+                        NameX.Add("Email");         TableX.Add("Owners");
+
+                        NameX.Add("Cost"); TableX.Add("HolderReestrs");
+                        NameX.Add("Date_buy_share"); TableX.Add("HolderReestrs");
+                        NameX.Add("Share"); TableX.Add("HolderReestrs");
+                         
+
+                        var db_index2 = new Database_structure();
+                        
+                        foreach (HolderReestr h in db_index.HolderReestrs.Where<HolderReestr>(h => h.Company_Id == Company_id))
                         {
-                            <tr> 
-                            <td> @o.Name </td><td> @o.PhoneNumber </td> <td> @o.Email </td> <td> @h.Cost </td> <td> @h.Date_buy_share </td>  <td> @h.Share</td>
-                            </tr>
+                            foreach (Owner o in db_index2.Owners.Where<Owner>(oi => oi.Id == h.Owner_Id))
+                            {
+                                <tr >
+                                           
+                                    <td><input type="text"      value="@o.Name"    @onchange="(e=> {  Set_value(NameX[0], o.Id.ToString(), e.Value.ToString() ,e, null, TableX[0]); })" /></td>
+                                    <td><input type="tel" value="@o.PhoneNumber"    @onchange="(e=> {  Set_value(NameX[1], o.Id.ToString(), e.Value.ToString() ,e, null, TableX[1]); })" /></td>
+                                    <td><input type="email" value="@o.Email"        @onchange="(e=> {  Set_value(NameX[2], o.Id.ToString(), e.Value.ToString() ,e, null, TableX[2]); })" /></td>
+                                    <td><input type="number" value="@h.Cost"        @onchange="(e=> {  Set_value(NameX[3], h.Id.ToString(), e.Value.ToString() ,e, null, TableX[3]); })" /> </td>
+                                    <td><input type="date" value="@h.Date_buy_share.ToString(__DATE_MASK)" @onchange="(e=> {  Set_value(NameX[4], h.Id.ToString(), e.Value.ToString() ,e, null, TableX[4]); })" /> </td>
+                                    <td><input type="text" value="@h.Share"                     @onchange="(e=> {  Set_value(NameX[5], h.Id.ToString(), e.Value.ToString() ,e, null, TableX[5]); })" /></td>
+                                        </tr>
+                                    }
 
+                                }
 
-                        }
-
-                    
-                    }
-                    
-
-                    db_index.Dispose();
-                }
-                </table>
+                                db_index2.DisposeAsync();
+                                db_index.Dispose();
+                            }
+                        </table>
+                
             </div>
         
 
@@ -608,11 +627,11 @@
     {
 
         return (new EventCallback());
-        
+
     }
 
 
-    
+
 
     /// <summary>
     /// Удаление компании
@@ -750,12 +769,12 @@
 
             try
             {
-               
+
                 if (name == "Date")
-                    { t.Date = DateTime.Parse(e.Value.ToString()).ToUniversalTime();  }
+                { t.Date = DateTime.Parse(e.Value.ToString()).ToUniversalTime();  }
                 if (name == "Sum")
-                    { t.Sum = float.Parse(e.Value.ToString()); }
-                
+                { t.Sum = float.Parse(e.Value.ToString()); }
+
                 db.Update<Capital>(t);
                 db.SaveChanges();
 
@@ -839,9 +858,9 @@
             {
 
                 if (name == "Date")
-                    { t.Date = DateTime.Parse( e.Value.ToString()).ToUniversalTime(); }
+                { t.Date = DateTime.Parse( e.Value.ToString()).ToUniversalTime(); }
 
-                                
+
                 if (name == "Description")
                 { t.Description = e.Value.ToString(); }
 
@@ -861,21 +880,18 @@
         if (table_name == "Documents")
         {
             Console.WriteLine($"Установка значения {name} id={id}: {value}");
-
             var t = db.Documents.Where<Document>(i => i.Id == id).Single();
-
             Console.WriteLine($"Установка значения -> ");
 
             try
             {
-
                 if (name == "Date")
                 { t.Date = DateTime.Parse(e.Value.ToString()).ToUniversalTime(); }
 
 
                 if (name == "Name")
                 { t.Name = e.Value.ToString(); }
-                
+
                 if (name == "Num")
                 { t.Num = e.Value.ToString(); }
 
@@ -893,6 +909,99 @@
                 Console.WriteLine(ex.InnerException.Message);
             }
         } // Документы
+
+
+
+        if (table_name == "HolderReestrs")
+        {
+            Console.WriteLine($"Установка значения {name} id={id}: {value}");
+            var t = db.HolderReestrs.Where<HolderReestr>(i => i.Id == id).Single();
+            Console.WriteLine($"Установка значения -> ");
+
+            try
+            {
+                 /*
+                 * HolderReestr h = new HolderReestr();
+                h.Cost
+                h.
+                */
+
+
+                if (name == "Date_buy_share")
+                { t.Date_buy_share = DateTime.Parse(e.Value.ToString()).ToUniversalTime(); }
+
+
+                if (name == "Cost")
+                { t.Cost = float.Parse(                    e.Value.ToString()); }
+
+                if (name == "Share")
+                { t.Share = float.Parse(     e.Value.ToString()); }
+
+                db.Update<HolderReestr>(t);
+                db.SaveChanges();
+
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.InnerException.Message);
+            }
+        } // Реестр владельцев
+
+
+        if (table_name == "Owners")
+        {
+            Console.WriteLine($"Установка значения {name} id={id}: {value}");
+            var t = db.Owners.Where<Owner>(i => i.Id == id).Single();
+            Console.WriteLine($"Установка значения -> ");
+
+            try
+            {
+                /*
+                 * HolderReestr h = new HolderReestr();
+                h.Cost
+                h.
+                */
+                
+                
+
+                if (name == "Inn")
+                { t.Inn = e.Value.ToString(); }
+                
+
+                if (name == "Email")
+                { t.Email = e.Value.ToString(); }
+
+                
+                if (name == "Org")
+                { t.Org = (e.Value.ToString()=="1" ) || (e.Value.ToString()=="TRUE"); }
+                
+                if (name == "PhoneNumber")
+                { t.PhoneNumber = e.Value.ToString(); }
+                
+                if (name == "Address")
+                { t.Address = e.Value.ToString(); }
+                
+                if (name == "KPP")
+                { t.KPP = e.Value.ToString(); }
+
+                if (name == "Name")
+                { t.Name = e.Value.ToString(); }
+                
+
+                db.Update<Owner>(t);
+                db.SaveChanges();
+
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.InnerException.Message);
+            }
+        } // Реестр владельцев
+
 
 
         //чистим память если автономно

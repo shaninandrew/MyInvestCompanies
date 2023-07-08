@@ -496,7 +496,50 @@
     @if (query_sub_page == "holders")
     {
         <div class="Editor" id="menu_holders_firm">
+            <div class="Header">
+            @{
+                    db_index = new Database_structure();
+                // показ имени связанной строики
+                if (Company_id != "")
+                {
+                    
+                    Company selected = db_index.Companies.Where(i => i.Id == Company_id).Single();
+                  
+                        @("«" + selected.Name + " | ИНН" + selected.Inn + "»")
+                    }
+                }
+            </div>
 
+            <div class="Control">
+                <button @onclick="Add_new_holder(Company_id)">Добавить нового владельца</button>
+                <button @onclick="Add_exist_holder(Company_id)">Добавить существующего владельца</button>
+
+            </div>
+
+            <div class="card_layout">
+              <table>
+
+                @{
+                  
+                    foreach (HolderReestr h in db_index.HolderReestrs.Where<HolderReestr>(h => h.Company_Id == Company_id))
+                    {
+                        foreach (Owner o in db_index.Owners.Where<Owner>(oi => oi.Id == h.Owner_Id))
+                        {
+                            <tr> 
+                            <td> @o.Name </td><td> @o.PhoneNumber </td> <td> @o.Email </td> <td> @h.Cost </td> <td> @h.Date_buy_share </td>  <td> @h.Share</td>
+                            </tr>
+
+
+                        }
+
+                    
+                    }
+                    
+
+                    db_index.Dispose();
+                }
+                </table>
+            </div>
         
 
 
@@ -521,7 +564,9 @@
 
 @code{
 
-
+    /// <summary>
+    /// Переключение страниц (чтобы не нагружать клиента)
+    /// </summary>
     static public void set_main_page()
     {
         query_sub_page = "main";
@@ -536,6 +581,37 @@
     {
         query_sub_page = "owners";
     }
+
+
+    ///
+    public static EventCallback Add_new_holder(string Company_id)
+    {
+        Database_structure db = new Database_structure();
+
+        Owner o = new Owner();
+        db.Owners.Add(o);
+
+        HolderReestr h = new HolderReestr();
+        h.Company_Id = Company_id;
+        h.Owner_Id =  o.Id;
+        db.HolderReestrs.Add(h);
+
+        db.SaveChanges();
+
+
+        db.Dispose();
+
+        return (new EventCallback());
+    }
+
+    public static EventCallback Add_exist_holder(string Company_id)
+    {
+
+        return (new EventCallback());
+        
+    }
+
+
     
 
     /// <summary>

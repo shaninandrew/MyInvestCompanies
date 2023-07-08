@@ -7,6 +7,9 @@
 {
     [Parameter]
     public string query_string  { get; set;} = "";
+
+    [Parameter]
+    public static string query_sub_page { get; set; } = "main";
     
     public string Company_id    { get; set ; } = "";
     
@@ -347,8 +350,6 @@
                 </div>
             }       //foreach
         }
-
-
     }
 
 
@@ -419,11 +420,14 @@
 
     <div class="menu">
             <div class="menu_header">
-                <button class="button" onclick=""> Данные о фирме</button>
-                <button class="button"> Данные о об учредителях</button>
+                <button class="button"              @onclick="set_main_page"    > Данные о фирме</button>
+                <button class="button"              @onclick="set_holders_page" > Данные о владельцах</button>
+                <button class="button"              @onclick="set_owners_page">   Данные о собственниках</button>
             </div>
 
-            <div id="menu_about_firm">
+    @if (query_sub_page=="main")
+    {
+     <div id="menu_about_firm">
                     <div class="Header"> Связанные данные для
                         @{
                             // показ имени связанной строики
@@ -486,23 +490,29 @@
                         }
                     </div>
                 </div>
+     </div>
+     }
+
+    @if (query_sub_page == "holders")
+    {
+        <div class="Editor" id="menu_holders_firm">
+
+        
+
+
         </div>
+    }
+
+    @if (query_sub_page == "owners")
+    {
+        <div id="menu_holders_firm">
+            Тут будет другое владельцы
+        </div>
+    }
+    
+
 </div>
 
-<script>
-function Menu(item)
-{
-   var menu_about_firm = document.getElementsById("menu_about_firm");
-   var menu_holders_firm = document.getElementsById("menu_holders_firm");
-   
-   menu_about_firm.style.display = 'none';
-   menu_holders_firm.style.display = 'none';
-
-   document.getElementsById(item).style.display='visible';
-
-}
-
-</script>
 
 <!--- ВЕБ МОРДА ЗАКОНЧИЛАСЬ --->
 
@@ -510,6 +520,23 @@ function Menu(item)
 
 
 @code{
+
+
+    static public void set_main_page()
+    {
+        query_sub_page = "main";
+    }
+
+    static public void set_holders_page()
+    {
+        query_sub_page = "holders";
+    }
+
+    static public void set_owners_page()
+    {
+        query_sub_page = "owners";
+    }
+    
 
     /// <summary>
     /// Удаление компании

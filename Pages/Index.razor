@@ -11,9 +11,11 @@
     [Parameter]
     public static string query_sub_page { get; set; } = "main";
     
-    public string Company_id    { get; set ; } = "";
+    public static string Company_id { get; set; } = "";
     
-    public string __DATE_MASK = "yyyy-MM-dd";
+    public static string __DATE_MASK = "yyyy-MM-dd";
+
+   public  static  string Selected_Holder = "";
 
 }
 
@@ -210,6 +212,15 @@
                 NameX.Add("Sum");
                 NameX.Add("Date");
 
+                <div class="card">
+                <table>
+                  <tr class="card_title">
+                            @foreach (String n in NameX)
+                            {
+                                <td>@n</td>
+                            }
+                            <td> </td>
+                </tr>
             
                 @foreach (Capital c in list_of_capital)
                 {
@@ -220,15 +231,8 @@
                     tmp_date= c.Date.Value.ToString(__DATE_MASK);
                     }
 
-                <div class="card">
-                <table>
-                        <tr>
-                            @foreach (String n in NameX)
-                            {
-                                <td>@n</td>
-                            }
-                            <td> </td>
-                        </tr>
+                
+                       
                         <tr>
                             <td>
                                 <input type="number" value="@c.Sum"     @onchange="(e=> {  Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
@@ -240,9 +244,10 @@
                                 <button class="delete_button" title="Удалить запись @c.Sum @c.Date" @onclick="(e=> {Delete_capital(c.Id.ToString()) ;} )">-</button>
                             </td>
                         </tr>
+                
+                }  <!-- //foreach -->
                 </table>
-                </div>
-                } //foreach
+            </div>
          
         }
 
@@ -268,18 +273,19 @@
             NameX.Add("Method");
             NameX.Add("Source");
 
-
+            <div class="card">
+            <table>
+                 <tr class="card_title">
+                    @foreach (String n in NameX)
+                    {
+                        <td>@n</td>
+                    }
+                    <td> </td>
+                </tr>
+                
             @foreach (Invest c in list_of_Investitions)
             {
-                <div class="card">
-                 <table>
-                        <tr>
-                            @foreach (String n in NameX)
-                            {
-                                <td>@n</td>
-                            }
-                            <td> </td>
-                        </tr>
+                    
                     <tr>
                         <td>
                             <input type="text" value="@c.Method" @onchange="(e=> {  Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
@@ -291,10 +297,11 @@
                             <button class="delete_button" title="Удалить запись @c.Method @c.Source" @onclick="(e=> { Delete_Investitions(c.Id.ToString()) ;} )">-</button>
                         </td>
                     </tr>
-                    </table>
-                 </div>
-            }   //foreach
-        }
+            
+            }   
+            </table>
+         </div>
+        } <!-- if -->
 
         //Deals
         if (table_name == "Deals")
@@ -320,23 +327,41 @@
             NameX.Add("Date");
             NameX.Add("Description");
 
+            <div class="card">
+            <table >
+                    <tr class="card_title">
+                    @foreach (String n in NameX)
+                    {
+                        <td>@n</td>
+                    }
+                    <td> </td>
+                </tr>
 
-            @foreach (Deal c in list_of_Deals)
-            {
-                string tmp_date = "";
-
-                if (c.Date.HasValue)
+                @foreach (Deal c in list_of_Deals)
                 {
-                    tmp_date = c.Date.Value.ToString(__DATE_MASK);
-                }
+                    string tmp_date = "";
 
-                 <div class="card">
-                    <input type="date" value="@tmp_date" @onchange="(e=> {  Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
-                    <textarea class="card_editor" type="text" rows="2" value="@c.Description" @onchange="(e=> {  Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
-                    <button class="delete_button" title="Удалить запись @c.Date @c.Description" @onclick="(e=> { Delete_Deal(c.Id.ToString()) ;} )">-</button>
+                    if (c.Date.HasValue)
+                    {
+                        tmp_date = c.Date.Value.ToString(__DATE_MASK);
+                    }
 
-                </div>
-            }       //foreach
+                     <tr >
+                        <td>
+                         <input type="date" value="@tmp_date" @onchange="(e=> {  Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
+                         </td>
+
+                         <td>  
+                            <textarea class="card_editor" type="text" rows="2" value="@c.Description" @onchange="(e=> {  Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
+                         </td>
+                         <td>
+                         <button class="delete_button" title="Удалить запись @c.Date @c.Description" @onclick="(e=> { Delete_Deal(c.Id.ToString()) ;} )">-</button>
+                         </td>
+                    </tr>
+                }    
+            </table>
+            </div>
+
         }
 
 
@@ -370,22 +395,45 @@
             NameX.Add("Name");
             NameX.Add("Url");
 
-            @foreach (Document c in list_of_docs)
-            {
-                string tmp_date = "";
-                tmp_date = c.Date.ToString(__DATE_MASK);
+            <div class="card">
+                <table>
+                    <tr class="card_title">
+                        @foreach (String n in NameX)
+                        {
+                            <td>@n</td>
+                        }
+                        <td> </td>
+                    </tr>
 
-                <div class="card">
-                    <input  type="text" value="@c.Num"       @onchange="(e=> {  Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
-                    <input  type="date" value="@tmp_date"    @onchange="(e=> {  Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
-                    <textarea class="card_editor" type="text" rows="2" value="@c.Name" @onchange="(e=> {  Set_value(NameX[2], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
-                    <input  type="url" value="@c.Url"       @onchange="(e=> {  Set_value(NameX[3], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
-                    <button class="delete_button" title="Удалить запись @c.Num @tmp_date" @onclick="(e=> { Delete_Document(c.Id.ToString()) ;} )">-</button>
-                </div>
-            }       //foreach
+                @foreach (Document c in list_of_docs)
+                {
+                    string tmp_date = "";
+                    tmp_date = c.Date.ToString(__DATE_MASK);
+
+                    <tr>
+                            <td> 
+                                <input  type="text" value="@c.Num"       @onchange="(e=> {  Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
+                            </td>
+                            <td>
+                                <input  type="date" value="@tmp_date"    @onchange="(e=> {  Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
+                            </td>
+                        
+                            <td>
+                                <textarea class="card_editor" type="text" rows="2" value="@c.Name" @onchange="(e=> {  Set_value(NameX[2], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
+                            </td>
+                    
+                            <td>
+                                <input  type="url" value="@c.Url"       @onchange="(e=> {  Set_value(NameX[3], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
+                            </td>
+                            <td>
+                                <button class="delete_button" title="Удалить запись @c.Num @tmp_date" @onclick="(e=> { Delete_Document(c.Id.ToString()) ;} )">-</button>
+                            </td>
+                    </tr>
+                }     <!--  //foreach -->
+                </table>
+            </div>
         }
     }
-
 
    // --- Загрузка  данных ---
     Database_structure db_index = new Database_structure();
@@ -527,31 +575,47 @@
          </div>
      }
 
+
     @if (query_sub_page == "holders")
     {
+
+
         <div  id="menu_holders_firm">
             <div class="Header">
-            @{
+                @{
                     db_index = new Database_structure();
-                // показ имени связанной строики
-                if (Company_id != "")
-                {
-                    
-                    Company selected = db_index.Companies.Where(i => i.Id == Company_id).Single();
-                  
-                        @("«" + selected.Name + " | ИНН" + selected.Inn + "»")
+                    // показ имени связанной строики
+                    if (Company_id != "")
+                    {
+                        Company selected = db_index.Companies.Where(i => i.Id == Company_id).Single();
+
+
+                        @(
+                                        "«" + selected.Name + " | ИНН" + selected.Inn + "» "                           
+                        )
+
+                        @if (Selected_Holder != "")
+                        { 
+                            Owner selected_owner = db_index.Owners.Where(o => o.Id == Selected_Holder).Single();
+                            @(" | Выбранный владелец «" + selected_owner.Name + " &nbsp; " + selected_owner.Address + "» &nbsp;(" + Selected_Holder + ")")
+                        }
                     }
                 }
             </div>
 
             <div class="Control">
                 <button class="button" @onclick="(e=> { Add_new_holder(Company_id); })">Добавить нового владельца</button>
-                <button class="button" @onclick="(e => { Add_exist_holder(Company_id); })">Добавить существующего владельца</button>
+                @{
+                    if (Selected_Holder != "")
+                    {
+                        <button  class="button" @onclick="(e => { Add_exist_holder(Company_id); })">Добавить существующего владельца</button>
+                    }
+                }
             </div>
 
-            <div class="scroll">
-               <div>
-                     <table>
+            <div class="card">
+                <table>
+               
                     @{
                          
                         List<string> NameX = new List<string>();
@@ -566,12 +630,14 @@
                         NameX.Add("Date_buy_share"); TableX.Add("HolderReestrs");
                         NameX.Add("Share"); TableX.Add("HolderReestrs");
 
-                            <tr >
-                             @foreach (String n in NameX)
-                             {
-                             <td>@n</td>
-                             }
-                          </tr>
+                      
+                            <tr class="card_title">
+                                @foreach (String n in NameX)
+                                {
+                                    <td>@n</td>
+                                }
+                                <td> </td>
+                            </tr>
 
                         var db_index2 = new Database_structure();
                         
@@ -586,18 +652,65 @@
                                     <td><input type="number" value="@h.Cost"        @onchange="(e=> {  Set_value(NameX[3], h.Id.ToString(), e.Value.ToString() ,e, null, TableX[3]); })" /> </td>
                                     <td><input type="date" value="@h.Date_buy_share.ToString(__DATE_MASK)" @onchange="(e=> {  Set_value(NameX[4], h.Id.ToString(), e.Value.ToString() ,e, null, TableX[4]); })" /> </td>
                                     <td><input type="text" value="@h.Share"                     @onchange="(e=> {  Set_value(NameX[5], h.Id.ToString(), e.Value.ToString() ,e, null, TableX[5]); })" /></td>
-                                     </tr>
+
+                                    <td> <button title="Выбрать" @onclick="(e=>{  Selected_Holder = o.Id; })"> ∙ </button> </td>
+
+                                </tr>
                             }
 
                         }
 
                         db_index2.DisposeAsync();
-                        db_index.Dispose();
-                      }
-                     </table>
-               </div> 
+                      
+                    }
+                </table>
             </div>
-        
+
+            @if (Selected_Holder != "")
+            {
+                if (db_index != null)
+                { db_index = new Database_structure(); }
+                Owner selected_owner = db_index.Owners.Where(o => o.Id == Selected_Holder).Single();
+                <div class="card">
+                <table>
+                    <tr class="card_title">
+                        <td>
+                            Редактирование выбранного владельца
+                            @(" «" + selected_owner.Name + " &nbsp;  " + selected_owner.Address + "» (" + Selected_Holder + ")")
+                            </td>
+                    </tr>
+                    <tr>
+                    <td>
+                                <div class="card_editor">
+                                        Данные
+                            
+
+                                    @{
+                                        Owner o = selected_owner;
+                                        string table = "Owners";
+                                        List<string> NameY = new List<string>();
+                                        NameY.Add("Address");
+                                        NameY.Add("Inn");
+                                        NameY.Add("KPP");
+                                        NameY.Add("Org");
+
+                                    }
+                                    <br/>
+                                    Адрес    <input type="text" value="@o.Address" @onchange="(e=> {  Set_value(NameY[0], o.Id.ToString(), e.Value.ToString() ,e, null, table); })" /> <br />
+                                    ИНН <input type="number" value="@o.Inn" @onchange="(e=> {  Set_value(NameY[1], o.Id.ToString(), e.Value.ToString() ,e, null, table); })" /> <br/>
+                                    КПП <input type="number" value="@o.KPP" @onchange="(e=> {  Set_value(NameY[2], o.Id.ToString(), e.Value.ToString() ,e, null, table); })" /> <br />
+                                    Юридическое лицо <input type="checkbox" value="@o.Org" @onchange="(e=> {  Set_value(NameY[3], o.Id.ToString(), e.Value.ToString() ,e, null, table); })" /> <br />
+
+                                </div>
+                            </td>
+                        </tr>
+                   </table>
+                </div>
+                db_index.Dispose();
+            }
+
+
+
 
 
         </div>

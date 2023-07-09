@@ -124,57 +124,73 @@ body {
 
 
 .card_title {
-    min-width: 300px;
-    
-    display: flex;
-    flex: 1 1 auto;
-    width: 400px;
-    margin: 6px 6px 6px 6px;
-    padding: 2px 2px 2px 2px;
-    border-spacing: 2px 2px;
+    color: #d36c09ef;
+    background: black;
+    align-content: center;
+    text-align:center;
 }
 
 
-.card 
-{
-    min-width: 300px;
+.card {
     background: #d36c09ef;
     display: flex;
     flex: 1 1 auto;
+    flex-basis: 30%;
     width: auto;
     margin: 6px 6px 6px 6px;
-    border-radius: 5px;
     border: 2px #706e6e;
     padding: 2px 2px 2px 2px;
     border-spacing: 2px 2px;
-    
+    vertical-align: top;
+    align-content: start;
+    min-height: 100px;
+    height: auto;
+    align-items: start;
+    border-radius: 10px;
 }
 
 .card:hover 
 {
         background: #f25d5d;
         border: 2px #f25d5d;
-        box-shadow: 4px 4px #f25d5d;
+        box-shadow: 4px 4px #bdb2b2;
 }
 
 .button {
     cursor: pointer;
     background: black;
     color: #ffad1a;
-    height: 60 px;
-    width: 40 px;
-    border-radius: 3 px 3 px 3 px 3 px;
+    height: 70 px;
+    min-width: 130 px;
+    width: auto;
+    border-radius: 5 px 5 px 5 px 5 px;
     font-size: 12pt;
     text-align: center;
+    
+    display: inline-block;
 }
+
+button {
+    cursor: pointer;
+    background: black;
+    color: #ffad1a;
+    height: 70 px;
+    min-width: 130 px;
+    width: auto;
+    border-radius: 5 px 5 px 5 px 5 px;
+    font-size: 12pt;
+    text-align: center;
+    display: inline-block;
+}
+
 
 .delete_button 
 {
     cursor: pointer;
     background: black;
     color: #ffad1a;
-    height: 60 px;
-    width: 60 px;
+    height: 70 px;
+    width: 70 px;
     border-radius: 3 px 3 px 3 px 3 px;
     font-size: 12pt;
     text-align: center;
@@ -184,7 +200,8 @@ button:hover {
     cursor: pointer;
     background: #ffad1a;
     color: black;
-    box-shadow: red 2 px 2px;
+    box-shadow: red 5 px 5px;
+    text-decoration-style:double;
 }
 
 

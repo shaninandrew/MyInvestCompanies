@@ -221,9 +221,26 @@
                     }
 
                 <div class="card">
-                    <input type="number" value="@c.Sum"     @onchange="(e=> {  Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
-                    <input type="date"  value="@tmp_date"    @onchange="(e=> {  Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
-                    <button class="delete_button" title="Удалить запись @c.Sum @c.Date" @onclick="(e=> {Delete_capital(c.Id.ToString()) ;} )">-</button>
+                <table>
+                        <tr>
+                            @foreach (String n in NameX)
+                            {
+                                <td>@n</td>
+                            }
+                            <td> </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="number" value="@c.Sum"     @onchange="(e=> {  Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
+                             </td>
+                            <td>
+                                <input type="date"  value="@tmp_date"    @onchange="(e=> {  Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
+                            </td>
+                            <td>
+                                <button class="delete_button" title="Удалить запись @c.Sum @c.Date" @onclick="(e=> {Delete_capital(c.Id.ToString()) ;} )">-</button>
+                            </td>
+                        </tr>
+                </table>
                 </div>
                 } //foreach
          
@@ -255,9 +272,26 @@
             @foreach (Invest c in list_of_Investitions)
             {
                 <div class="card">
-                    <input type="text" value="@c.Method" @onchange="(e=> {  Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
-                    <textarea class="card_editor" type="text" rows="2" value="@c.Source" @onchange="(e=> {  Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
-                    <button class="delete_button" title="Удалить запись @c.Method @c.Source" @onclick="(e=> { Delete_Investitions(c.Id.ToString()) ;} )">-</button>
+                 <table>
+                        <tr>
+                            @foreach (String n in NameX)
+                            {
+                                <td>@n</td>
+                            }
+                            <td> </td>
+                        </tr>
+                    <tr>
+                        <td>
+                            <input type="text" value="@c.Method" @onchange="(e=> {  Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
+                        </td>
+                        <td>
+                            <textarea class="card_editor" type="text" rows="2" value="@c.Source" @onchange="(e=> {  Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
+                        </td>
+                        <td>
+                            <button class="delete_button" title="Удалить запись @c.Method @c.Source" @onclick="(e=> { Delete_Investitions(c.Id.ToString()) ;} )">-</button>
+                        </td>
+                    </tr>
+                    </table>
                  </div>
             }   //foreach
         }
@@ -495,7 +529,7 @@
 
     @if (query_sub_page == "holders")
     {
-        <div class="Editor" id="menu_holders_firm">
+        <div  id="menu_holders_firm">
             <div class="Header">
             @{
                     db_index = new Database_structure();
@@ -513,12 +547,11 @@
             <div class="Control">
                 <button class="button" @onclick="(e=> { Add_new_holder(Company_id); })">Добавить нового владельца</button>
                 <button class="button" @onclick="(e => { Add_exist_holder(Company_id); })">Добавить существующего владельца</button>
-
             </div>
 
             <div class="scroll">
-               
-                      <table>
+               <div>
+                     <table>
                     @{
                          
                         List<string> NameX = new List<string>();
@@ -532,7 +565,13 @@
                         NameX.Add("Cost"); TableX.Add("HolderReestrs");
                         NameX.Add("Date_buy_share"); TableX.Add("HolderReestrs");
                         NameX.Add("Share"); TableX.Add("HolderReestrs");
-                         
+
+                            <tr >
+                             @foreach (String n in NameX)
+                             {
+                             <td>@n</td>
+                             }
+                          </tr>
 
                         var db_index2 = new Database_structure();
                         
@@ -540,24 +579,23 @@
                         {
                             foreach (Owner o in db_index2.Owners.Where<Owner>(oi => oi.Id == h.Owner_Id))
                             {
-                                <tr >
-                                           
+                                    <tr >
                                     <td><input type="text"      value="@o.Name"    @onchange="(e=> {  Set_value(NameX[0], o.Id.ToString(), e.Value.ToString() ,e, null, TableX[0]); })" /></td>
                                     <td><input type="tel" value="@o.PhoneNumber"    @onchange="(e=> {  Set_value(NameX[1], o.Id.ToString(), e.Value.ToString() ,e, null, TableX[1]); })" /></td>
                                     <td><input type="email" value="@o.Email"        @onchange="(e=> {  Set_value(NameX[2], o.Id.ToString(), e.Value.ToString() ,e, null, TableX[2]); })" /></td>
                                     <td><input type="number" value="@h.Cost"        @onchange="(e=> {  Set_value(NameX[3], h.Id.ToString(), e.Value.ToString() ,e, null, TableX[3]); })" /> </td>
                                     <td><input type="date" value="@h.Date_buy_share.ToString(__DATE_MASK)" @onchange="(e=> {  Set_value(NameX[4], h.Id.ToString(), e.Value.ToString() ,e, null, TableX[4]); })" /> </td>
                                     <td><input type="text" value="@h.Share"                     @onchange="(e=> {  Set_value(NameX[5], h.Id.ToString(), e.Value.ToString() ,e, null, TableX[5]); })" /></td>
-                                        </tr>
-                                    }
-
-                                }
-
-                                db_index2.DisposeAsync();
-                                db_index.Dispose();
+                                     </tr>
                             }
-                        </table>
-                
+
+                        }
+
+                        db_index2.DisposeAsync();
+                        db_index.Dispose();
+                      }
+                     </table>
+               </div> 
             </div>
         
 
@@ -932,7 +970,7 @@
 
 
                 if (name == "Cost")
-                { t.Cost = float.Parse(                    e.Value.ToString()); }
+                { t.Cost = float.Parse(   e.Value.ToString()); }
 
                 if (name == "Share")
                 { t.Share = float.Parse(     e.Value.ToString()); }

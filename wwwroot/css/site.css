@@ -122,6 +122,19 @@ body {
     display: flex;
 }
 
+
+.card_title {
+    min-width: 300px;
+    
+    display: flex;
+    flex: 1 1 auto;
+    width: 400px;
+    margin: 6px 6px 6px 6px;
+    padding: 2px 2px 2px 2px;
+    border-spacing: 2px 2px;
+}
+
+
 .card 
 {
     min-width: 300px;

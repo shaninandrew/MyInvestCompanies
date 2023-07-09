@@ -101,7 +101,7 @@
         ds.Dispose();
     }
 
-
+    /// Добавляет инвестии
     async void  AddInvestitions( string company_id)
     {
         Database_structure ds = new Database_structure();
@@ -117,7 +117,10 @@
         ds.Dispose();
 
     }
-
+    
+    ///
+    ///   Удаляет инвестицию
+    ///  
     async void Delete_Investitions(string invest_id)
     {
         Database_structure ds = new Database_structure();
@@ -435,7 +438,7 @@
         }
     }
 
-   // --- Загрузка  данных ---
+    // --- Загрузка  данных ---
     Database_structure db_index = new Database_structure();
     List<Company> list_of_companies = null;
     Console.Write("Отображение редактора ...");
@@ -445,7 +448,7 @@
         list_of_companies = new List<Company>();
         list_of_companies.Clear();
 
-        foreach (Company c in db_index.Companies.ToList<Company>())
+        foreach (Company c in db_index.Companies.ToList<Company>().AsParallel())
         {
             string t = c.Inn + c.Name + c.Address + c.KPP + c.Description + c.Fact_Address;
             if (t.IndexOf(query_string, StringComparison.OrdinalIgnoreCase) > -1)
@@ -453,11 +456,32 @@
                 list_of_companies.Add(c);
             }
         }
+
+        //поиск по реквизитам владельца
+        foreach (Owner o in db_index.Owners.ToList<Owner>().AsParallel())
+        {
+            string t = o.Inn + o.Name + o.Address + o.KPP + o.Email + o.PhoneNumber;
+            if (t.IndexOf(query_string, StringComparison.OrdinalIgnoreCase) > -1)
+            {
+
+                List<HolderReestr> Holders = db_index.HolderReestrs.Where<HolderReestr>(h => h.Owner_Id == o.Id).ToList();
+
+                foreach (HolderReestr h in Holders)
+                {
+                    Company c = db_index.Companies.Where(cx => cx.Id == h.Company_Id).Single();
+                    list_of_companies.Add(c);
+                }
+            }
+        }
+
+
     }
     else
     {
         list_of_companies = db_index.Companies.ToList<Company>(  );
     }
+    //убираем дубли
+     list_of_companies.Distinct();
 
     Comparison<Company> x_comp = new Comparison<Company>(delegate( Company x, Company y) { return (x.Id.CompareTo(y.Id)); });
     list_of_companies.Sort(x_comp);
@@ -588,8 +612,6 @@
                     if (Company_id != "")
                     {
                         Company selected = db_index.Companies.Where(i => i.Id == Company_id).Single();
-
-
                         @(
                                         "«" + selected.Name + " | ИНН" + selected.Inn + "» "                           
                         )
@@ -604,11 +626,12 @@
             </div>
 
             <div class="Control">
-                <button class="button" @onclick="(e=> { Add_new_holder(Company_id); })">Добавить нового владельца</button>
+                <button class="button" @onclick="(e=> { Add_new_holder(Company_id); })">Добавить нового владельца</button> 
+
                 @{
                     if (Selected_Holder != "")
                     {
-                        <button  class="button" @onclick="(e => { Add_exist_holder(Company_id); })">Добавить существующего владельца</button>
+                        <button  class="button" @onclick="(e => { Remove_exist_holder(Company_id,Selected_Holder); })">Отключить выбранного владельца</button>
                     }
                 }
             </div>
@@ -641,9 +664,9 @@
 
                         var db_index2 = new Database_structure();
                         
-                        foreach (HolderReestr h in db_index.HolderReestrs.Where<HolderReestr>(h => h.Company_Id == Company_id))
+                        foreach (HolderReestr h in db_index.HolderReestrs.Where<HolderReestr>(h => h.Company_Id == Company_id).ToList<HolderReestr>())
                         {
-                            foreach (Owner o in db_index2.Owners.Where<Owner>(oi => oi.Id == h.Owner_Id))
+                            foreach (Owner o in db_index2.Owners.Where<Owner>(oi => oi.Id == h.Owner_Id).ToList<Owner>())
                             {
                                     <tr >
                                     <td><input type="text"      value="@o.Name"    @onchange="(e=> {  Set_value(NameX[0], o.Id.ToString(), e.Value.ToString() ,e, null, TableX[0]); })" /></td>
@@ -653,7 +676,7 @@
                                     <td><input type="date" value="@h.Date_buy_share.ToString(__DATE_MASK)" @onchange="(e=> {  Set_value(NameX[4], h.Id.ToString(), e.Value.ToString() ,e, null, TableX[4]); })" /> </td>
                                     <td><input type="text" value="@h.Share"                     @onchange="(e=> {  Set_value(NameX[5], h.Id.ToString(), e.Value.ToString() ,e, null, TableX[5]); })" /></td>
 
-                                    <td> <button title="Выбрать" @onclick="(e=>{  Selected_Holder = o.Id; })"> ∙ </button> </td>
+                                    <td> <button title="Выбрать" @onclick="(e=>{ if (Selected_Holder==o.Id) Selected_Holder=String.Empty;  else  Selected_Holder = o.Id; })"> ↓ </button> </td>
 
                                 </tr>
                             }
@@ -675,39 +698,82 @@
                 <table>
                     <tr class="card_title">
                         <td>
-                            Редактирование выбранного владельца
-                            @(" «" + selected_owner.Name + " &nbsp;  " + selected_owner.Address + "» (" + Selected_Holder + ")")
-                            </td>
+                            <div class="Header">
+                                Редактирование выбранного владельца
+                                @(" «" + selected_owner.Name + "   " + selected_owner.Address + "» (" + Selected_Holder + ")")
+                            </div>
+                         </td>
                     </tr>
-                    <tr>
-                    <td>
-                                <div class="card_editor">
-                                        Данные
+
+                         <tr>
+                             <td>
+                                    <div class="card_editor">
+                                            Данные
+             
+                                        @{
+                                            Owner o = selected_owner;
+                                            string table = "Owners";
+                                            List<string> NameY = new List<string>();
+                                            NameY.Add("Address");
+                                            NameY.Add("Inn");
+                                            NameY.Add("KPP");
+                                            NameY.Add("Org");
+
+                                        }
+                                        <br/>
+                                        Адрес    <textarea type="text" value="@o.Address" @onchange="(e=> {  Set_value(NameY[0], o.Id.ToString(), e.Value.ToString() ,e, null, table); })" /> <br />
+                                        ИНН <input type="number" value="@o.Inn" @onchange="(e=> {  Set_value(NameY[1], o.Id.ToString(), e.Value.ToString() ,e, null, table); })" /> <br/>
+                                        КПП <input type="number" value="@o.KPP" @onchange="(e=> {  Set_value(NameY[2], o.Id.ToString(), e.Value.ToString() ,e, null, table); })" /> <br />
+                                        Юридическое лицо <input type="checkbox" checked="@o.Org" @onchange="(e=> {  Set_value(NameY[3], o.Id.ToString(), e.Value.ToString() ,e, null, table); })" /> <br />
+
+                                    </div>
+                             </td>
                             
-
-                                    @{
-                                        Owner o = selected_owner;
-                                        string table = "Owners";
-                                        List<string> NameY = new List<string>();
-                                        NameY.Add("Address");
-                                        NameY.Add("Inn");
-                                        NameY.Add("KPP");
-                                        NameY.Add("Org");
-
-                                    }
-                                    <br/>
-                                    Адрес    <input type="text" value="@o.Address" @onchange="(e=> {  Set_value(NameY[0], o.Id.ToString(), e.Value.ToString() ,e, null, table); })" /> <br />
-                                    ИНН <input type="number" value="@o.Inn" @onchange="(e=> {  Set_value(NameY[1], o.Id.ToString(), e.Value.ToString() ,e, null, table); })" /> <br/>
-                                    КПП <input type="number" value="@o.KPP" @onchange="(e=> {  Set_value(NameY[2], o.Id.ToString(), e.Value.ToString() ,e, null, table); })" /> <br />
-                                    Юридическое лицо <input type="checkbox" value="@o.Org" @onchange="(e=> {  Set_value(NameY[3], o.Id.ToString(), e.Value.ToString() ,e, null, table); })" /> <br />
-
-                                </div>
-                            </td>
                         </tr>
                    </table>
+                   </div>
+                   
+                   <div class="card">
+                    <div class="Header">
+                        Редактирование владельцев и установка связей
+                    
+                        
+                    <div class="card_editor" align="center">
+
+                        @{
+                            db_index = new Database_structure();
+                            Company selected_company = db_index.Companies.Where(i => i.Id == Company_id).Single();
+
+                            //заготовка
+                            HolderReestr holder = new HolderReestr();
+                            holder.Company_Id = selected_company.Id;
+                            holder.Owner_Id = selected_owner.Id;
+
+                            Link lnk = new Link(selected_company.Id, selected_owner.Id);
+
+
+                        }
+                        Связать  @(selected_owner.Name + " --->  «" + selected_company.Name + " | ИНН" + selected_company.Inn + "» ?")
+                        <br>
+                        <button @onclick="(e=>{ 
+                            db_index = new Database_structure(); 
+                            db_index.HolderReestrs.Add(holder); 
+                            db_index.Links.AddAsync (lnk); 
+                            db_index.SaveChanges();
+                            db_index.Dispose(); })">
+                             Связать? </button>
+
+
+                            <button @onclick="(e=>{    Selected_Holder=string.Empty;  })">
+                                Отключить режим привязки
+                            </button>
+                    </div>
+                    </div>
                 </div>
-                db_index.Dispose();
+
+                if (db_index != null) { db_index.Dispose(); }
             }
+            <!-- selected owner -->
 
 
 
@@ -779,6 +845,22 @@
 
         return (new EventCallback());
 
+    }
+
+
+    public static EventCallback Remove_exist_holder(string Company_id,  string Selected_Holder)
+    {
+
+        Database_structure db = new Database_structure();
+
+       // ..чистим таблицу
+        db.HolderReestrs.RemoveRange( db.HolderReestrs.Where<HolderReestr>(h => h.Company_Id == Company_id).Where<HolderReestr> (w => w.Owner_Id == Selected_Holder).ToArray() );
+
+        //чистим связи
+        db.Links.RemoveRange(db.Links.Where<Link>(l => l.Parent_Id == Company_id).Where<Link>(w => w.Child_Id == Selected_Holder).ToArray());
+        db.SaveChanges();
+        db.Dispose();
+        return (new EventCallback());
     }
 
 
@@ -1071,10 +1153,10 @@
 
             try
             {
-                 /*
-                 * HolderReestr h = new HolderReestr();
-                h.Cost
-                h.
+                /*
+                * HolderReestr h = new HolderReestr();
+               h.Cost
+               h.
                 */
 
 
@@ -1114,19 +1196,23 @@
                 h.Cost
                 h.
                 */
-                
-                
+
+
 
                 if (name == "Inn")
                 { t.Inn = e.Value.ToString(); }
-                
+
 
                 if (name == "Email")
                 { t.Email = e.Value.ToString(); }
 
-                
+
                 if (name == "Org")
-                { t.Org = (e.Value.ToString()=="1" ) || (e.Value.ToString()=="TRUE"); }
+                {
+                    t.Org = false;
+                    t.Org = (e.Value.ToString() == "1") || (e.Value.ToString() == "TRUE") || (e.Value.ToString() == "True"); 
+                     
+                }
                 
                 if (name == "PhoneNumber")
                 { t.PhoneNumber = e.Value.ToString(); }

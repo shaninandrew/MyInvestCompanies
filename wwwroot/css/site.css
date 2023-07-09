@@ -91,6 +91,7 @@ input {
 .Control {
     padding: 2px 2px 2px 2px;
     background: #e58c1f;
+    height: 1 rem;
 }
 
 .Header {
@@ -98,6 +99,7 @@ input {
     background: #ffad1a;
     color: black;
     font-weight: bold;
+    height:1 rem;
 }
 
 .Search {
@@ -120,6 +122,7 @@ body {
 
 .card_layout {
     display: flex;
+    background:white;
 }
 
 

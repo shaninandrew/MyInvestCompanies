@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\hedge\\Source\\Repos\\shaninandrew\\MyInvestCompanies\\MyInvestCompanies.csproj": {}
+    "C:\\Users\\Шанин\\Source\\Repos\\shaninandrew\\MyInvestCompanies\\MyInvestCompanies.csproj": {}
   },
   "projects": {
-    "C:\\Users\\hedge\\Source\\Repos\\shaninandrew\\MyInvestCompanies\\MyInvestCompanies.csproj": {
+    "C:\\Users\\Шанин\\Source\\Repos\\shaninandrew\\MyInvestCompanies\\MyInvestCompanies.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\hedge\\Source\\Repos\\shaninandrew\\MyInvestCompanies\\MyInvestCompanies.csproj",
+        "projectUniqueName": "C:\\Users\\Шанин\\Source\\Repos\\shaninandrew\\MyInvestCompanies\\MyInvestCompanies.csproj",
         "projectName": "MyInvestCompanies",
-        "projectPath": "C:\\Users\\hedge\\Source\\Repos\\shaninandrew\\MyInvestCompanies\\MyInvestCompanies.csproj",
-        "packagesPath": "C:\\Users\\hedge\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\hedge\\Source\\Repos\\shaninandrew\\MyInvestCompanies\\obj\\",
+        "projectPath": "C:\\Users\\Шанин\\Source\\Repos\\shaninandrew\\MyInvestCompanies\\MyInvestCompanies.csproj",
+        "packagesPath": "C:\\Users\\Шанин\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Шанин\\Source\\Repos\\shaninandrew\\MyInvestCompanies\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\hedge\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Шанин\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [

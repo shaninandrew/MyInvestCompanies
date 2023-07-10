@@ -562,13 +562,11 @@
 </div>
 
 
-<br/>
-
     <div class="menu">
             <div class="menu_header">
                 <button class="button"              @onclick="set_main_page"    > Данные о фирме</button>
                 <button class="button"              @onclick="set_holders_page" > Данные о владельцах</button>
-                <button class="button"              @onclick="set_owners_page">   Данные о собственниках</button>
+                <button class="button"              @onclick="set_doc_page">   Список документов</button>
             </div>
 
     @if (query_sub_page=="main")
@@ -858,6 +856,10 @@
         query_sub_page = "owners";
     }
 
+    static public void set_doc_page()
+    { 
+            query_sub_page = "docs";
+    }
 
     ///
     public static EventCallback Add_new_holder(string Company_id)

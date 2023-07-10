@@ -16,12 +16,21 @@
     public static string __DATE_MASK = "yyyy-MM-dd";
 
    public  static  string Selected_Holder = "";
+   
+   public  static  bool Allow_delete = false;
+  /// Переключалка  
+  public static void Switch_delete()
+    { 
+        Allow_delete= (!Allow_delete );
+    }
 
 }
 
 
 @{
-    void ShowRowEditor_company(Company c)
+    ///
+    /// Редактор компаний в-строку
+    async void ShowRowEditor_company(Company c)
     {
 
         List<string> NameX = new List<string>();
@@ -49,7 +58,11 @@
             <input type="number" value="@c.Inn" @onfocus="(e=> { Company_id = c.Id; })" @onclick="(e=> { Company_id = c.Id; })" @onchange="(e=> {  Set_value(NameX[5], c.Id.ToString(), e.Value.ToString() , e, null, table);  })" />
             @{NameX.Add("KPP"); }
             <input type="number" value="@c.KPP" @onfocus="(e=> { Company_id = c.Id; })" @onclick="(e=> { Company_id = c.Id; })" @onchange="(e=> {  Set_value(NameX[6], c.Id.ToString(), e.Value.ToString() , e, null , table );  })" />
-            <button  class="delete_button" title="Удалить запись @c.Name @c.Address" @onclick="(e=> {Delete_company(c.Id.ToString(), null) ;} )">-</button>
+            
+            @if (Allow_delete)
+            {
+                <button  class="delete_button" title="Удалить запись @c.Name @c.Address" @onclick="(e=> {Delete_company(c.Id.ToString(), null) ;} )">-</button>
+            }
         </div>
 }
 
@@ -224,7 +237,8 @@
                             }
                             <td> </td>
                 </tr>
-            
+
+                 <!-- выводных уставного капитала -->            
                 @foreach (Capital c in list_of_capital)
                 {
                     string tmp_date = "";
@@ -233,8 +247,6 @@
                     { 
                     tmp_date= c.Date.Value.ToString(__DATE_MASK);
                     }
-
-                
                        
                         <tr>
                             <td>
@@ -243,8 +255,13 @@
                             <td>
                                 <input type="date"  value="@tmp_date"    @onchange="(e=> {  Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
                             </td>
-                            <td>
-                                <button class="delete_button" title="Удалить запись @c.Sum @c.Date" @onclick="(e=> {Delete_capital(c.Id.ToString()) ;} )">-</button>
+                               <td>
+                                @if (Allow_delete)
+                                {
+                            
+                                       <button class="delete_button" title="Удалить запись @c.Sum @c.Date" @onclick="(e=> {Delete_capital(c.Id.ToString()) ;} )">-</button>
+                            
+                                }
                             </td>
                         </tr>
                 
@@ -297,8 +314,11 @@
                             <textarea class="card_editor" type="text" rows="2" value="@c.Source" @onchange="(e=> {  Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
                         </td>
                         <td>
-                            <button class="delete_button" title="Удалить запись @c.Method @c.Source" @onclick="(e=> { Delete_Investitions(c.Id.ToString()) ;} )">-</button>
-                        </td>
+                        @if (Allow_delete)
+                                {
+                                    <button class="delete_button" title="Удалить запись @c.Method @c.Source" @onclick="(e=> { Delete_Investitions(c.Id.ToString()) ;} )">-</button>
+                                }
+                            </td>
                     </tr>
             
             }   
@@ -358,7 +378,10 @@
                             <textarea class="card_editor" type="text" rows="2" value="@c.Description" @onchange="(e=> {  Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
                          </td>
                          <td>
-                         <button class="delete_button" title="Удалить запись @c.Date @c.Description" @onclick="(e=> { Delete_Deal(c.Id.ToString()) ;} )">-</button>
+                          @if (Allow_delete)
+                                {
+                                     <button class="delete_button" title="Удалить запись @c.Date @c.Description" @onclick="(e=> { Delete_Deal(c.Id.ToString()) ;} )">-</button>
+                                }
                          </td>
                     </tr>
                 }    
@@ -429,7 +452,10 @@
                                 <input  type="url" value="@c.Url"       @onchange="(e=> {  Set_value(NameX[3], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
                             </td>
                             <td>
-                                <button class="delete_button" title="Удалить запись @c.Num @tmp_date" @onclick="(e=> { Delete_Document(c.Id.ToString()) ;} )">-</button>
+                             @if (Allow_delete)
+                                {
+                                    <button class="delete_button" title="Удалить запись @c.Num @tmp_date" @onclick="(e=> { Delete_Document(c.Id.ToString()) ;} )">-</button>
+                                }
                             </td>
                     </tr>
                 }     <!--  //foreach -->
@@ -473,22 +499,35 @@
                 }
             }
         }
-
-
+        //Удаление дублей
+        list_of_companies.Distinct();
     }
     else
     {
         list_of_companies = db_index.Companies.ToList<Company>(  );
     }
-    //убираем дубли
-     list_of_companies.Distinct();
 
+
+    //сортировка
     Comparison<Company> x_comp = new Comparison<Company>(delegate( Company x, Company y) { return (x.Id.CompareTo(y.Id)); });
     list_of_companies.Sort(x_comp);
     db_index.Dispose();
 
+
+
+
+   
+
 }
 
+
+
+
+
+
+<!--- ВЕБ МОРДА ОСНОВНАЯ ЧАСТЬ --->
+
+<!-- веб часть -->
 <div class="Search">
 Поиск компаний  <input class="search_string" title="Поисковая строка" type="text" @bind-value=query_string @bind-value:event="oninput" />
 </div>
@@ -501,7 +540,8 @@
 <div class="Control">
 <!--- делаем через лябмду - иначе кнопка запускается автоматом -->
     <button class="button" @onclick="(e)=>{  Add_company(null); }">Добавить компанию </button>
-    Тестовая инфа: @Company_id
+    <button class="button" @onclick="(e)=>{ Switch_delete(); }"> Разрешить/запретить удаление </button>
+    | Тестовая инфа: @Company_id
 </div>
 <br />
 
@@ -619,7 +659,7 @@
                         @if (Selected_Holder != "")
                         { 
                             Owner selected_owner = db_index.Owners.Where(o => o.Id == Selected_Holder).Single();
-                            @(" | Выбранный владелец «" + selected_owner.Name + " &nbsp; " + selected_owner.Address + "» &nbsp;(" + Selected_Holder + ")")
+                            @(" | Выбранный владелец «" + selected_owner.Name + "  " + selected_owner.Address + "»  (" + Selected_Holder + ")")
                         }
                     }
                 }

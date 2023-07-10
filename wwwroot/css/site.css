@@ -10,7 +10,7 @@
     z-index: 1000;
 }
 
-    #blazor-error-ui .dismiss {
+ #blazor-error-ui .dismiss {
         cursor: pointer;
         position: absolute;
         right: 3.5rem;
@@ -27,6 +27,22 @@
         content: "An error has occurred."
     }
 
+
+
+
+body {
+    font-size: font-size: 12pt;
+    font-family: Tahoma;
+    color: white;
+    background: black;
+}
+
+input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+}
+
+
 .scroll {
     scroll-behavior: smooth;
     scrollbar-3dlight-color: #e58c1f;
@@ -39,10 +55,11 @@
     padding: 2px 2px 2px 2px;
     
     border-spacing: 2px 5px;
+    width:100%;
 }
 
 .inside-scroll {
-    height: 100 px;
+    height: 150 px;
     width: auto;
     overscroll-behavior: contain;
     overflow: hidden;
@@ -75,6 +92,22 @@ input {
     font-size: 12pt;
     border-radius: 3 px 3 px;
     margin: 2px;
+    width:contain 200px;
+}
+
+
+.long_input {
+    background: white;
+    border: 1 px;
+    border-color: darkgreen;
+    padding: 2px 2px 2px 2px;
+    height: 1 rem;
+    
+    font: Tahoma;
+    font-size: 12pt;
+    border-radius: 3 px 3 px;
+    margin: 2px;
+    width: 97%;
 }
 
 .Editor:hover {
@@ -85,6 +118,7 @@ input {
     padding: 2px 2px 2px 2px;
     border-spacing: 2px 5px;
     background: white;
+    width:100%;
 }
 
 
@@ -106,23 +140,18 @@ input {
     padding: 2px 2px 2px 2px;
     background:black;
     color:white;
+    width:100%;
 
 }
 
 .search_string {
-    width:500px;
-}
-
-body {
-    font-size: font-size: 12pt;
-    font-family:Tahoma;
-    color: white;
-    background: black;
+    width: 90%;
 }
 
 .card_layout {
     display: flex;
     background:white;
+    color:black;
 }
 
 
@@ -163,14 +192,28 @@ body {
     cursor: pointer;
     background: black;
     color: #ffad1a;
-    height: 70 px;
-    min-width: 130 px;
-    width: auto;
+    height: 90 px;
+    min-width: 230 px;
+    width:contain;
     border-radius: 5 px 5 px 5 px 5 px;
     font-size: 12pt;
     text-align: center;
-    
     display: inline-block;
+    padding: 5px 10px;
+}
+
+input[type=button] {
+    cursor: pointer;
+    background: black;
+    color: #ffad1a;
+    height: 90 px;
+    min-width: 230 px;
+    width: contain;
+    border-radius: 5 px 5 px 5 px 5 px;
+    font-size: 12pt;
+    text-align: center;
+    display: inline-block;
+    padding: 5px 10px;
 }
 
 button {

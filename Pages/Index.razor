@@ -10,19 +10,22 @@
 
     [Parameter]
     public static string query_sub_page { get; set; } = "main";
-    
+
     public static string Company_id { get; set; } = "";
-    
+
     public static string __DATE_MASK = "yyyy-MM-dd";
 
-   public  static  string Selected_Holder = "";
-   
-   public  static  bool Allow_delete = false;
-  /// Переключалка  
-  public static void Switch_delete()
+    public  static  string Selected_Holder = "";
+
+    public  static  bool Allow_delete = false;
+    /// Переключалка  
+    public static void Switch_delete()
     { 
         Allow_delete= (!Allow_delete );
     }
+
+    /// Подключаем черный ящик
+    public Functions f = new Functions();
 
 }
 
@@ -40,31 +43,31 @@
         <!--  @onmouseover="(e=> { Company_id = c.Id; } -->
         <div class="Editor">
 
-            <input type="text" value="@c.Name" @onfocus="(e=> { Company_id = c.Id; })" @onclick="(e=> { Company_id = c.Id; })" @onchange="(e=>  { Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e, null, table );  })" />
+            <input type="text" value="@c.Name" @onfocus="(e=> { Company_id = c.Id; })" @onclick="(e=> { Company_id = c.Id; })" @onchange="(e=>  { f.Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e, null, table );  })" />
             
              @{
                  NameX.Add("Founded");
                  string tmp_date = c.Founded.Date.ToUniversalTime().ToString(__DATE_MASK);
                 }
 
-            <input type=date value="@tmp_date" @onfocus="(e=> { Company_id = c.Id; })" @onclick="(e=> { Company_id = c.Id; })" @onchange="(e=> {  Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
+            <input type=date value="@tmp_date" @onfocus="(e=> { Company_id = c.Id; })" @onclick="(e=> { Company_id = c.Id; })" @onchange="(e=> {  f.Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
             @{NameX.Add("Address");}
-            <input type="text" value="@c.Address" @onfocus="(e=> { Company_id = c.Id; })" @onclick="(e=> { Company_id = c.Id; })" @onchange="(e=> {  Set_value(NameX[2], c.Id.ToString(), e.Value.ToString() , e, null , table); })" />
+            <input type="text" value="@c.Address" @onfocus="(e=> { Company_id = c.Id; })" @onclick="(e=> { Company_id = c.Id; })" @onchange="(e=> {  f.Set_value(NameX[2], c.Id.ToString(), e.Value.ToString() , e, null , table); })" />
             @{NameX.Add("Fact_Address"); }
-            <input type="text" value="@c.Fact_Address" @onfocus="(e=> { Company_id = c.Id; })" @onclick="(e=> { Company_id = c.Id; })" @onchange="(e=> {  Set_value(NameX[3], c.Id.ToString(), e.Value.ToString() , e, null,table);  })" />
+            <input type="text" value="@c.Fact_Address" @onfocus="(e=> { Company_id = c.Id; })" @onclick="(e=> { Company_id = c.Id; })" @onchange="(e=> {  f.Set_value(NameX[3], c.Id.ToString(), e.Value.ToString() , e, null,table);  })" />
             @{NameX.Add("Description"); }
-            <input type="text" value="@c.Description" @onfocus="(e=> { Company_id = c.Id; })" @onclick="(e=> { Company_id = c.Id; })" @onchange="(e=> {  Set_value(NameX[4], c.Id.ToString(), e.Value.ToString() , e, null, table);  })" />
+            <input type="text" value="@c.Description" @onfocus="(e=> { Company_id = c.Id; })" @onclick="(e=> { Company_id = c.Id; })" @onchange="(e=> {  f.Set_value(NameX[4], c.Id.ToString(), e.Value.ToString() , e, null, table);  })" />
             @{NameX.Add("Inn"); }
-            <input type="number" value="@c.Inn" @onfocus="(e=> { Company_id = c.Id; })" @onclick="(e=> { Company_id = c.Id; })" @onchange="(e=> {  Set_value(NameX[5], c.Id.ToString(), e.Value.ToString() , e, null, table);  })" />
+            <input type="number" value="@c.Inn" @onfocus="(e=> { Company_id = c.Id; })" @onclick="(e=> { Company_id = c.Id; })" @onchange="(e=> {  f.Set_value(NameX[5], c.Id.ToString(), e.Value.ToString() , e, null, table);  })" />
             @{NameX.Add("KPP"); }
-            <input type="number" value="@c.KPP" @onfocus="(e=> { Company_id = c.Id; })" @onclick="(e=> { Company_id = c.Id; })" @onchange="(e=> {  Set_value(NameX[6], c.Id.ToString(), e.Value.ToString() , e, null , table );  })" />
+            <input type="number" value="@c.KPP" @onfocus="(e=> { Company_id = c.Id; })" @onclick="(e=> { Company_id = c.Id; })" @onchange="(e=> {  f.Set_value(NameX[6], c.Id.ToString(), e.Value.ToString() , e, null , table );  })" />
             
             @if (Allow_delete)
             {
-                <button  class="delete_button" title="Удалить запись @c.Name @c.Address" @onclick="(e=> {Delete_company(c.Id.ToString(), null) ;} )">-</button>
+                <button  class="delete_button" title="Удалить запись @c.Name @c.Address" @onclick="(e=> {f.Delete_company(c.Id.ToString(), null) ;} )">-</button>
             }
         </div>
-}
+    }
 
     /// Показывает связи
     void Show_Linx (string company_id)
@@ -86,117 +89,6 @@
     }
 
 
-    /// Добавляет сведения о капитале
-    async void AddCapital(string company_id)
-    {
-        Database_structure ds = new Database_structure();
-
-        Capital c_new = new Capital();
-        c_new.Id_company = company_id;
-        ds.Capitals.Add(c_new);
-
-        //добавление связки
-        Link  lnk = new Link(company_id, c_new.Id); ;
-        ds.Links.Add(lnk);
-
-        ds.SaveChanges();
-        ds.Dispose();
-    }
-
-
-
-    async void Delete_capital (string capital_id)
-    {
-        Database_structure ds = new Database_structure();
-        ds.Capitals.Remove(ds.Capitals.Where(i => i.Id == capital_id).Single());
-        ds.Links.RemoveRange(ds.Links.Where<Link>(i => i.Parent_Id == capital_id).ToArray());
-        ds.SaveChanges();
-        ds.Dispose();
-    }
-
-    /// Добавляет инвестии
-    async void  AddInvestitions( string company_id)
-    {
-        Database_structure ds = new Database_structure();
-
-        Invest i_new = new Invest();
-        i_new.Id_company = company_id;
-        ds.Investitions.Add(i_new);
-
-        Link lnk = new Link(company_id, i_new.Id); ;
-        ds.Links.Add(lnk);
-
-        ds.SaveChanges();
-        ds.Dispose();
-
-    }
-    
-    ///
-    ///   Удаляет инвестицию
-    ///  
-    async void Delete_Investitions(string invest_id)
-    {
-        Database_structure ds = new Database_structure();
-        ds.Investitions.Remove(ds.Investitions.Where(i => i.Id == invest_id).Single());
-        ds.Links.RemoveRange(ds.Links.Where<Link>(i => i.Parent_Id == invest_id).ToArray());
-
-
-        ds.SaveChanges();
-        ds.Dispose();
-    }
-
-    //AddDeal(id)
-    /// Добавляет сделку
-    async void Add_Deal (string company_id)
-    {
-        Database_structure ds = new Database_structure();
-
-        Deal i_new = new Deal();
-        i_new.Id_company = company_id;
-        ds.Deals.Add(i_new);
-
-        Link  lnk = new Link(company_id, i_new.Id); ;
-        ds.Links.Add(lnk);
-
-        ds.SaveChanges();
-        ds.Dispose();
-    }
-
-    async void Delete_Deal(string _id)
-    {
-        Database_structure ds = new Database_structure();
-        ds.Deals.Remove(ds.Deals.Where(i => i.Id == _id).Single());
-        ds.Links.RemoveRange(ds.Links.Where<Link>(i => i.Parent_Id == _id).ToArray());
-        ds.SaveChanges();
-        ds.Dispose();
-    }
-
-    //AddDeal(id)
-    /// Добавляет документа
-    async void Add_Document(string company_id)
-    {
-        Database_structure ds = new Database_structure();
-
-        Document i_new = new Document();
-        string Child_id = i_new.Id;
-        ds.Documents.Add(i_new);
-
-        Link lnk = new Link(company_id, Child_id); ;
-        ds.Links.Add(lnk);
-
-        ds.SaveChanges();
-        ds.Dispose();
-    }
-
-
-    async void Delete_Document (string _id)
-    {
-        Database_structure ds = new Database_structure();
-        ds.Documents.Remove(ds.Documents.Where(i => i.Id == _id).Single());
-        ds.Links.RemoveRange(ds.Links.Where<Link>(i => i.Parent_Id == _id).ToArray());
-        ds.SaveChanges();
-        ds.Dispose();
-    }
 
 
 
@@ -211,7 +103,7 @@
                 Уставный капитал
                 </div>
                 <div class="Control">
-                     <Button class="button" title="Добавляет размер уставного капитал" @onclick="(e=>{ AddCapital(id); })"> Добавить капитал </Button>
+                <Button class="button" title="Добавляет размер уставного капитал" @onclick="(e=>{ f.AddCapital(id); })"> Добавить капитал </Button>
                 </div>
 
 
@@ -250,16 +142,16 @@
                        
                         <tr>
                             <td>
-                                <input type="number" value="@c.Sum"     @onchange="(e=> {  Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
+                                <input type="number" value="@c.Sum"     @onchange="(e=> {  f.Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
                              </td>
                             <td>
-                                <input type="date"  value="@tmp_date"    @onchange="(e=> {  Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
+                                <input type="date"  value="@tmp_date"    @onchange="(e=> {  f.Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
                             </td>
                                <td>
                                 @if (Allow_delete)
                                 {
-                            
-                                       <button class="delete_button" title="Удалить запись @c.Sum @c.Date" @onclick="(e=> {Delete_capital(c.Id.ToString()) ;} )">-</button>
+
+                                    <button class="delete_button" title="Удалить запись @c.Sum @c.Date" @onclick="(e=> {f.Delete_capital(c.Id.ToString()) ;} )">-</button>
                             
                                 }
                             </td>
@@ -277,7 +169,7 @@
                Инвестиции
             </div>
             <div class="Control">
-                <Button class="button" title="Добавляет размер вложенных инвестиций" @onclick="(e=>{ AddInvestitions(id); })">Добавить инвестицию</Button>
+                <Button class="button" title="Добавляет размер вложенных инвестиций" @onclick="(e=>{ f.AddInvestitions(id); })">Добавить инвестицию</Button>
             </div>
 
 
@@ -308,15 +200,15 @@
                     
                     <tr>
                         <td>
-                            <input type="text" value="@c.Method" @onchange="(e=> {  Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
+                            <input type="text" value="@c.Method" @onchange="(e=> {  f.Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
                         </td>
                         <td>
-                            <textarea class="card_editor" type="text" rows="2" value="@c.Source" @onchange="(e=> {  Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
+                            <textarea class="card_editor" type="text" rows="2" value="@c.Source" @onchange="(e=> {  f.Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
                         </td>
                         <td>
                         @if (Allow_delete)
                                 {
-                                    <button class="delete_button" title="Удалить запись @c.Method @c.Source" @onclick="(e=> { Delete_Investitions(c.Id.ToString()) ;} )">-</button>
+                                    <button class="delete_button" title="Удалить запись @c.Method @c.Source" @onclick="(e=> { f.Delete_Investitions(c.Id.ToString()) ;} )">-</button>
                                 }
                             </td>
                     </tr>
@@ -334,7 +226,7 @@
             </div>
 
             <div class="Control">
-                <Button class="button" title="Добавляет список сделок" @onclick="(e=>{ Add_Deal(id); })">Добавить сделку</Button>
+                <Button class="button" title="Добавляет список сделок" @onclick="(e=>{ f.Add_Deal(id); })">Добавить сделку</Button>
             </div>
 
 
@@ -371,16 +263,16 @@
 
                      <tr >
                         <td>
-                         <input type="date" value="@tmp_date" @onchange="(e=> {  Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
+                         <input type="date" value="@tmp_date" @onchange="(e=> {  f.Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
                          </td>
 
                          <td>  
-                            <textarea class="card_editor" type="text" rows="2" value="@c.Description" @onchange="(e=> {  Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
+                            <textarea class="card_editor" type="text" rows="2" value="@c.Description" @onchange="(e=> {  f.Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
                          </td>
                          <td>
                           @if (Allow_delete)
                                 {
-                                     <button class="delete_button" title="Удалить запись @c.Date @c.Description" @onclick="(e=> { Delete_Deal(c.Id.ToString()) ;} )">-</button>
+                                    <button class="delete_button" title="Удалить запись @c.Date @c.Description" @onclick="(e=> { f.Delete_Deal(c.Id.ToString()) ;} )">-</button>
                                 }
                          </td>
                     </tr>
@@ -398,7 +290,7 @@
                 Документы
             </div>
             <div class="Control">
-                <Button class="button" title="Добавляет документ" @onclick="(e=>{ Add_Document (id); })">+Документ</Button>
+                <Button class="button" title="Добавляет документ" @onclick="(e=>{ f.Add_Document (id); })">+Документ</Button>
             </div>
 
 
@@ -438,23 +330,23 @@
 
                     <tr>
                             <td> 
-                                <input  type="text" value="@c.Num"       @onchange="(e=> {  Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
+                                <input  type="text" value="@c.Num"       @onchange="(e=> {  f.Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
                             </td>
                             <td>
-                                <input  type="date" value="@tmp_date"    @onchange="(e=> {  Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
+                                <input  type="date" value="@tmp_date"    @onchange="(e=> {  f.Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
                             </td>
                         
                             <td>
-                                <textarea class="card_editor" type="text" rows="2" value="@c.Name" @onchange="(e=> {  Set_value(NameX[2], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
+                                <textarea class="card_editor" type="text" rows="2" value="@c.Name" @onchange="(e=> {  f.Set_value(NameX[2], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
                             </td>
                     
                             <td>
-                                <input  type="url" value="@c.Url"       @onchange="(e=> {  Set_value(NameX[3], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
+                                <input  type="url" value="@c.Url"       @onchange="(e=> {  f.Set_value(NameX[3], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
                             </td>
                             <td>
                              @if (Allow_delete)
                                 {
-                                    <button class="delete_button" title="Удалить запись @c.Num @tmp_date" @onclick="(e=> { Delete_Document(c.Id.ToString()) ;} )">-</button>
+                                    <button class="delete_button" title="Удалить запись @c.Num @tmp_date" @onclick="(e=> { f.Delete_Document(c.Id.ToString()) ;} )">-</button>
                                 }
                             </td>
                     </tr>
@@ -514,10 +406,6 @@
     db_index.Dispose();
 
 
-
-
-   
-
 }
 
 
@@ -539,8 +427,8 @@
 
 <div class="Control">
 <!--- делаем через лябмду - иначе кнопка запускается автоматом -->
-    <button class="button" @onclick="(e)=>{  Add_company(null); }">Добавить компанию </button>
-    <button class="button" @onclick="(e)=>{ Switch_delete(); }"> Разрешить/запретить удаление </button>
+    <button class="button" @onclick="(e)=>{  f.Add_company(null); }">Добавить компанию </button> 
+    <button class="button" @onclick="(e)=>{  Switch_delete(); }"> Разрешить/запретить удаление </button>
     | Тестовая инфа: @Company_id
 </div>
 <br />
@@ -564,9 +452,9 @@
 
     <div class="menu">
             <div class="menu_header">
-                <button class="button"              @onclick="set_main_page"    > Данные о фирме</button>
-                <button class="button"              @onclick="set_holders_page" > Данные о владельцах</button>
-                <button class="button"              @onclick="set_doc_page">   Список документов</button>
+                <button class="button"              @onclick="set_main_page"    > Данные о фирме</button> 
+                <button class="button"              @onclick="set_holders_page" > Данные о владельцах</button> 
+                <button class="button"              @onclick="set_doc_page">   Список документов</button> 
             </div>
 
     @if (query_sub_page=="main")
@@ -664,18 +552,19 @@
             </div>
 
             <div class="Control">
-                <button class="button" @onclick="(e=> { Add_new_holder(Company_id); })">Добавить нового владельца</button> 
+                <button class="button" @onclick="(e=> { f.Add_new_holder(Company_id); })">Добавить нового владельца</button> 
 
                 @{
                     if (Selected_Holder != "")
                     {
-                        <button  class="button" @onclick="(e => { Remove_exist_holder(Company_id,Selected_Holder); })">Отключить выбранного владельца</button>
+                        <button  class="button" @onclick="(e => { f.Remove_exist_holder(Company_id,Selected_Holder); })">Отключить выбранного владельца</button>
                     }
                 }
             </div>
 
-            <div class="card">
-                <table>
+            
+            <div class="card_layout">
+                <table width="100%">
                
                     @{
                          
@@ -706,13 +595,13 @@
                         {
                             foreach (Owner o in db_index2.Owners.Where<Owner>(oi => oi.Id == h.Owner_Id).ToList<Owner>())
                             {
-                                    <tr >
-                                    <td><input type="text"      value="@o.Name"    @onchange="(e=> {  Set_value(NameX[0], o.Id.ToString(), e.Value.ToString() ,e, null, TableX[0]); })" /></td>
-                                    <td><input type="tel" value="@o.PhoneNumber"    @onchange="(e=> {  Set_value(NameX[1], o.Id.ToString(), e.Value.ToString() ,e, null, TableX[1]); })" /></td>
-                                    <td><input type="email" value="@o.Email"        @onchange="(e=> {  Set_value(NameX[2], o.Id.ToString(), e.Value.ToString() ,e, null, TableX[2]); })" /></td>
-                                    <td><input type="number" value="@h.Cost"        @onchange="(e=> {  Set_value(NameX[3], h.Id.ToString(), e.Value.ToString() ,e, null, TableX[3]); })" /> </td>
-                                    <td><input type="date" value="@h.Date_buy_share.ToString(__DATE_MASK)" @onchange="(e=> {  Set_value(NameX[4], h.Id.ToString(), e.Value.ToString() ,e, null, TableX[4]); })" /> </td>
-                                    <td><input type="text" value="@h.Share"                     @onchange="(e=> {  Set_value(NameX[5], h.Id.ToString(), e.Value.ToString() ,e, null, TableX[5]); })" /></td>
+                                    <tr class="Editor" style="width:100%">
+                                    <td><input class="long_input" type="text" value="@o.Name" @onchange="(e=> {  f.Set_value(NameX[0], o.Id.ToString(), e.Value.ToString() ,e, null, TableX[0]); })" /></td>
+                                    <td><input class="long_input" type="tel" value="@o.PhoneNumber" @onchange="(e=> {  f.Set_value(NameX[1], o.Id.ToString(), e.Value.ToString() ,e, null, TableX[1]); })" /></td>
+                                    <td><input class="long_input" type="email" value="@o.Email" @onchange="(e=> {  f.Set_value(NameX[2], o.Id.ToString(), e.Value.ToString() ,e, null, TableX[2]); })" /></td>
+                                    <td><input class="long_input" type="number" value="@h.Cost" @onchange="(e=> {  f.Set_value(NameX[3], h.Id.ToString(), e.Value.ToString() ,e, null, TableX[3]); })" /> </td>
+                                    <td><input class="long_input" type="date" value="@h.Date_buy_share.ToString(__DATE_MASK)" @onchange="(e=> {  f.Set_value(NameX[4], h.Id.ToString(), e.Value.ToString() ,e, null, TableX[4]); })" /> </td>
+                                    <td><input class="long_input" type="text" value="@h.Share" @onchange="(e=> {  f.Set_value(NameX[5], h.Id.ToString(), e.Value.ToString() ,e, null, TableX[5]); })" /></td>
 
                                     <td> <button title="Выбрать" @onclick="(e=>{ if (Selected_Holder==o.Id) Selected_Holder=String.Empty;  else  Selected_Holder = o.Id; })"> ↓ </button> </td>
 
@@ -732,90 +621,95 @@
                 if (db_index != null)
                 { db_index = new Database_structure(); }
                 Owner selected_owner = db_index.Owners.Where(o => o.Id == Selected_Holder).Single();
-                <div class="card">
-                <table>
-                    <tr class="card_title">
-                        <td>
-                            <div class="Header">
-                                Редактирование выбранного владельца
-                                @(" «" + selected_owner.Name + "   " + selected_owner.Address + "» (" + Selected_Holder + ")")
-                            </div>
-                         </td>
-                    </tr>
 
-                         <tr>
-                             <td>
-                                    <div class="card_editor">
-                                            Данные
-             
-                                        @{
-                                            Owner o = selected_owner;
-                                            string table = "Owners";
-                                            List<string> NameY = new List<string>();
-                                            NameY.Add("Address");
-                                            NameY.Add("Inn");
-                                            NameY.Add("KPP");
-                                            NameY.Add("Org");
+                <div class="scroll">
 
-                                        }
-                                        <br/>
-                                        Адрес    <textarea type="text" value="@o.Address" @onchange="(e=> {  Set_value(NameY[0], o.Id.ToString(), e.Value.ToString() ,e, null, table); })" /> <br />
-                                        ИНН <input type="number" value="@o.Inn" @onchange="(e=> {  Set_value(NameY[1], o.Id.ToString(), e.Value.ToString() ,e, null, table); })" /> <br/>
-                                        КПП <input type="number" value="@o.KPP" @onchange="(e=> {  Set_value(NameY[2], o.Id.ToString(), e.Value.ToString() ,e, null, table); })" /> <br />
-                                        Юридическое лицо <input type="checkbox" checked="@o.Org" @onchange="(e=> {  Set_value(NameY[3], o.Id.ToString(), e.Value.ToString() ,e, null, table); })" /> <br />
+                    <div class="Header" width="400px">
+                        Редактирование выбранного владельца
+                        @(" «" + selected_owner.Name + "   " + selected_owner.Address + "» (" + Selected_Holder + ")")
+                    </div>
 
-                                    </div>
-                             </td>
-                            
-                        </tr>
-                   </table>
-                   </div>
-                   
-                   <div class="card">
-                    <div class="Header">
-                        Редактирование владельцев и установка связей
-                    
+                    <div class="inside-scroll" >
                         
-                    <div class="card_editor" align="center">
+                        <div class="card_layout" >
+                            
+                            <div class="Editor">
+                                <div class="card_title"> Данные </div><br>
 
-                        @{
-                            db_index = new Database_structure();
-                            Company selected_company = db_index.Companies.Where(i => i.Id == Company_id).Single();
+             
+                                @{
+                                    Owner o = selected_owner;
+                                    string table = "Owners";
+                                    List<string> NameY = new List<string>();
+                                    NameY.Add("Address");
+                                    NameY.Add("Inn");
+                                    NameY.Add("KPP");
+                                    NameY.Add("Org");
 
-                            //заготовка
-                            HolderReestr holder = new HolderReestr();
-                            holder.Company_Id = selected_company.Id;
-                            holder.Owner_Id = selected_owner.Id;
-
-                            Link lnk = new Link(selected_company.Id, selected_owner.Id);
-
-
-                        }
-                        Связать  @(selected_owner.Name + " --->  «" + selected_company.Name + " | ИНН" + selected_company.Inn + "» ?")
-                        <br>
-                        <button @onclick="(e=>{ 
-                            db_index = new Database_structure(); 
-                            db_index.HolderReestrs.Add(holder); 
-                            db_index.Links.AddAsync (lnk); 
-                            db_index.SaveChanges();
-                            db_index.Dispose(); })">
-                             Связать? </button>
+                                }
+                                <div>
+                                    Адрес    <textarea class="long_input" type="text" value="@o.Address" @onchange="(e=> {  f.Set_value(NameY[0], o.Id.ToString(), e.Value.ToString() ,e, null, table); })" /> <br/>
+                                    ИНН <input class="long_input" type="number" value="@o.Inn" @onchange="(e=> {  f.Set_value(NameY[1], o.Id.ToString(), e.Value.ToString() ,e, null, table); })" /> <br />
+                                    КПП <input class="long_input" type="number" value="@o.KPP" @onchange="(e=> {  f.Set_value(NameY[2], o.Id.ToString(), e.Value.ToString() ,e, null, table); })" /> <br />
+                                    Юридическое лицо <input type="checkbox" checked="@o.Org" @onchange="(e=> {  f.Set_value(NameY[3], o.Id.ToString(), e.Value.ToString() ,e, null, table); })" /> <br />
+                                </div>
+                            </div>
 
 
-                            <button @onclick="(e=>{    Selected_Holder=string.Empty;  })">
-                                Отключить режим привязки
-                            </button>
-                    </div>
-                    </div>
-                </div>
+                            <div class="Editor">
+                                <div class="card_title">
+                                   
+
+
+                                    @{
+                                        db_index = new Database_structure();
+                                        Company selected_company = db_index.Companies.Where(i => i.Id == Company_id).Single();
+
+                                        //заготовка
+                                        HolderReestr holder = new HolderReestr();
+                                        holder.Company_Id = selected_company.Id;
+                                        holder.Owner_Id = selected_owner.Id;
+
+                                        Link lnk = new Link(selected_company.Id, selected_owner.Id);
+                                    }
+
+                                    Связать  @(selected_owner.Name + " --->  «" + selected_company.Name + " | ИНН" + selected_company.Inn + "» ?")
+
+                                </div>
+
+                                <div align="center">
+                                   
+                                    <button class="button" @onclick="(e=>{
+                                            db_index = new Database_structure();
+                                            db_index.HolderReestrs.Add(holder);
+                                            db_index.Links.AddAsync (lnk);
+                                            db_index.SaveChanges();
+                                            db_index.Dispose(); })">
+                                        Связать?
+                                    </button> <br>
+
+
+                                    <button class="button" @onclick="(e=>{    Selected_Holder=string.Empty;  })">
+                                        Отключить режим привязки
+                                    </button>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                   </div>
+
+                
+                    
+
+                   
+
+                </div> <!--scroll -->
 
                 if (db_index != null) { db_index.Dispose(); }
             }
             <!-- selected owner -->
-
-
-
-
 
         </div>
     }
@@ -837,9 +731,8 @@
 
 
 @code{
-
     /// <summary>
-    /// Переключение страниц (чтобы не нагружать клиента)
+    ///  Вспомогательнгые функции
     /// </summary>
     static public void set_main_page()
     {
@@ -857,438 +750,9 @@
     }
 
     static public void set_doc_page()
-    { 
-            query_sub_page = "docs";
-    }
-
-    ///
-    public static EventCallback Add_new_holder(string Company_id)
     {
-        Database_structure db = new Database_structure();
-
-        Owner o = new Owner();
-        db.Owners.Add(o);
-
-        HolderReestr h = new HolderReestr();
-        h.Company_Id = Company_id;
-        h.Owner_Id =  o.Id;
-        db.HolderReestrs.Add(h);
-
-        db.SaveChanges();
-
-
-        db.Dispose();
-
-        return (new EventCallback());
+        query_sub_page = "docs";
     }
-
-    public static EventCallback Add_exist_holder(string Company_id)
-    {
-
-        return (new EventCallback());
-
-    }
-
-
-    public static EventCallback Remove_exist_holder(string Company_id,  string Selected_Holder)
-    {
-
-        Database_structure db = new Database_structure();
-
-       // ..чистим таблицу
-        db.HolderReestrs.RemoveRange( db.HolderReestrs.Where<HolderReestr>(h => h.Company_Id == Company_id).Where<HolderReestr> (w => w.Owner_Id == Selected_Holder).ToArray() );
-
-        //чистим связи
-        db.Links.RemoveRange(db.Links.Where<Link>(l => l.Parent_Id == Company_id).Where<Link>(w => w.Child_Id == Selected_Holder).ToArray());
-        db.SaveChanges();
-        db.Dispose();
-        return (new EventCallback());
-    }
-
-
-
-
-    /// <summary>
-    /// Удаление компании
-    /// </summary>
-    /// <param name="id"></param>
-    /// <param name="dbx"></param>
-    /// <returns></returns>
-    static public EventCallback Delete_company(string id, Database_structure? dbx)
-    {
-
-        Database_structure db = null;
-
-        if (dbx != null)
-        { db = dbx; }
-        else
-        { db = new Database_structure(); }
-        try
-        {
-            Company c = db.Companies.Where<Company>(i => i.Id == id).Single<Company>();
-            Console.Write($"Удаляем запись {c.Name} {c.Id}");
-            db.Companies.Remove(c);
-            db.SaveChanges();
-            Console.WriteLine($" успешно...");
-        }
-        catch (Exception ex)
-        {
-
-            Console.WriteLine($"Удаление id= {id} " + ex.Message        );
-        }
-
-        //чистим память если автономно
-        if (dbx == null)
-        { db.Dispose(); }
-
-
-        return (new EventCallback());
-    }
-
-    /// <summary>
-    /// ДОбавление новыой компании
-    /// </summary>
-    /// <param name="dbx"></param>
-    /// <returns></returns>
-    static public EventCallback Add_company(Database_structure? dbx)
-    {
-
-        Database_structure db = null;
-
-        if (dbx != null)
-        { db = dbx; }
-        else
-        { db = new Database_structure(); }
-
-
-        Company c = new Company();
-        c.Name = "???";
-        db.Companies.Add(c);
-        db.SaveChanges();
-
-        //чистим память если автономно
-        if (dbx == null)
-        { db.Dispose(); }
-
-        return (new EventCallback());
-
-    }
-
-
-    /// <summary>
-    /// Установка значений в таблицах
-    /// </summary>
-    /// <param name="name"></param>
-    /// <param name="id"></param>
-    /// <param name="value"></param>
-    /// <param name="e"></param>
-    /// <param name="dbx"></param>
-    /// <param name="table_name"></param>
-    /// <returns></returns>
-    static public  EventCallback Set_value(string name, string id, string value, ChangeEventArgs? e, Database_structure? dbx , string table_name )// (object sender, ChangeEventArgs e)//(string name, string id)
-    {
-
-        Database_structure db = null;
-
-        if (dbx != null)
-        { db = dbx; }
-        else
-        { db = new Database_structure(); }
-
-        if (table_name == "Companies")
-        {
-            Console.WriteLine($"Установка значения {name} id={id}: {value}");
-
-            var t = db.Companies.Where<Company>(i => i.Id == id).Single<Company>();
-
-            Console.WriteLine($"Установка значения - {t.Id} {t.Name}: {t.Description} {t.KPP} {t.Address} {t.Fact_Address} {t.Founded} {t.Inn}");
-
-            try
-            {
-                if (name == "Name")
-                { t.Name = e.Value.ToString(); }
-                if (name == "Founded")
-                { t.Founded = DateTime.Parse(e.Value.ToString()).ToUniversalTime(); }
-                if (name == "Address")
-                { t.Address = e.Value.ToString(); }
-                if (name == "Fact_Address")
-                { t.Fact_Address = e.Value.ToString(); }
-                if (name == "Description")
-                { t.Description = e.Value.ToString(); }
-                if (name == "Inn")
-                { t.Inn = e.Value.ToString(); }
-                if (name == "KPP")
-                { t.KPP = e.Value.ToString(); }
-
-                db.Update<Company>(t);
-                db.SaveChanges();
-
-
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                Console.WriteLine(ex.InnerException.Message);
-            }
-        } // Comapnies
-
-
-
-        if (table_name == "Capitals")
-        {
-            Console.WriteLine($"Установка значения {name} id={id}: {value}");
-
-            var t = db.Capitals.Where<Capital>(i => i.Id == id).Single<Capital>();
-
-            Console.WriteLine($"Установка значения -> ");
-
-            try
-            {
-
-                if (name == "Date")
-                { t.Date = DateTime.Parse(e.Value.ToString()).ToUniversalTime();  }
-                if (name == "Sum")
-                { t.Sum = float.Parse(e.Value.ToString()); }
-
-                db.Update<Capital>(t);
-                db.SaveChanges();
-
-
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                Console.WriteLine(ex.InnerException.Message);
-            }
-        } // Capitals
-
-
-        if (table_name == "Investitions")
-        {
-            Console.WriteLine($"Установка значения {name} id={id}: {value}");
-
-            var t = db.Investitions.Where<Invest>(i => i.Id == id).Single<Invest>();
-
-            Console.WriteLine($"Установка значения -> ");
-
-            try
-            {
-
-                if (name == "Method")
-                { t.Method = e.Value.ToString() ; }
-                if (name == "Source")
-                { t.Source= e.Value.ToString(); }
-
-                db.Update<Invest>(t);
-                db.SaveChanges();
-
-
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                Console.WriteLine(ex.InnerException.Message);
-            }
-        } // Capitals
-
-
-        if (table_name == "Capitals")
-        {
-            Console.WriteLine($"Установка значения {name} id={id}: {value}");
-
-            var t = db.Capitals.Where<Capital>(i => i.Id == id).Single<Capital>();
-
-            Console.WriteLine($"Установка значения -> ");
-
-            try
-            {
-
-                if (name == "Date")
-                { t.Date = DateTime.Parse(e.Value.ToString()).ToUniversalTime(); }
-                if (name == "Sum")
-                { t.Sum = float.Parse(e.Value.ToString()); }
-
-                db.Update<Capital>(t);
-                db.SaveChanges();
-
-
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                Console.WriteLine(ex.InnerException.Message);
-            }
-        } // Capitals
-
-
-        if (table_name == "Deals")
-        {
-            Console.WriteLine($"Установка значения {name} id={id}: {value}");
-
-            var t = db.Deals.Where<Deal>(i => i.Id == id).Single();
-
-            Console.WriteLine($"Установка значения -> ");
-
-            try
-            {
-
-                if (name == "Date")
-                { t.Date = DateTime.Parse( e.Value.ToString()).ToUniversalTime(); }
-
-
-                if (name == "Description")
-                { t.Description = e.Value.ToString(); }
-
-                db.Update<Deal>(t);
-                db.SaveChanges();
-
-
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                Console.WriteLine(ex.InnerException.Message);
-            }
-        } // Сделки
-
-
-        if (table_name == "Documents")
-        {
-            Console.WriteLine($"Установка значения {name} id={id}: {value}");
-            var t = db.Documents.Where<Document>(i => i.Id == id).Single();
-            Console.WriteLine($"Установка значения -> ");
-
-            try
-            {
-                if (name == "Date")
-                { t.Date = DateTime.Parse(e.Value.ToString()).ToUniversalTime(); }
-
-
-                if (name == "Name")
-                { t.Name = e.Value.ToString(); }
-
-                if (name == "Num")
-                { t.Num = e.Value.ToString(); }
-
-                if (name == "Url")
-                { t.Url = e.Value.ToString(); }
-
-                db.Update<Document>(t);
-                db.SaveChanges();
-
-
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                Console.WriteLine(ex.InnerException.Message);
-            }
-        } // Документы
-
-
-
-        if (table_name == "HolderReestrs")
-        {
-            Console.WriteLine($"Установка значения {name} id={id}: {value}");
-            var t = db.HolderReestrs.Where<HolderReestr>(i => i.Id == id).Single();
-            Console.WriteLine($"Установка значения -> ");
-
-            try
-            {
-                /*
-                * HolderReestr h = new HolderReestr();
-               h.Cost
-               h.
-                */
-
-
-                if (name == "Date_buy_share")
-                { t.Date_buy_share = DateTime.Parse(e.Value.ToString()).ToUniversalTime(); }
-
-
-                if (name == "Cost")
-                { t.Cost = float.Parse(   e.Value.ToString()); }
-
-                if (name == "Share")
-                { t.Share = float.Parse(     e.Value.ToString()); }
-
-                db.Update<HolderReestr>(t);
-                db.SaveChanges();
-
-
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                Console.WriteLine(ex.InnerException.Message);
-            }
-        } // Реестр владельцев
-
-
-        if (table_name == "Owners")
-        {
-            Console.WriteLine($"Установка значения {name} id={id}: {value}");
-            var t = db.Owners.Where<Owner>(i => i.Id == id).Single();
-            Console.WriteLine($"Установка значения -> ");
-
-            try
-            {
-                /*
-                 * HolderReestr h = new HolderReestr();
-                h.Cost
-                h.
-                */
-
-
-
-                if (name == "Inn")
-                { t.Inn = e.Value.ToString(); }
-
-
-                if (name == "Email")
-                { t.Email = e.Value.ToString(); }
-
-
-                if (name == "Org")
-                {
-                    t.Org = false;
-                    t.Org = (e.Value.ToString() == "1") || (e.Value.ToString() == "TRUE") || (e.Value.ToString() == "True"); 
-                     
-                }
-                
-                if (name == "PhoneNumber")
-                { t.PhoneNumber = e.Value.ToString(); }
-                
-                if (name == "Address")
-                { t.Address = e.Value.ToString(); }
-                
-                if (name == "KPP")
-                { t.KPP = e.Value.ToString(); }
-
-                if (name == "Name")
-                { t.Name = e.Value.ToString(); }
-                
-
-                db.Update<Owner>(t);
-                db.SaveChanges();
-
-
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                Console.WriteLine(ex.InnerException.Message);
-            }
-        } // Реестр владельцев
-
-
-
-        //чистим память если автономно
-        if (dbx == null)
-        { db.Dispose(); }
-        EventCallback evc = new EventCallback();
-        return (evc);
-    }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
 
 
 }

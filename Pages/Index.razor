@@ -22,6 +22,7 @@
     public static bool _FLAG_show_doc_editor = true;
 
     public static string Deal_id = "";
+    public static string Invest_id = "";
 
 
     /// Переключалка  
@@ -156,7 +157,7 @@
                     }
 
                     <!--  //foreach -->
-                }
+             
                
             </table>
         }
@@ -258,60 +259,72 @@
 
         if (table_name == "Investitions")
         {
-            <div class="Header">
-                Инвестиции @Company_title
-            </div>
-            <div class="Control">
-                <Button class="button" title="Добавляет размер вложенных инвестиций" @onclick="(e=>{ f.AddInvestitions(id); })">Добавить инвестицию</Button>
-            </div>
-            
+                <div class="Header">
+                    Инвестиции @Company_title
+                </div>
 
-            List<Invest> list_of_Investitions = ds.Investitions.Where<Invest>(c => c.Id_company == company_id).ToList();
-            Comparison<Invest> x_comp = new Comparison<Invest>(delegate (Invest x, Invest y) { return (x.Id.CompareTo(y.Id)); });
-            list_of_Investitions.Sort(x_comp);
+                <div class="Control">
+                    <Button class="button" title="Добавляет размер вложенных инвестиций" @onclick="(e=>{ f.AddInvestitions(id); })">Добавить инвестицию</Button>
+                </div>
 
+                List<Invest> list_of_Investitions = ds.Investitions.Where<Invest>(c => c.Id_company == company_id).ToList();
+                Comparison<Invest> x_comp = new Comparison<Invest>(delegate (Invest x, Invest y) { return (x.Id.CompareTo(y.Id)); });
+                list_of_Investitions.Sort(x_comp);
 
-            string table = "Investitions";
-            List<string> NameX = new List<string>();
-            NameX.Add("Method");
-            NameX.Add("Source");
+                string table = "Investitions";
+                List<string> NameX = new List<string>();
+                NameX.Add("Method");
+                NameX.Add("Source");
 
-            <div class="card">
-            <table>
-                 <tr class="card_title">
-                    @foreach (String n in NameX)
-                    {
-                        <td>@n</td>
-                    }
-                    <td> </td>
-                </tr>
-                
-            @foreach (Invest c in list_of_Investitions)
-            {
-                    
-                    <tr>
-                        <td>
-                            <input type="text" value="@c.Method" @onchange="(e=> {  f.Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
-                        </td>
-                        <td>
-                            <textarea class="card_editor" type="text" rows="2" value="@c.Source" @onchange="(e=> {  f.Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
-                        </td>
-
-                            <td>
-                                <button> + </button>
-                            </td>
-                        
-                            <td>
-                                @if (Allow_delete)
-                                {
-                                    <button class="delete_button" title="Удалить запись @c.Method @c.Source" @onclick="(e=> { f.Delete_Investitions(c.Id.ToString()) ;} )">-</button>
-                                }
-                            </td>
+                <div class="card">
+                <table>
+                     <tr class="card_title">
+                        @foreach (String n in NameX)
+                        {
+                            <td>@n</td>
+                        }
+                        <td> </td>
                     </tr>
+                
+                @foreach (Invest c in list_of_Investitions)
+                {
+                    
+                        <tr>
+                            <td>
+                                <input type="text" value="@c.Method" @onclick="(e=>{ Invest_id=c.Id; })"  @onchange="(e=> {  f.Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
+                            </td>
+                            <td>
+                                <textarea class="card_editor" type="text" rows="2" value="@c.Source" @onclick="(e=>{ Invest_id=c.Id; })"  @onchange="(e=> {  f.Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
+                            </td>
+
+                                <td>
+                                <button @onclick="(e=> { f.Add_Document_for_Invest(c.Id.ToString()) ; _FLAG_show_doc_editor= true;} )"> +Документ </button>
+                                </td>
+                        
+                                <td>
+                                    @if (Allow_delete)
+                                    {
+                                        <button class="delete_button" title="Удалить запись @c.Method @c.Source" @onclick="(e=> { f.Delete_Investitions(c.Id.ToString()) ;} )">-</button>
+                                    }
+                                </td>
+                        </tr>
             
-            }   
-            </table>
-         </div>
+                }   
+                </table>
+
+
+                @if (_FLAG_show_doc_editor)
+                {
+                    <div class="card">
+                        @("Выбранное дело  (" + @Invest_id + ")")
+                        @{
+                            Show_Table(Invest_id, "Documents", false);
+                        }
+                    </div>
+                }
+
+
+             </div>
         } <!-- if -->
 
         //Deals

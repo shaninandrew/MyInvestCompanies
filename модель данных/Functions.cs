@@ -553,10 +553,10 @@ namespace MyInvestCompanies.модель_данных
 
 
 
-        ///  <summary>
-        /// Добавляет документ
+        /// <summary>
+        /// Добавляет документ привязанные к сделке
         /// </summary>
-        /// <param name="company_id"></param>
+        /// <param name="deal_id"></param>
         public async void Add_Document_for_Deal (string deal_id)
         {
             Database_structure ds = new Database_structure();
@@ -569,16 +569,37 @@ namespace MyInvestCompanies.модель_данных
             lnk.Parent_table = "Deals";
             ds.Links.Add(lnk);
 
-            ds.SaveChanges();
+            ds.SaveChangesAsync();
             ds.Dispose();
         }
+
+        /// <summary>
+        /// Добавляет документ привязанные к инвестиционной сделке 
+        /// </summary>
+        /// <param name="deal_id"></param>
+        public async void Add_Document_for_Invest(string invest_id)
+        {
+            Database_structure ds = new Database_structure();
+
+            Document i_new = new Document();
+            string Child_id = i_new.Id;
+            ds.Documents.Add(i_new);
+            Link lnk = new Link(invest_id, Child_id); ;
+            
+            lnk.Parent_table = "Investitions";
+            ds.Links.Add(lnk);
+
+            ds.SaveChangesAsync();
+            ds.Dispose();
+        }
+
 
 
         ///  <summary>
         /// Добавляет документ
         /// </summary>
         /// <param name="company_id"></param>
-        public  async void Add_Document(string company_id)
+        public async void Add_Document(string company_id)
         {
             Database_structure ds = new Database_structure();
 

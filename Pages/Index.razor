@@ -95,25 +95,31 @@
     /// Показ любой таблицы
     async void Show_Table (string company_id, string table_name)
     {
+        Database_structure ds = new Database_structure();
         string id = company_id;
+        string Company_title = "";
+        // показ имени связанной строики
+        if (Company_id != "")
+        {
+            Company selected = ds.Companies.Where(i => i.Id == Company_id).Single();
+            Company_title = "«" + selected.Name + " | ИНН" + selected.Inn + "»";
+        }
 
         if (table_name == "Capitals")
         {
                 <div class="Header">
-                Уставный капитал
+                Уставный капитал @Company_title
                 </div>
                 <div class="Control">
                 <Button class="button" title="Добавляет размер уставного капитал" @onclick="(e=>{ f.AddCapital(id); })"> Добавить капитал </Button>
                 </div>
 
-
-                Database_structure ds = new Database_structure();
-                List<Capital> list_of_capital = ds.Capitals.Where<Capital>(C => C.Id_company == company_id).ToList<Capital>();
                 
+                List<Capital> list_of_capital = ds.Capitals.Where<Capital>(C => C.Id_company == company_id).ToList<Capital>();
                 Comparison<Capital> x_comp = new Comparison<Capital>(delegate (Capital x, Capital y) { return (x.Id.CompareTo(y.Id)); });
                 list_of_capital.Sort(x_comp);
 
-                ds.Dispose();
+                
 
                 string table = "Capitals";
                 List<string> NameX = new List<string > ();
@@ -137,7 +143,7 @@
 
                     if (c.Date.HasValue)
                     { 
-                    tmp_date= c.Date.Value.ToString(__DATE_MASK);
+                     tmp_date= c.Date.Value.ToString(__DATE_MASK);
                     }
                        
                         <tr>
@@ -166,19 +172,17 @@
         if (table_name == "Investitions")
         {
             <div class="Header">
-               Инвестиции
+                Инвестиции @Company_title
             </div>
             <div class="Control">
                 <Button class="button" title="Добавляет размер вложенных инвестиций" @onclick="(e=>{ f.AddInvestitions(id); })">Добавить инвестицию</Button>
             </div>
 
 
-            Database_structure ds = new Database_structure();
             List<Invest> list_of_Investitions = ds.Investitions.Where<Invest>(c => c.Id_company == company_id).ToList();
             Comparison<Invest> x_comp = new Comparison<Invest>(delegate (Invest x, Invest y) { return (x.Id.CompareTo(y.Id)); });
             list_of_Investitions.Sort(x_comp);
 
-            ds.Dispose();
 
             string table = "Investitions";
             List<string> NameX = new List<string>();
@@ -222,7 +226,7 @@
         if (table_name == "Deals")
         {
             <div class="Header">
-                Сделки
+                Сделки @Company_title
             </div>
 
             <div class="Control">
@@ -230,12 +234,12 @@
             </div>
 
 
-            Database_structure ds = new Database_structure();
+
             List<Deal> list_of_Deals = ds.Deals.Where<Deal>(c => c.Id_company == company_id).ToList();
             Comparison<Deal> x_comp = new Comparison<Deal>(delegate (Deal x, Deal y) { return (x.Id.CompareTo(y.Id)); });
             list_of_Deals.Sort(x_comp);
 
-            ds.Dispose();
+
 
             string table = "Deals";
             List<string> NameX = new List<string>();
@@ -283,37 +287,40 @@
         }
 
 
-        //Deals
+        //Documents
         if (table_name == "Documents")
         {
             <div class="Header">
-                Документы
+                Документы связанные с @Company_title
             </div>
+
             <div class="Control">
                 <Button class="button" title="Добавляет документ" @onclick="(e=>{ f.Add_Document (id); })">+Документ</Button>
             </div>
 
+            <div class="scroll">
+               
+            @{
+       
+                List<Document> list_of_docs = new List<Document>();
+                foreach (Link l in ds.Links.Where<Link>(i => i.Parent_Id == company_id).ToList<Link>())
+                    {  list_of_docs.AddRange( ds.Documents.Where<Document>(c => c.Id == l.Child_Id  ).ToArray<Document>()); }
 
-            Database_structure ds = new Database_structure();
-            List<Document> list_of_docs = new List<Document>();
-            foreach (Link l in ds.Links.Where<Link>(i => i.Parent_Id == company_id).ToList<Link>())
-                {  list_of_docs.AddRange( ds.Documents.Where<Document>(c => c.Id == l.Child_Id  ).ToArray<Document>()); }
+
+                Comparison<Document> x_comp = new Comparison<Document>(delegate (Document x, Document y) { return (x.Id.CompareTo(y.Id)); });
+                list_of_docs.Sort(x_comp);
+
+                string table = table_name;
+                List<string> NameX = new List<string>();
 
 
-            Comparison<Document> x_comp = new Comparison<Document>(delegate (Document x, Document y) { return (x.Id.CompareTo(y.Id)); });
-            list_of_docs.Sort(x_comp);
-
-            ds.Dispose();
-
-            string table = table_name;
-            List<string> NameX = new List<string>();
-
-            NameX.Add("Num");
-            NameX.Add("Date");
-            NameX.Add("Name");
-            NameX.Add("Url");
-
-            <div class="card">
+                NameX.Add("Num");
+                NameX.Add("Date");
+                NameX.Add("Name");
+                NameX.Add("Url");
+            }
+            <div class="inside-scroll" style="height:300px">
+            
                 <table>
                     <tr class="card_title">
                         @foreach (String n in NameX)
@@ -328,8 +335,8 @@
                     string tmp_date = "";
                     tmp_date = c.Date.ToString(__DATE_MASK);
 
-                    <tr>
-                            <td> 
+                            <tr class="Editor">
+                            <td > 
                                 <input  type="text" value="@c.Num"       @onchange="(e=> {  f.Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
                             </td>
                             <td>
@@ -352,8 +359,17 @@
                     </tr>
                 }     <!--  //foreach -->
                 </table>
+                
+               </div>
             </div>
         }
+
+        if (ds!=null)
+        {
+            ds.Dispose();
+            GC.Collect();
+        }
+
     }
 
     // --- Загрузка  данных ---

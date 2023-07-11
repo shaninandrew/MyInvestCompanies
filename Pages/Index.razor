@@ -24,8 +24,11 @@
         Allow_delete= (!Allow_delete );
     }
 
-    /// Подключаем черный ящик
+    /// Подключаем черный ящик c функциями
     public Functions f = new Functions();
+
+    public static string Selected_document = "";
+
 
 }
 
@@ -298,70 +301,114 @@
                 <Button class="button" title="Добавляет документ" @onclick="(e=>{ f.Add_Document (id); })">+Документ</Button>
             </div>
 
-            <div class="scroll">
+            <div  style="width:auto">
                
-            @{
-       
-                List<Document> list_of_docs = new List<Document>();
-                foreach (Link l in ds.Links.Where<Link>(i => i.Parent_Id == company_id).ToList<Link>())
-                    {  list_of_docs.AddRange( ds.Documents.Where<Document>(c => c.Id == l.Child_Id  ).ToArray<Document>()); }
+               <div  style="height:50%">
+                 <div class="card_layout">
+                  
+                 <div class="card">
+                    <div class="scroll">
+                    <div style="height:270px">
+
+                @{
+
+                    List<Document> list_of_docs = new List<Document>();
+                    foreach (Link l in ds.Links.Where<Link>(i => i.Parent_Id == company_id).ToList<Link>())
+                        {  list_of_docs.AddRange( ds.Documents.Where<Document>(c => c.Id == l.Child_Id  ).ToArray<Document>()); }
+
+                    if (list_of_docs.Count == 0)
+                    {
+                           @("Данных нет");
+
+                    }
+                 else
+                    {
+                        Comparison<Document> x_comp = new Comparison<Document>(delegate (Document x, Document y) { return (x.Id.CompareTo(y.Id)); });
+                        list_of_docs.Sort(x_comp);
+
+                        string table = table_name;
+                        List<string> NameX = new List<string>();
 
 
-                Comparison<Document> x_comp = new Comparison<Document>(delegate (Document x, Document y) { return (x.Id.CompareTo(y.Id)); });
-                list_of_docs.Sort(x_comp);
-
-                string table = table_name;
-                List<string> NameX = new List<string>();
-
-
-                NameX.Add("Num");
-                NameX.Add("Date");
-                NameX.Add("Name");
-                NameX.Add("Url");
-            }
-            <div class="inside-scroll" style="height:300px">
-            
-                <table>
-                    <tr class="card_title">
-                        @foreach (String n in NameX)
-                        {
-                            <td>@n</td>
-                        }
-                        <td> </td>
-                    </tr>
-
-                @foreach (Document c in list_of_docs)
-                {
-                    string tmp_date = "";
-                    tmp_date = c.Date.ToString(__DATE_MASK);
-
-                            <tr class="Editor">
-                            <td > 
-                                <input  type="text" value="@c.Num"       @onchange="(e=> {  f.Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
-                            </td>
-                            <td>
-                                <input  type="date" value="@tmp_date"    @onchange="(e=> {  f.Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
-                            </td>
-                        
-                            <td>
-                                <textarea class="card_editor" type="text" rows="2" value="@c.Name" @onchange="(e=> {  f.Set_value(NameX[2], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
-                            </td>
-                    
-                            <td>
-                                <input  type="url" value="@c.Url"       @onchange="(e=> {  f.Set_value(NameX[3], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
-                            </td>
-                            <td>
-                             @if (Allow_delete)
-                                {
-                                    <button class="delete_button" title="Удалить запись @c.Num @tmp_date" @onclick="(e=> { f.Delete_Document(c.Id.ToString()) ;} )">-</button>
-                                }
-                            </td>
-                    </tr>
-                }     <!--  //foreach -->
-                </table>
+                        NameX.Add("Num");
+                        NameX.Add("Date");
+                        NameX.Add("Name");
+                        NameX.Add("Url");
                 
-               </div>
-            </div>
+                       
+                            <table style="width:100%">
+                                <tr class="card_title">
+                                    @foreach (String n in NameX)
+                                    {
+                                        <td>@n</td>
+                                    }
+                                    <td> </td>
+                                </tr>
+
+                                @foreach (Document c in list_of_docs)
+                                {
+                                    string tmp_date = "";
+                                    tmp_date = c.Date.ToString(__DATE_MASK);
+
+                                            <tr class="Editor">
+                                            <td > 
+                                                <input  type="text" value="@c.Num"   @onclick="(e=>{ Selected_document = c.Id;  })"    @onchange="(e=> {  f.Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
+                                            </td>
+                                            <td>
+                                                  <input type="date" value="@tmp_date" @onclick="(e=>{ Selected_document = c.Id;  })" @onchange="(e=> {  f.Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
+                                            </td>
+                        
+                                            <td>
+                                                <textarea class="card_editor"  @onclick="(e=>{ Selected_document = c.Id;  })"  type="text" rows="2" value="@c.Name" @onchange="(e=> {  f.Set_value(NameX[2], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
+                                            </td>
+                    
+                                            <td>
+                                                            <input type="url" value="@c.Url" @onclick="(e=>{ Selected_document = c.Id;  })" @onchange="(e=> {  f.Set_value(NameX[3], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
+                                            </td>
+                                            <td>
+                                             @if (Allow_delete)
+                                                {
+                                                    <button class="delete_button" title="Удалить запись @c.Num @tmp_date" @onclick="(e=> { f.Delete_Document(c.Id.ToString()) ;} )">-</button>
+                                                }
+                                            </td>
+                                    </tr>
+                                }    <!--  //foreach -->
+               
+                                            </table>
+
+                                        }
+                                    } <!-- есть данные --->
+
+                                </div>
+                            </div>
+
+                        </div> <!--card-->
+
+                        <div class="card">
+                            <div class="card_title">
+                                @if (Selected_document != "")
+                                {
+                                  @("Выбранный документ : "+  @Selected_document)
+                                    
+                                }
+
+                            </div>
+                    <div>
+                        Карточка редактор 
+                    </div>
+                
+                </div>
+
+                </div> <!-- card style- -->
+
+                
+
+                </div>
+
+
+
+            </div> <!--scroll-->
+        
         }
 
         if (ds!=null)

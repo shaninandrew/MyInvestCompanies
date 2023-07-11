@@ -59,17 +59,18 @@
                  string tmp_date = c.Founded.Date.ToUniversalTime().ToString(__DATE_MASK);
                 }
 
-            <input type=date value="@tmp_date" @onfocus="(e=> { Company_id = c.Id; })" @onclick="(e=> { Company_id = c.Id; })" @onchange="(e=> {  f.Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
+
+            <input type=date value="@tmp_date" @onfocus="(e=> { Company_id = c.Id; })" @onclick="(e=> { Selected_document=String.Empty;  Company_id = c.Id; })" @onchange="(e=> {  f.Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
             @{NameX.Add("Address");}
-            <input type="text" value="@c.Address" @onfocus="(e=> { Company_id = c.Id; })" @onclick="(e=> { Company_id = c.Id; })" @onchange="(e=> {  f.Set_value(NameX[2], c.Id.ToString(), e.Value.ToString() , e, null , table); })" />
+            <input type="text" value="@c.Address" @onfocus="(e=> { Company_id = c.Id; })" @onclick="(e=> { Company_id = c.Id; })" @onchange="(e=> { Selected_document=String.Empty;  f.Set_value(NameX[2], c.Id.ToString(), e.Value.ToString() , e, null , table); })" />
             @{NameX.Add("Fact_Address"); }
-            <input type="text" value="@c.Fact_Address" @onfocus="(e=> { Company_id = c.Id; })" @onclick="(e=> { Company_id = c.Id; })" @onchange="(e=> {  f.Set_value(NameX[3], c.Id.ToString(), e.Value.ToString() , e, null,table);  })" />
+            <input type="text" value="@c.Fact_Address" @onfocus="(e=> { Company_id = c.Id; })" @onclick="(e=> { Company_id = c.Id; })" @onchange="(e=> { Selected_document=String.Empty; f.Set_value(NameX[3], c.Id.ToString(), e.Value.ToString() , e, null,table);  })" />
             @{NameX.Add("Description"); }
-            <input type="text" value="@c.Description" @onfocus="(e=> { Company_id = c.Id; })" @onclick="(e=> { Company_id = c.Id; })" @onchange="(e=> {  f.Set_value(NameX[4], c.Id.ToString(), e.Value.ToString() , e, null, table);  })" />
+            <input type="text" value="@c.Description" @onfocus="(e=> { Company_id = c.Id; })" @onclick="(e=> { Company_id = c.Id; })" @onchange="(e=> { Selected_document=String.Empty; f.Set_value(NameX[4], c.Id.ToString(), e.Value.ToString() , e, null, table);  })" />
             @{NameX.Add("Inn"); }
-            <input type="number" value="@c.Inn" @onfocus="(e=> { Company_id = c.Id; })" @onclick="(e=> { Company_id = c.Id; })" @onchange="(e=> {  f.Set_value(NameX[5], c.Id.ToString(), e.Value.ToString() , e, null, table);  })" />
+            <input type="number" value="@c.Inn" @onfocus="(e=> { Company_id = c.Id; })" @onclick="(e=> { Company_id = c.Id; })" @onchange="(e=> { Selected_document=String.Empty;  f.Set_value(NameX[5], c.Id.ToString(), e.Value.ToString() , e, null, table);  })" />
             @{NameX.Add("KPP"); }
-            <input type="number" value="@c.KPP" @onfocus="(e=> { Company_id = c.Id; })" @onclick="(e=> { Company_id = c.Id; })" @onchange="(e=> {  f.Set_value(NameX[6], c.Id.ToString(), e.Value.ToString() , e, null , table );  })" />
+            <input type="number" value="@c.KPP" @onfocus="(e=> { Company_id = c.Id; })" @onclick="(e=> { Company_id = c.Id; })" @onchange="(e=> { Selected_document=String.Empty;  f.Set_value(NameX[6], c.Id.ToString(), e.Value.ToString() , e, null , table );  })" />
             
             @if (Allow_delete)
             {
@@ -95,52 +96,82 @@
         </div>
         -->
         ds.Dispose();
-    }
-
-
-
-    async void Show_Table_Docs_as_EditableList (List<Document> docs)
-    {
-
-        foreach (Document d in docs)
-        {
-            @( d.Name + " " + d.Num + " " + d.Date.ToString()+ " " + d.Url )
-
-        }
 
     }
 
 
-
-    async void Show_Linked_Table (string id, string table_name)
+    async void Show_Table_Docs_as_EditableList (List<Document> docs, bool show_viewer)
     {
-        Database_structure ds = new Database_structure();
-        List<Link> lx=   ds.Links.Where<Link>(i => i.Parent_Id == id).ToList<Link>();
 
+        Comparison<Document> x_comp = new Comparison<Document>(delegate (Document x, Document y) { return (x.Id.CompareTo(y.Id)); });
+        docs.Sort(x_comp);
 
+        string table = "Documents";
+        List<string> NameX = new List<string>();
 
-        if (table_name=="Documents")
+        NameX.Add("Num");
+        NameX.Add("Date");
+        NameX.Add("Name");
+        NameX.Add("Url");
+
+        @if (docs.Count > 0)
         {
-            var Obj = new List<Document>();
-            foreach (Link l in lx)
-            {
-                Obj.AddRange ( ds.Documents.Where<Document>(d => d.Id == l.Child_Id).ToArray<Document>());
-            }
+            <table class="scroll" style="width:100%">
+                    <tr class="card_title">
 
-            Show_Table_Docs_as_EditableList (Obj);
+                    @foreach (String n in NameX)
+                    {
+                        <td>@n</td>
+                    }
+                    <td> </td>
+                    </tr>
 
+                    @foreach (Document c in docs)
+                    {
+                        string tmp_date = "";
+                        tmp_date = c.Date.ToString(__DATE_MASK);
+
+                        <tr class="Editor">
+                            <td>
+                                <input type="text" value="@c.Num" @onclick="(e=>{ Selected_document = c.Id;  })" @onchange="(e=> {  f.Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
+                            </td>
+                            <td>
+                                <input type="date" value="@tmp_date" @onclick="(e=>{ Selected_document = c.Id;  })" @onchange="(e=> {  f.Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
+                            </td>
+
+                            <td>
+                                <textarea class="card_editor" @onclick="(e=>{ Selected_document = c.Id;  })" type="text" rows="2" value="@c.Name" @onchange="(e=> {  f.Set_value(NameX[2], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
+                            </td>
+
+                            <td>
+                                <input type="url" value="@c.Url" @onclick="(e=>{ Selected_document = c.Id;  })" @onchange="(e=> {  f.Set_value(NameX[3], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
+                            </td>
+                            <td>
+                                @if (Allow_delete)
+                                {
+                                    <button class="delete_button" title="Удалить запись @c.Num @tmp_date" @onclick="(e=> { f.Delete_Document(c.Id.ToString()) ;} )">-</button>
+                                }
+                            </td>
+                        </tr>
+                    }
+
+                    <!--  //foreach -->
+                }
+               
+            </table>
+        }
+        else
+        {
+            @("Нет данных.")
 
         }
 
-        ds.Dispose();
-
-       }
-
+    } <!-- function -->
 
 
 
     /// Показ любой таблицы
-    async void Show_Table (string company_id, string table_name)
+    async void Show_Table (string company_id, string table_name, bool show_additional_editor)
     {
         Database_structure ds = new Database_structure();
         string id = company_id;
@@ -154,68 +185,68 @@
 
         if (table_name == "Capitals")
         {
-                <div class="Header">
+            <div class="Header">
                 Уставный капитал @Company_title
-                </div>
-                <div class="Control">
+            </div>
+            <div class="Control">
                 <Button class="button" title="Добавляет размер уставного капитал" @onclick="(e=>{ f.AddCapital(id); })"> Добавить капитал </Button>
-                </div>
+            </div>
 
-                
-                List<Capital> list_of_capital = ds.Capitals.Where<Capital>(C => C.Id_company == company_id).ToList<Capital>();
-                Comparison<Capital> x_comp = new Comparison<Capital>(delegate (Capital x, Capital y) { return (x.Id.CompareTo(y.Id)); });
-                list_of_capital.Sort(x_comp);
+            List<Capital> list_of_capital = ds.Capitals.Where<Capital>(C => C.Id_company == company_id).ToList<Capital>();
+            Comparison<Capital> x_comp = new Comparison<Capital>(delegate (Capital x, Capital y) { return (x.Id.CompareTo(y.Id)); });
+            list_of_capital.Sort(x_comp);
 
-                
 
-                string table = "Capitals";
-                List<string> NameX = new List<string > ();
-                NameX.Add("Sum");
-                NameX.Add("Date");
 
-                <div class="card">
+            string table = "Capitals";
+            List<string> NameX = new List<string>();
+            NameX.Add("Sum");
+            NameX.Add("Date");
+
+            @if (list_of_capital.Count>0)
+            {
+            <div class="card">
                 <table>
-                  <tr class="card_title">
-                            @foreach (String n in NameX)
-                            {
-                                <td>@n</td>
-                            }
-                            <td> </td>
-                </tr>
+                    <tr class="card_title">
+                        @foreach (String n in NameX)
+                        {
+                            <td>@n</td>
+                        }
+                        <td> </td>
+                    </tr>
 
-                 <!-- выводных уставного капитала -->            
-                @foreach (Capital c in list_of_capital)
-                {
-                    string tmp_date = "";
+                    <!-- выводных уставного капитала -->            
+                    @foreach (Capital c in list_of_capital)
+                    {
+                        string tmp_date = "";
 
-                    if (c.Date.HasValue)
-                    { 
-                     tmp_date= c.Date.Value.ToString(__DATE_MASK);
-                    }
-                       
+                        if (c.Date.HasValue)
+                        {
+                            tmp_date = c.Date.Value.ToString(__DATE_MASK);
+                        }
+
                         <tr>
                             <td>
                                 <input type="number" value="@c.Sum"     @onchange="(e=> {  f.Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
-                             </td>
+                            </td>
                             <td>
                                 <input type="date"  value="@tmp_date"    @onchange="(e=> {  f.Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
                             </td>
-                               <td>
+                            <td>
                                 @if (Allow_delete)
                                 {
 
                                     <button class="delete_button" title="Удалить запись @c.Sum @c.Date" @onclick="(e=> {f.Delete_capital(c.Id.ToString()) ;} )">-</button>
-                            
+
                                 }
                             </td>
                         </tr>
-                
-                }  <!-- //foreach -->
+                    }
+                    <!-- //foreach -->
                 </table>
             </div>
-         
-        }
-
+            } <!-- if count > 0 -->
+        } <!-- Capital -->
 
         
         if (table_name == "Acquisitions")
@@ -328,16 +359,14 @@
 
                      <tr >
                         <td>
-                         <input type="date" value="@tmp_date" @onclick="(e=>{ Deal_id=c.Id; })" @onchange="(e=> {  f.Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
+                             <input type="date" value="@tmp_date" @onclick="(e=>{ Deal_id=c.Id; })" @onchange="(e=> {  f.Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
                          </td>
-
                          <td>  
                             <textarea class="card_editor" type="text" rows="2" @onclick="(e=>{ Deal_id=c.Id; })" value="@c.Description" @onchange="(e=> {  f.Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
                          </td>
                          
                          <td >
                                 <button class="button" title="Добавить документ к сделке от @c.Date.ToString()" @onclick="(e=> { f.Add_Document_for_Deal(c.Id.ToString()) ; _FLAG_show_doc_editor= true;} )">+Документ</button>
-                                
                         </td>
 
                          <td>
@@ -356,8 +385,8 @@
             {
                 
                 <div class="card">
-                   @("Выбранное дело" + @Deal_id)
-                    @{ Show_Table(Deal_id, "Documents");}
+                   @("Выбранное дело  (" + @Deal_id+ ")")
+                    @{ Show_Table(Deal_id, "Documents",false);}
                     </div>
                 }
            
@@ -372,9 +401,13 @@
                 Документы связанные с @Company_title
             </div>
 
-            <div class="Control">
-                <Button class="button" title="Добавляет документ" @onclick="(e=>{ f.Add_Document (id); })">+Документ</Button>
-            </div>
+            <!-- показывает кнопки создания документиов -->
+            @if (show_additional_editor)
+            {
+                <div class="Control">
+                    <Button class="button" title="Добавляет документ" @onclick="(e=>{ f.Add_Document (id); })">+Документ</Button>
+                </div>
+            }
 
             <div  style="width:auto">
                
@@ -385,71 +418,32 @@
                     <div class="scroll">
                     <div style="height:270px">
 
-                @{
+                        @{
 
-                    List<Document> list_of_docs = new List<Document>();
-                    foreach (Link l in ds.Links.Where<Link>(i => i.Parent_Id == company_id).ToList<Link>())
-                        {  list_of_docs.AddRange( ds.Documents.Where<Document>(c => c.Id == l.Child_Id  ).ToArray<Document>()); }
+                            List<Document> list_of_docs = new List<Document>();
+                            //Документы от фирмы сразу напрямую
+                            foreach (Link l in ds.Links.Where<Link>(i => i.Parent_Id == company_id).ToList<Link>())
+                            {  list_of_docs.AddRange( ds.Documents.Where<Document>(c => c.Id == l.Child_Id  ).ToArray<Document>()); }
+
+                            //LINQ Join Доки + Связка + Сделка где id_company= Дело
+                            foreach (Document docx in (from d in ds.Documents
+                                                    join l in ds.Links on d.Id equals l.Child_Id
+                                                    join deals in ds.Deals on l.Parent_Id equals deals.Id
+                                                    where deals.Id_company==company_id 
+                                                    select d).ToList<Document>()
+                                                    )
+                                        { list_of_docs.Add(docx); }
+
 
                     if (list_of_docs.Count == 0)
                     {
-                           @("Данных нет");
+                                            @("Данных нет")
+                                            ;
 
-                    }
-                 else
-                    {
-                        Comparison<Document> x_comp = new Comparison<Document>(delegate (Document x, Document y) { return (x.Id.CompareTo(y.Id)); });
-                        list_of_docs.Sort(x_comp);
-
-                        string table = table_name;
-                        List<string> NameX = new List<string>();
-
-
-                        NameX.Add("Num");
-                        NameX.Add("Date");
-                        NameX.Add("Name");
-                        NameX.Add("Url");
-                
-                       
-                            <table class="scroll" style="width:100%" >
-                                <tr class="card_title">
-                                    @foreach (String n in NameX)
-                                    {
-                                        <td>@n</td>
-                                    }
-                                    <td> </td>
-                                </tr>
-
-                                @foreach (Document c in list_of_docs)
-                                {
-                                    string tmp_date = "";
-                                    tmp_date = c.Date.ToString(__DATE_MASK);
-
-                                            <tr class="Editor">
-                                            <td > 
-                                                <input  type="text" value="@c.Num"   @onclick="(e=>{ Selected_document = c.Id;  })"    @onchange="(e=> {  f.Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
-                                            </td>
-                                            <td>
-                                                  <input type="date" value="@tmp_date" @onclick="(e=>{ Selected_document = c.Id;  })" @onchange="(e=> {  f.Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
-                                            </td>
-                        
-                                            <td>
-                                                <textarea class="card_editor"  @onclick="(e=>{ Selected_document = c.Id;  })"  type="text" rows="2" value="@c.Name" @onchange="(e=> {  f.Set_value(NameX[2], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
-                                            </td>
-                    
-                                            <td>
-                                                            <input type="url" value="@c.Url" @onclick="(e=>{ Selected_document = c.Id;  })" @onchange="(e=> {  f.Set_value(NameX[3], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
-                                            </td>
-                                            <td>
-                                             @if (Allow_delete)
-                                                {
-                                                    <button class="delete_button" title="Удалить запись @c.Num @tmp_date" @onclick="(e=> { f.Delete_Document(c.Id.ToString()) ;} )">-</button>
-                                                }
-                                            </td>
-                                    </tr>
-                                }    <!--  //foreach -->
-               
-                                            </table>
+                                        }
+                                        else
+                                        {
+                                            Show_Table_Docs_as_EditableList(list_of_docs, true);
 
                                         }
                                     } <!-- есть данные --->
@@ -459,26 +453,33 @@
 
                         </div> <!--card-->
 
-                        <div class="card">
-                            <div class="card_title">
-                                @if (Selected_document != "")
-                                {
-                                  @("Выбранный документ : "+  @Selected_document)
-                                    
-                                }
-                                else
-                                {
-                                    @("Выберите документ ")
-                                }
+                        @if (show_additional_editor)
+                        {
+                            <div class="card">
+                                <div class="card_title">
+                                    @if (Selected_document != "")
+                                    {
+                                        @(
+                                                                "Выбранный документ : " + @Selected_document
+                                                                )
+
+                                    }
+                                    else
+                                    {
+                                        @(
+                                                                "Выберите документ "
+                                                                )
+                                    }
+
+                                </div>
+                                <div class="card_editor">
+                                    <div class="scroll">
+                                        Карточка редактор 
+                                    </div>
+                                </div>
 
                             </div>
-                    <div class="card_editor">
-                        <div class="scroll">
-                        Карточка редактор 
-                        </div>
-                    </div>
-                
-                </div>
+                        }
 
                 </div> <!-- card style- -->
             </div>
@@ -627,7 +628,7 @@
                                 if (Company_id != null)
                                 {
                                     if (Company_id!="")
-                                        Show_Table(Company_id, "Capitals");
+                                        Show_Table(Company_id, "Capitals",false);
                                 }
                             }
                     </div>
@@ -637,7 +638,7 @@
                                 if (Company_id != null)
                                 {
                                     if (Company_id != "")
-                                        Show_Table(Company_id, "Investitions");
+                                        Show_Table(Company_id, "Investitions",false);
                                 }
                             }
                         </div>
@@ -648,7 +649,7 @@
                             if (Company_id != null)
                             {
                                 if (Company_id != "")
-                                        Show_Table(Company_id, "Deals");
+                                        Show_Table(Company_id, "Deals",false);
                             }
                         }
                     </div>
@@ -854,11 +855,10 @@
                     if (Company_id != null)
                     {
                         if (Company_id != "")
-                            Show_Table(Company_id, "Documents");
+                            Show_Table(Company_id, "Documents",true);
                     }
                 }
             </div>
-          
         </div>
     }
     

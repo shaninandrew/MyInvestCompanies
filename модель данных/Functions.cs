@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MyInvestCompanies.модель_данных
 {
@@ -611,6 +613,11 @@ namespace MyInvestCompanies.модель_данных
                 Console.WriteLine( ex.Message);
             }
         }
+
+
+
+
+       
 
 
         /// <summary>

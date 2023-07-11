@@ -512,15 +512,7 @@
                         }
                     </div>
 
-                    <div style="Card">
-                        @{
-                            if (Company_id != null)
-                            {
-                                if (Company_id != "")
-                                    Show_Table(Company_id, "Documents");
-                            }
-                        }
-                    </div>
+                 
                 </div>
          </div>
      }
@@ -528,8 +520,6 @@
 
     @if (query_sub_page == "holders")
     {
-
-
         <div  id="menu_holders_firm">
             <div class="Header">
                 @{
@@ -700,12 +690,7 @@
                         </div>
                    </div>
 
-                
-                    
-
-                   
-
-                </div> <!--scroll -->
+               </div> <!--scroll -->
 
                 if (db_index != null) { db_index.Dispose(); }
             }
@@ -714,10 +699,19 @@
         </div>
     }
 
-    @if (query_sub_page == "owners")
+    @if (query_sub_page == "docs")
     {
-        <div id="menu_holders_firm">
-            Тут будет другое владельцы
+        <div id="menu_docs">
+            <div style="Card">
+                @{
+                    if (Company_id != null)
+                    {
+                        if (Company_id != "")
+                            Show_Table(Company_id, "Documents");
+                    }
+                }
+            </div>
+          
         </div>
     }
     

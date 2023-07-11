@@ -50,12 +50,13 @@ input[type="checkbox"] {
     overflow-x: auto;
     overflow: auto;
     align-content: space-between;
-    /* background: #706e6e; */
+     background: white;
     
     padding: 2px 2px 2px 2px;
     
     border-spacing: 2px 5px;
     width:100%;
+
 }
 
 .inside-scroll {
@@ -64,8 +65,8 @@ input[type="checkbox"] {
     overscroll-behavior: contain;
     overflow: hidden;
     padding: 2px 2px 2px 2px;
-    
     border-spacing: 2px 2px;
+    border-radius: 3 px 3 px;
 }
 
 input:focus {
@@ -133,7 +134,8 @@ input {
     background: #ffad1a;
     color: black;
     font-weight: bold;
-    height:1 rem;
+    height: 1 rem;
+    border-radius: 3 px 3 px;
 }
 
 .Search {
@@ -149,9 +151,10 @@ input {
 }
 
 .card_layout {
+    border-radius: 3 px 3 px 3px 3px;
     display: flex;
-    background:white;
-    color:black;
+    background: white;
+    color: black;
 }
 
 
@@ -159,7 +162,9 @@ input {
     color: #d36c09ef;
     background: black;
     align-content: center;
-    text-align:center;
+    text-align: center;
+    width: 100%;
+    border-radius: 3 px 3 px 3px 3px;
 }
 
 
@@ -179,6 +184,7 @@ input {
     height: auto;
     align-items: start;
     border-radius: 10px;
+    display: block;
 }
 
 .card:hover 
@@ -251,9 +257,8 @@ button:hover {
 }
 
 
-.card_editor 
-{
-    min-width:120 px;
-    width:auto;
-
+.card_editor {
+    border-radius: 10px;
+    min-width: 120 px;
+    width: auto;
 }

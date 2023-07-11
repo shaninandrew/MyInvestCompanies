@@ -18,6 +18,12 @@
     public  static  string Selected_Holder = "";
 
     public  static  bool Allow_delete = false;
+
+    public static bool _FLAG_show_doc_editor = true;
+
+    public static string Deal_id = "";
+
+
     /// Переключалка  
     public static void Switch_delete()
     { 
@@ -91,6 +97,44 @@
         ds.Dispose();
     }
 
+
+
+    async void Show_Table_Docs_as_EditableList (List<Document> docs)
+    {
+
+        foreach (Document d in docs)
+        {
+            @( d.Name + " " + d.Num + " " + d.Date.ToString()+ " " + d.Url )
+
+        }
+
+    }
+
+
+
+    async void Show_Linked_Table (string id, string table_name)
+    {
+        Database_structure ds = new Database_structure();
+        List<Link> lx=   ds.Links.Where<Link>(i => i.Parent_Id == id).ToList<Link>();
+
+
+
+        if (table_name=="Documents")
+        {
+            var Obj = new List<Document>();
+            foreach (Link l in lx)
+            {
+                Obj.AddRange ( ds.Documents.Where<Document>(d => d.Id == l.Child_Id).ToArray<Document>());
+            }
+
+            Show_Table_Docs_as_EditableList (Obj);
+
+
+        }
+
+        ds.Dispose();
+
+       }
 
 
 
@@ -172,6 +216,15 @@
          
         }
 
+
+        
+        if (table_name == "Acquisitions")
+        {
+            <!--обоснования для сделок-->
+
+        
+        }
+
         if (table_name == "Investitions")
         {
             <div class="Header">
@@ -180,7 +233,7 @@
             <div class="Control">
                 <Button class="button" title="Добавляет размер вложенных инвестиций" @onclick="(e=>{ f.AddInvestitions(id); })">Добавить инвестицию</Button>
             </div>
-
+            
 
             List<Invest> list_of_Investitions = ds.Investitions.Where<Invest>(c => c.Id_company == company_id).ToList();
             Comparison<Invest> x_comp = new Comparison<Invest>(delegate (Invest x, Invest y) { return (x.Id.CompareTo(y.Id)); });
@@ -212,8 +265,13 @@
                         <td>
                             <textarea class="card_editor" type="text" rows="2" value="@c.Source" @onchange="(e=> {  f.Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
                         </td>
-                        <td>
-                        @if (Allow_delete)
+
+                            <td>
+                                <button> + </button>
+                            </td>
+                        
+                            <td>
+                                @if (Allow_delete)
                                 {
                                     <button class="delete_button" title="Удалить запись @c.Method @c.Source" @onclick="(e=> { f.Delete_Investitions(c.Id.ToString()) ;} )">-</button>
                                 }
@@ -270,12 +328,18 @@
 
                      <tr >
                         <td>
-                         <input type="date" value="@tmp_date" @onchange="(e=> {  f.Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
+                         <input type="date" value="@tmp_date" @onclick="(e=>{ Deal_id=c.Id; })" @onchange="(e=> {  f.Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
                          </td>
 
                          <td>  
-                            <textarea class="card_editor" type="text" rows="2" value="@c.Description" @onchange="(e=> {  f.Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
+                            <textarea class="card_editor" type="text" rows="2" @onclick="(e=>{ Deal_id=c.Id; })" value="@c.Description" @onchange="(e=> {  f.Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
                          </td>
+                         
+                         <td >
+                                <button class="button" title="Добавить документ к сделке от @c.Date.ToString()" @onclick="(e=> { f.Add_Document_for_Deal(c.Id.ToString()) ; _FLAG_show_doc_editor= true;} )">+Документ</button>
+                                
+                        </td>
+
                          <td>
                           @if (Allow_delete)
                                 {
@@ -286,6 +350,17 @@
                 }    
             </table>
             </div>
+
+
+            if (_FLAG_show_doc_editor)
+            {
+                
+                <div class="card">
+                   @("Выбранное дело" + @Deal_id)
+                    @{ Show_Table(Deal_id, "Documents");}
+                    </div>
+                }
+           
 
         }
 
@@ -336,7 +411,7 @@
                         NameX.Add("Url");
                 
                        
-                            <table style="width:100%">
+                            <table class="scroll" style="width:100%" >
                                 <tr class="card_title">
                                     @foreach (String n in NameX)
                                     {
@@ -391,19 +466,22 @@
                                   @("Выбранный документ : "+  @Selected_document)
                                     
                                 }
+                                else
+                                {
+                                    @("Выберите документ ")
+                                }
 
                             </div>
-                    <div>
+                    <div class="card_editor">
+                        <div class="scroll">
                         Карточка редактор 
+                        </div>
                     </div>
                 
                 </div>
 
                 </div> <!-- card style- -->
-
-                
-
-                </div>
+            </div>
 
 
 
@@ -531,7 +609,7 @@
                                 db_index = new Database_structure();
                                 Company selected = db_index.Companies.Where(i => i.Id == Company_id).Single();
                                 db_index.Dispose();
-                                @("«" + selected.Name +" | ИНН"+ selected.Inn +"»")
+                                //@("«" + selected.Name +" | ИНН"+ selected.Inn +"»")
                             }
                         }
                     </div>
@@ -640,11 +718,17 @@
                                     <td>@n</td>
                                 }
                                 <td> </td>
-                            </tr>
+                        </tr>
 
                         var db_index2 = new Database_structure();
-                        
-                        foreach (HolderReestr h in db_index.HolderReestrs.Where<HolderReestr>(h => h.Company_Id == Company_id).ToList<HolderReestr>())
+
+                        List<HolderReestr> reestr = db_index.HolderReestrs.Where<HolderReestr>(h => h.Company_Id == Company_id).Distinct().ToList<HolderReestr>();
+
+                        Comparison<HolderReestr> y_comp = new Comparison<HolderReestr>(delegate (HolderReestr x, HolderReestr y) { return (x.Id.CompareTo(y.Id)); });
+                        reestr.Sort(y_comp); 
+
+
+                        foreach (HolderReestr h in reestr)
                         {
                             foreach (Owner o in db_index2.Owners.Where<Owner>(oi => oi.Id == h.Owner_Id).ToList<Owner>())
                             {

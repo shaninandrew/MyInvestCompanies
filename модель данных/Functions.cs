@@ -549,12 +549,34 @@ namespace MyInvestCompanies.модель_данных
             ds.Dispose();
         }
 
-        
+
+
         ///  <summary>
         /// Добавляет документ
         /// </summary>
         /// <param name="company_id"></param>
-       public  async void Add_Document(string company_id)
+        public async void Add_Document_for_Deal (string deal_id)
+        {
+            Database_structure ds = new Database_structure();
+
+            Document i_new = new Document();
+            string Child_id = i_new.Id;
+            ds.Documents.Add(i_new);
+
+            Link lnk = new Link(deal_id, Child_id); ;
+            lnk.Parent_table = "Deals";
+            ds.Links.Add(lnk);
+
+            ds.SaveChanges();
+            ds.Dispose();
+        }
+
+
+        ///  <summary>
+        /// Добавляет документ
+        /// </summary>
+        /// <param name="company_id"></param>
+        public  async void Add_Document(string company_id)
         {
             Database_structure ds = new Database_structure();
 
@@ -563,6 +585,7 @@ namespace MyInvestCompanies.модель_данных
             ds.Documents.Add(i_new);
 
             Link lnk = new Link(company_id, Child_id); ;
+            lnk.Parent_table = "Companies";
             ds.Links.Add(lnk);
 
             ds.SaveChanges();
@@ -575,11 +598,18 @@ namespace MyInvestCompanies.модель_данных
         /// <param name="_id"></param>
         public async void Delete_Document(string _id)
         {
-            Database_structure ds = new Database_structure();
-            ds.Documents.Remove(ds.Documents.Where(i => i.Id == _id).Single());
-            ds.Links.RemoveRange(ds.Links.Where<Link>(i => i.Parent_Id == _id).ToArray());
-            ds.SaveChanges();
-            ds.Dispose();
+            try
+            {
+                Database_structure ds = new Database_structure();
+                ds.Documents.Remove(ds.Documents.Where(i => i.Id == _id).Single());
+                ds.Links.RemoveRange(ds.Links.Where<Link>(i => i.Parent_Id == _id).ToArray());
+                ds.SaveChanges();
+                ds.Dispose();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine( ex.Message);
+            }
         }
 
 

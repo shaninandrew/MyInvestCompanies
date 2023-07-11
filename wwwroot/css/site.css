@@ -113,6 +113,7 @@ input {
 
 .Editor:hover {
     background: #f25d5d;
+    cursor:pointer;
 }
 
 .Editor {
@@ -169,30 +170,28 @@ input {
 
 
 .card {
-    background: #d36c09ef;
+    background: #f7eacf;
     display: flex;
     flex: 1 1 auto;
-    flex-basis: 30%;
-    width: auto;
-    margin: 6px 6px 6px 6px;
+    flex-basis: 42%;
+    width:700px ;
+
+    margin: 3px 3px 3px 3px;
     border: 2px #706e6e;
+
     padding: 2px 2px 2px 2px;
     border-spacing: 2px 2px;
     vertical-align: top;
     align-content: start;
+
     min-height: 100px;
     height: auto;
+
     align-items: start;
-    border-radius: 10px;
+    border-radius: 2px;
     display: block;
 }
 
-.card:hover 
-{
-        background: #f25d5d;
-        border: 2px #f25d5d;
-        box-shadow: 4px 4px #bdb2b2;
-}
 
 .button {
     cursor: pointer;
@@ -222,13 +221,25 @@ input[type=button] {
     padding: 5px 10px;
 }
 
+input[type=text] {
+    cursor:default;
+    height: 90 px;
+    min-width: 230 px;
+    width: 92%;
+    border-radius: 5 px 5 px 5 px 5 px;
+    font-size: 12pt;
+    text-align: left;
+    display: inline-block;
+    padding: 5px 5px;
+}
+
 button {
     cursor: pointer;
     background: black;
     color: #ffad1a;
     height: 70 px;
     min-width: 130 px;
-    width: auto;
+    width:fit-content;
     border-radius: 5 px 5 px 5 px 5 px;
     font-size: 12pt;
     text-align: center;

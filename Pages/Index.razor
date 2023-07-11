@@ -51,33 +51,52 @@
 
         string table = "Companies";
         <!--  @onmouseover="(e=> { Company_id = c.Id; } -->
-        <div class="Editor">
+        
+        <tr class="Editor">
+            <td>
+                <input type="text" value="@c.Name" @onfocus="(e=> { Company_id = c.Id; })" @onclick="(e=> { Company_id = c.Id; })" @onchange="(e=>  { f.Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e, null, table );  })" />
+            </td>
 
-            <input type="text" value="@c.Name" @onfocus="(e=> { Company_id = c.Id; })" @onclick="(e=> { Company_id = c.Id; })" @onchange="(e=>  { f.Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e, null, table );  })" />
-            
+            <td>
              @{
                  NameX.Add("Founded");
                  string tmp_date = c.Founded.Date.ToUniversalTime().ToString(__DATE_MASK);
                 }
-
-
             <input type=date value="@tmp_date" @onfocus="(e=> { Company_id = c.Id; })" @onclick="(e=> { Selected_document=String.Empty;  Company_id = c.Id; })" @onchange="(e=> {  f.Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
+            </td>
+
             @{NameX.Add("Address");}
+            <td>
             <input type="text" value="@c.Address" @onfocus="(e=> { Company_id = c.Id; })" @onclick="(e=> { Company_id = c.Id; })" @onchange="(e=> { Selected_document=String.Empty;  f.Set_value(NameX[2], c.Id.ToString(), e.Value.ToString() , e, null , table); })" />
+            </td>
+
             @{NameX.Add("Fact_Address"); }
+            <td>
             <input type="text" value="@c.Fact_Address" @onfocus="(e=> { Company_id = c.Id; })" @onclick="(e=> { Company_id = c.Id; })" @onchange="(e=> { Selected_document=String.Empty; f.Set_value(NameX[3], c.Id.ToString(), e.Value.ToString() , e, null,table);  })" />
+            </td>
             @{NameX.Add("Description"); }
+            <td>
             <input type="text" value="@c.Description" @onfocus="(e=> { Company_id = c.Id; })" @onclick="(e=> { Company_id = c.Id; })" @onchange="(e=> { Selected_document=String.Empty; f.Set_value(NameX[4], c.Id.ToString(), e.Value.ToString() , e, null, table);  })" />
+            </td>
+
             @{NameX.Add("Inn"); }
+            <td>
             <input type="number" value="@c.Inn" @onfocus="(e=> { Company_id = c.Id; })" @onclick="(e=> { Company_id = c.Id; })" @onchange="(e=> { Selected_document=String.Empty;  f.Set_value(NameX[5], c.Id.ToString(), e.Value.ToString() , e, null, table);  })" />
+            </td>
+            
             @{NameX.Add("KPP"); }
+            <td>
             <input type="number" value="@c.KPP" @onfocus="(e=> { Company_id = c.Id; })" @onclick="(e=> { Company_id = c.Id; })" @onchange="(e=> { Selected_document=String.Empty;  f.Set_value(NameX[6], c.Id.ToString(), e.Value.ToString() , e, null , table );  })" />
+            </td>
             
             @if (Allow_delete)
             {
+                <td>
                 <button  class="delete_button" title="Удалить запись @c.Name @c.Address" @onclick="(e=> {f.Delete_company(c.Id.ToString(), null) ;} )">-</button>
+                </td>
             }
-        </div>
+        </tr>
+        
     }
 
     /// Показывает связи
@@ -277,52 +296,61 @@
                 NameX.Add("Source");
 
                 <div class="card">
-                <table>
-                     <tr class="card_title">
-                        @foreach (String n in NameX)
-                        {
-                            <td>@n</td>
-                        }
-                        <td> </td>
-                    </tr>
-                
-                @foreach (Invest c in list_of_Investitions)
-                {
-                    
-                        <tr>
-                            <td>
-                                <input type="text" value="@c.Method" @onclick="(e=>{ Invest_id=c.Id; })"  @onchange="(e=> {  f.Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
-                            </td>
-                            <td>
-                                <textarea class="card_editor" type="text" rows="2" value="@c.Source" @onclick="(e=>{ Invest_id=c.Id; })"  @onchange="(e=> {  f.Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
-                            </td>
-
-                                <td>
-                                <button @onclick="(e=> { f.Add_Document_for_Invest(c.Id.ToString()) ; _FLAG_show_doc_editor= true;} )"> +Документ </button>
-                                </td>
-                        
-                                <td>
-                                    @if (Allow_delete)
-                                    {
-                                        <button class="delete_button" title="Удалить запись @c.Method @c.Source" @onclick="(e=> { f.Delete_Investitions(c.Id.ToString()) ;} )">-</button>
-                                    }
-                                </td>
+                <div class="scroll">
+                <div style="height:300px;">
+                        <table style="width:100%">
+                         <tr class="card_title">
+                            @foreach (String n in NameX)
+                            {
+                                <td>@n</td>
+                            }
+                            <td> </td>
+                            <td> </td>
                         </tr>
+                
+                    @foreach (Invest c in list_of_Investitions)
+                    {
+
+                            <tr class="Editor">
+                                <td>
+                                    <input type="text" value="@c.Method" @onclick="(e=>{ Invest_id=c.Id; })"  @onchange="(e=> {  f.Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
+                                </td>
+                                <td>
+                                    <textarea class="card_editor" type="text" rows="2" value="@c.Source" @onclick="(e=>{ Invest_id=c.Id; })"  @onchange="(e=> {  f.Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
+                                </td>
+
+                                    <td>
+                                    <button @onclick="(e=> { f.Add_Document_for_Invest(c.Id.ToString()) ; _FLAG_show_doc_editor= true;} )"> +Документ </button>
+                                    </td>
+                        
+                                    <td>
+                                        @if (Allow_delete)
+                                        {
+                                            <button class="delete_button" title="Удалить запись @c.Method @c.Source" @onclick="(e=> { f.Delete_Investitions(c.Id.ToString()) ;} )">-</button>
+                                        }
+                                    </td>
+
+                                    <td>
+                                     <button class="button" title="Открыть панель редактирования документов" @onclick="(e=>{ _FLAG_show_doc_editor=!_FLAG_show_doc_editor; })"> * </button>
+                                    </td>
+
+                            </tr>
             
-                }   
-                </table>
-
-
-                @if (_FLAG_show_doc_editor)
-                {
-                    <div class="card">
-                        @("Выбранное дело  (" + @Invest_id + ")")
-                        @{
-                            Show_Table(Invest_id, "Documents", false);
-                        }
+                    }   
+                    </table>
                     </div>
-                }
+                </div>
 
+                    @if (_FLAG_show_doc_editor)
+                    {
+                        <div class="card">
+                            @("Выбранное дело  (" + @Invest_id + ")")
+                            @{
+                                Show_Table(Invest_id, "Documents", false);
+                            }
+                        </div>
+                    }
+                
 
              </div>
         } <!-- if -->
@@ -344,20 +372,21 @@
             Comparison<Deal> x_comp = new Comparison<Deal>(delegate (Deal x, Deal y) { return (x.Id.CompareTo(y.Id)); });
             list_of_Deals.Sort(x_comp);
 
-
-
             string table = "Deals";
             List<string> NameX = new List<string>();
             NameX.Add("Date");
             NameX.Add("Description");
-
+            
+            <div class="scroll">
+            <div style="height:300px;">
             <div class="card">
-            <table >
+            <table style="width:100%" >
                     <tr class="card_title">
                     @foreach (String n in NameX)
                     {
                         <td>@n</td>
                     }
+                    <td> </td>
                     <td> </td>
                 </tr>
 
@@ -370,7 +399,7 @@
                         tmp_date = c.Date.Value.ToString(__DATE_MASK);
                     }
 
-                     <tr >
+                     <tr class="Editor">
                         <td>
                              <input type="date" value="@tmp_date" @onclick="(e=>{ Deal_id=c.Id; })" @onchange="(e=> {  f.Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
                          </td>
@@ -388,20 +417,24 @@
                                     <button class="delete_button" title="Удалить запись @c.Date @c.Description" @onclick="(e=> { f.Delete_Deal(c.Id.ToString()) ;} )">-</button>
                                 }
                          </td>
+
+                        <td>
+                            <button class="button" title="Открыть панель редактирования документов" @onclick="(e=>{ _FLAG_show_doc_editor=!_FLAG_show_doc_editor; })"> * </button>
+                        </td>
                     </tr>
                 }    
             </table>
             </div>
-
+            </div>
+            </div>
 
             if (_FLAG_show_doc_editor)
             {
-                
                 <div class="card">
-                   @("Выбранное дело  (" + @Deal_id+ ")")
-                    @{ Show_Table(Deal_id, "Documents",false);}
-                    </div>
-                }
+                        @("Выбранное дело  (" + @Deal_id+ ")")
+                        @{ Show_Table(Deal_id, "Documents",false);}
+                </div>
+            }
            
 
         }
@@ -446,6 +479,16 @@
                                                     select d).ToList<Document>()
                                                     )
                                         { list_of_docs.Add(docx); }
+
+
+                            //LINQ Join Доки + Связка + Сделка где id_company= Дело
+                            foreach (Document docx in (from d in ds.Documents
+                                                        join l in ds.Links on d.Id equals l.Child_Id
+                                                        join inv in ds.Investitions on l.Parent_Id equals inv.Id
+                                                        where inv.Id_company == company_id
+                                                        select d).ToList<Document>()
+                            )
+                            { list_of_docs.Add(docx); }
 
 
                     if (list_of_docs.Count == 0)
@@ -592,11 +635,12 @@
 <div class="scroll">
     <div style="height:300px;  background:#00000068 ; ">
         <!-- вывод списка -->
-        
+        <table  style="width:100%">
         @foreach (Company c in list_of_companies)
                 {
                     ShowRowEditor_company(c); 
                 }
+        </table>
         @{
             Console.WriteLine("Оk ...");
             GC.Collect()          ;
@@ -629,12 +673,7 @@
                     </div>
 
                 <div class="card_layout">
-                        <div>
-                            @if (Company_id != null)
-                            {
-                                Show_Linx(Company_id);
-                            }
-                        </div>
+                 
 
                     <div style="Сard" >
                             @{
@@ -666,8 +705,6 @@
                             }
                         }
                     </div>
-
-                 
                 </div>
          </div>
      }

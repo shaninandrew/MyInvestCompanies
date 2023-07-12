@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Linq;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MyInvestCompanies.модель_данных
@@ -307,6 +308,33 @@ namespace MyInvestCompanies.модель_данных
             } // Сделки
 
 
+
+            if (table_name == "Acquisitions")
+            {
+                Console.WriteLine($"Установка значения {name} id={id}: {value}");
+                var t = db.Acquisitions.Where<Acquisition>(i => i.Id == id).Single();
+                                 
+                Console.WriteLine($"Установка значения Acquisitions -> ");
+
+                try
+                {
+
+                    if (name == "Description")
+                    { t.Description = e.Value.ToString(); }
+
+                    db.Update<Acquisition>(t);
+                    db.SaveChanges();
+
+
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    Console.WriteLine(ex.InnerException.Message);
+                }
+            } // Описание
+
+
             if (table_name == "Documents")
             {
                 Console.WriteLine($"Установка значения {name} id={id}: {value}");
@@ -317,7 +345,6 @@ namespace MyInvestCompanies.модель_данных
                 {
                     if (name == "Date")
                     { t.Date = DateTime.Parse(e.Value.ToString()).ToUniversalTime(); }
-
 
                     if (name == "Name")
                     { t.Name = e.Value.ToString(); }
@@ -330,7 +357,6 @@ namespace MyInvestCompanies.модель_данных
 
                     db.Update<Document>(t);
                     db.SaveChanges();
-
 
                 }
                 catch (Exception ex)
@@ -461,6 +487,8 @@ namespace MyInvestCompanies.модель_данных
 
             //добавление связки
             Link lnk = new Link(company_id, c_new.Id); ;
+            lnk.Parent_table = "Companies";
+            lnk.Child_table = "Capitals";
             ds.Links.Add(lnk);
 
             ds.SaveChanges();
@@ -495,6 +523,9 @@ namespace MyInvestCompanies.модель_данных
             ds.Investitions.Add(i_new);
 
             Link lnk = new Link(company_id, i_new.Id); ;
+            lnk.Parent_table = "Companies";
+            lnk.Child_table = "Investitions";
+
             ds.Links.Add(lnk);
 
             ds.SaveChanges();
@@ -530,9 +561,13 @@ namespace MyInvestCompanies.модель_данных
 
             Deal i_new = new Deal();
             i_new.Id_company = company_id;
+
             ds.Deals.Add(i_new);
 
             Link lnk = new Link(company_id, i_new.Id); ;
+            lnk.Parent_table = "Companies";
+            lnk.Child_table = "Deals";
+
             ds.Links.Add(lnk);
 
             ds.SaveChanges();
@@ -552,6 +587,46 @@ namespace MyInvestCompanies.модель_данных
         }
 
 
+        /// <summary>
+        /// Добавляет документ привязанные к обоснованию
+        /// </summary>
+        /// <param name="acq_id"></param>
+        public async void Add_Document_for_Acq(string acq_id)
+        {
+            Database_structure ds = new Database_structure();
+
+            Console.WriteLine($" * Установка нового документа ...для {acq_id}");
+            Document i_new = new Document();
+            i_new.Name = "Документ обоснование";
+            i_new.Num = "111/000-обсн";
+
+            string Child_id = i_new.Id;
+            ds.Documents.Add(i_new);
+
+            Link lnk = new Link(acq_id, Child_id); ;
+            lnk.Child_table = "Acquisitions";
+            lnk.Parent_table = "Companies";
+            
+
+
+            ds.Links.Add(lnk);
+            ds.SaveChanges();
+            await ds.DisposeAsync();
+        }
+
+       /// <summary>
+       ///  Удаление обоснований
+       /// </summary>
+       /// <param name="_id"></param>
+        public async void Delete_Acq(string _id)
+        {
+            Database_structure ds = new Database_structure();
+            ds.Acquisitions.Remove(ds.Acquisitions.Where(i => i.Id == _id).Single());
+            ds.Links.RemoveRange(ds.Links.Where<Link>(i => i.Parent_Id == _id).ToArray());
+            ds.SaveChanges();
+            ds.Dispose();
+        }
+
 
         /// <summary>
         /// Добавляет документ привязанные к сделке
@@ -569,8 +644,8 @@ namespace MyInvestCompanies.модель_данных
             lnk.Parent_table = "Deals";
             ds.Links.Add(lnk);
 
-            ds.SaveChangesAsync();
-            ds.Dispose();
+            ds.SaveChanges();
+            await ds.DisposeAsync();
         }
 
         /// <summary>
@@ -582,6 +657,9 @@ namespace MyInvestCompanies.модель_данных
             Database_structure ds = new Database_structure();
 
             Document i_new = new Document();
+            i_new.Name = "Документ об инвестиции";
+            i_new.Num = "111/000-инвест";
+
             string Child_id = i_new.Id;
             ds.Documents.Add(i_new);
             Link lnk = new Link(invest_id, Child_id); ;
@@ -589,8 +667,32 @@ namespace MyInvestCompanies.модель_данных
             lnk.Parent_table = "Investitions";
             ds.Links.Add(lnk);
 
-            ds.SaveChangesAsync();
-            ds.Dispose();
+            ds.SaveChanges();
+            await ds.DisposeAsync();
+        }
+
+
+        
+         /// <summary>
+         /// Добавляет обоснование в таблицу
+         /// </summary>
+         /// <param name="Company_id"></param>
+        public async void Add_Acq(string Company_id)
+        {
+            Database_structure ds = new Database_structure();
+
+            Acquisition i_new = new Acquisition();
+            i_new.Id_company = Company_id;
+
+            string Child_id = i_new.Id;
+            ds.Acquisitions.Add(i_new);
+            Link lnk = new Link(Company_id, Child_id); ;
+
+            lnk.Parent_table = "Acquisition";
+            ds.Links.Add(lnk);
+
+            ds.SaveChanges();
+            await ds.DisposeAsync();
         }
 
 
@@ -604,6 +706,10 @@ namespace MyInvestCompanies.модель_данных
             Database_structure ds = new Database_structure();
 
             Document i_new = new Document();
+
+            i_new.Name = "Документ ";
+            i_new.Num = "111/000";
+
             string Child_id = i_new.Id;
             ds.Documents.Add(i_new);
 

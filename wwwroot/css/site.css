@@ -124,6 +124,19 @@ input {
 }
 
 
+.Editor_selected {
+    padding: 2px 2px 2px 2px;
+    border-spacing: 2px 5px;
+    background: #8ebb60;
+    width: 100%;
+}
+
+.Editor_selected:hover {
+        background-clip: border-box;
+        background: darkgreen;
+    }
+
+
 .Control {
     padding: 2px 2px 2px 2px;
     background: #e58c1f;
@@ -160,7 +173,7 @@ input {
 
 
 .card_title {
-    color: #d36c09ef;
+    color: #ffad1a;
     background: black;
     align-content: center;
     text-align: center;
@@ -272,4 +285,10 @@ button:hover {
     border-radius: 10px;
     min-width: 120 px;
     width: auto;
+}
+
+textarea {
+    width:100%;
+    font-size:6 mm;
+    height:50px;
 }

@@ -35,7 +35,7 @@ namespace MyInvestCompanies.модель_данных
             //Считываем конфигурацию
             var doc = JsonDocument.Parse(System.IO.File.ReadAllText("Properties\\config-db.json"));
 
-            bool at_home = true;
+            bool at_home =! true;
 
             string connection_string = "";
             if (!at_home) 

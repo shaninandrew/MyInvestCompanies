@@ -27,6 +27,12 @@
     public static string Acquisition_id = "";
 
 
+    public static string Detail_docs = "";
+
+
+
+
+
     /// Переключалка  
     public static void Switch_delete()
     { 
@@ -161,7 +167,11 @@
                         string tmp_date = "";
                         tmp_date = c.Date.ToString(__DATE_MASK);
 
-                        <tr class="Editor">
+                        string class_x = "Editor";
+                        if (c.Id == Selected_document)
+                                { class_x = "Editor_selected"; }
+
+                        <tr class=@class_x>
                             <td>
                                 <input type="text" value="@c.Num" @onclick="(e=>{ Selected_document = c.Id;  })" @onchange="(e=> {  f.Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
                             </td>
@@ -548,6 +558,9 @@
             {
                 <div class="Control">
                     <Button class="button" title="Добавляет документ" @onclick="(e=>{ f.Add_Document (id); })">+Документ</Button>
+
+                    Поиск по документам <input @bind-value="Detail_docs" @bind-value:event="oninput" placeholder="Поисковая строка"  />
+                    
                 </div>
             }
 
@@ -560,54 +573,106 @@
                     <div class="scroll">
                     <div style="height:500px">
 
-                        @{
+                                    @{
+                                        Console.WriteLine($"Отбор данных {show_additional_editor}  запрос  {Detail_docs}  {company_id}");
 
-                            List<Document> list_of_docs = new List<Document>();
-                            //Документы от фирмы сразу напрямую
-                            foreach (Link l in ds.Links.Where<Link>(i => i.Parent_Id == company_id).ToList<Link>())
-                            {  list_of_docs.AddRange( ds.Documents.Where<Document>(c => c.Id == l.Child_Id  ).ToArray<Document>()); }
+                                        List<Document> list_of_docs = new List<Document>();
+                                        //Документы от фирмы сразу напрямую
+                                        foreach (Link l in ds.Links.Where<Link>(i => i.Parent_Id == company_id).ToList<Link>())
+                                        {
+                                            if (!show_additional_editor)
+                                            {
+                                                list_of_docs.AddRange(ds.Documents.Where<Document>
+                                                    ( 
+                                                        (c => c.Id == l.Child_Id  && (c.Num+ c.Name).IndexOf(Detail_docs) > -1)
+                                                    ).ToArray<Document>());
 
-                            //LINQ Join Доки + Связка + Сделка где id_company= Дело
-                            foreach (Document docx in (from d in ds.Documents
-                                                    join l in ds.Links on d.Id equals l.Child_Id
-                                                    join deals in ds.Deals on l.Parent_Id equals deals.Id
-                                                    where deals.Id_company==company_id 
-                                                    select d).ToList<Document>()
-                                                    )
-                                        { list_of_docs.Add(docx); }
+                                            }
+                                            else
+                                            {
+                                                list_of_docs.AddRange(ds.Documents.Where<Document>
+                                                    (c => c.Id == l.Child_Id));
+
+                                            }
+                                        }
+
+                                        //LINQ Join Доки + Связка + Сделка где id_company= Дело
+                                        foreach (Document docx in (from d in ds.Documents
+                                                                   join l in ds.Links on d.Id equals l.Child_Id
+                                                                   join deals in ds.Deals on l.Parent_Id equals deals.Id
+                                                                   where 
+                                                                    deals.Id_company == company_id
+                                                                   select d).ToList<Document>()
+                                                                )
+                                        { 
+                                            if (!show_additional_editor)
+                                            {
+                                                list_of_docs.Add(docx); 
+                                            }
+                                            else
+                                            {
+                                                if ((docx.Num + docx.Name).IndexOf(Detail_docs) > -1)
+                                                { list_of_docs.Add(docx); }
+                                            }
+                                        }
 
 
-                            //LINQ Join Доки + Связка + Сделка где id_company= Дело
-                            foreach (Document docx in (from d in ds.Documents
-                                                        join l in ds.Links on d.Id equals l.Child_Id
-                                                        join inv in ds.Investitions on l.Parent_Id equals inv.Id
-                                                        where inv.Id_company == company_id
-                                                        select d).ToList<Document>()
-                            )
-                            { list_of_docs.Add(docx); }
+                                        //LINQ Join Доки + Связка + Сделка где id_company= Дело
+                                        foreach (Document docx in (from d in ds.Documents
+                                                                   join l in ds.Links on d.Id equals l.Child_Id
+                                                                   join inv in ds.Investitions on l.Parent_Id equals inv.Id
+                                                                   where  (inv.Id_company == company_id)
+                                                                   select d).ToList<Document>())
+                                        {
+                                            if (!show_additional_editor)
+                                            {
+                                                list_of_docs.Add(docx);
+                                            }
+                                            else
+                                            {
+                                                if ((docx.Num + docx.Name).IndexOf(Detail_docs) > -1)
+                                                { list_of_docs.Add(docx); }
+                                            }
+
+                                    }
 
 
                             //LINQ Join Доки + Связка + Описание где id_company= Дело
                             foreach (Document docx in (from d in ds.Documents
                                                         join l in ds.Links on d.Id equals l.Child_Id
                                                         join A in ds.Acquisitions on l.Parent_Id equals A.Id
-                                                        where A.Id_company == company_id
+                                                        where (A.Id_company == company_id)
                                                         select d).ToList<Document>()
-                            )
-                            { list_of_docs.Add(docx); }
-
-
-                    if (list_of_docs.Count == 0)
-                    {
-                                            @("Данных нет")
-                                            ;
-
-                                        }
-                                        else
+                                                        )
                                         {
-                                            Show_Table_Docs_as_EditableList(list_of_docs, true);
+                                            
+                                                if (!show_additional_editor)
+                                                {
+                                                    list_of_docs.Add(docx);
+                                                }
+                                                else
+                                                {
+                                                 if ((docx.Num + docx.Name).IndexOf (Detail_docs)>-1)
+                                                    list_of_docs.Add(docx);
+                                                }
 
+
+                                           
                                         }
+
+
+                            if (list_of_docs.Count == 0)
+                            {
+                                @("Данных нет")
+                                ;
+
+                            }
+                            else
+                            {
+
+                                Show_Table_Docs_as_EditableList(list_of_docs, true);
+
+                            }
                                     } <!-- есть данные --->
 
                                 </div>

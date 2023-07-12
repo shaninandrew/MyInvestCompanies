@@ -325,7 +325,7 @@
 
                                 <tr class="@class_x">
                                     <td>
-                                        <textarea value="@c.Description" @onclick="(e=>{ Acquisition_id=c.Id; })" @onchange="(e=> {  f.Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
+                                        <textarea @onclick="(e=>{ Acquisition_id=c.Id; })" @onchange="(e=> {  f.Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })" value="@c.Description">  </textarea>
                                     </td>
                                  
 
@@ -340,7 +340,7 @@
                                         }
                                     </td>
 
-                                    <td>
+                                    <td align="center">
                                         <button class="button" title="Открыть панель редактирования документов" @onclick="(e=>{ _FLAG_show_doc_editor=!_FLAG_show_doc_editor; })"> * </button>
                                     </td>
 
@@ -357,7 +357,7 @@
 
                         @("Выбранное дело  (" + @Acquisition_id + ")")
                         @{
-                            Show_Table(Acquisition_id, "Acquisition", false);
+                            Show_Table(Acquisition_id, "Documents", false);
                         }
                     </div>
                 }
@@ -426,7 +426,7 @@
                                         }
                                     </td>
 
-                                    <td>
+                                    <td align="center">
                                      <button class="button" title="Открыть панель редактирования документов" @onclick="(e=>{ _FLAG_show_doc_editor=!_FLAG_show_doc_editor; })"> * </button>
                                     </td>
 
@@ -517,7 +517,7 @@
                                 }
                          </td>
 
-                        <td>
+                        <td align="center">
                             <button class="button" title="Открыть панель редактирования документов" @onclick="(e=>{ _FLAG_show_doc_editor=!_FLAG_show_doc_editor; })"> * </button>
                         </td>
                     </tr>
@@ -538,7 +538,8 @@
         }
 
 
-        //Documents
+        //Documents 
+        // Глабальная  вкладка
         if (table_name == "Documents")
         {
             <div class="Header">
@@ -553,14 +554,14 @@
                 </div>
             }
 
-            <div  style="width:auto">
+            <div  style="width:auto; height:auto">
                
-               <div  style="height:50%">
+               <div  style="height:510px">
                  <div class="card_layout">
                   
                  <div class="card">
                     <div class="scroll">
-                    <div style="height:270px">
+                    <div style="height:500px">
 
                         @{
 

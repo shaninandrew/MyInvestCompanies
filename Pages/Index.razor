@@ -26,7 +26,9 @@
 
     public static string Acquisition_id = "";
 
-
+    /// <summary>
+    ///  Фильтр по документам
+    /// </summary>
     public static string Detail_docs = "";
 
 
@@ -148,7 +150,8 @@
         NameX.Add("Num");
         NameX.Add("Date");
         NameX.Add("Name");
-        NameX.Add("Url");
+        if (show_viewer)
+          { NameX.Add("Url"); }
 
         @if (docs.Count > 0)
         {
@@ -183,9 +186,15 @@
                                 <textarea class="card_editor" @onclick="(e=>{ Selected_document = c.Id;  })" type="text" rows="2" value="@c.Name" @onchange="(e=> {  f.Set_value(NameX[2], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
                             </td>
 
-                            <td>
+                            @if (show_viewer)
+                            {
+                                <td>
                                 <input type="url" value="@c.Url" @onclick="(e=>{ Selected_document = c.Id;  })" @onchange="(e=> {  f.Set_value(NameX[3], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
-                            </td>
+                                <button title="Загрузить скан документа в архив"> Загрузить</button>
+                                </td>
+                            }
+
+
                             <td align="center">
                                 @if (Allow_delete)
                                 {
@@ -551,6 +560,7 @@
         {
             <div class="Header">
                 Документы связанные с @Company_title
+                
             </div>
 
             <!-- показывает кнопки создания документиов -->
@@ -661,18 +671,18 @@
                                         }
 
 
-                            if (list_of_docs.Count == 0)
-                            {
-                                @("Данных нет")
-                                ;
+                                        if (list_of_docs.Count == 0)
+                                        {
+                                            @("Данных нет")
+                                            ;
 
-                            }
-                            else
-                            {
+                                        }
+                                        else
+                                        {
 
-                                Show_Table_Docs_as_EditableList(list_of_docs, true);
+                                            Show_Table_Docs_as_EditableList(list_of_docs, show_additional_editor);
 
-                            }
+                                        }
                                     } <!-- есть данные --->
 
                                 </div>
@@ -710,7 +720,7 @@
 
 
             </div> <!--scroll-->
-        
+
         }
 
         if (ds!=null)
@@ -731,13 +741,16 @@
         list_of_companies = new List<Company>();
         list_of_companies.Clear();
 
-        foreach (Company c in db_index.Companies.ToList<Company>().AsParallel())
+        foreach (Company c in ( from comp in db_index.Companies 
+                               orderby comp.Id
+                               select comp
+                              ).Where<Company>(cx=> cx.Name.IndexOf(query_string)>-1 ).Distinct().ToList<Company>().AsParallel()
+                )
         {
-            string t = c.Inn + c.Name + c.Address + c.KPP + c.Description + c.Fact_Address;
-            if (t.IndexOf(query_string, StringComparison.OrdinalIgnoreCase) > -1)
-            {
-                list_of_companies.Add(c);
-            }
+            //where((comp.Inn.ToString() + comp.Name.ToString() + comp.KPP.ToString() + comp.Description.ToString()).ToString().IndexOf(query_string, StringComparison.OrdinalIgnoreCase) > -1)
+            //
+            list_of_companies.Add(c);
+
         }
 
         //поиск по реквизитам владельца
@@ -748,16 +761,19 @@
             {
 
                 List<HolderReestr> Holders = db_index.HolderReestrs.Where<HolderReestr>(h => h.Owner_Id == o.Id).ToList();
-
-                foreach (HolderReestr h in Holders)
-                {
-                    Company c = db_index.Companies.Where(cx => cx.Id == h.Company_Id).Single();
-                    list_of_companies.Add(c);
-                }
+                if (Holders.Count>0)
+                    foreach (HolderReestr h in Holders)
+                    {
+                        try
+                        {
+                            Company c = db_index.Companies.Where(cx => cx.Id == h.Company_Id).Single();
+                            list_of_companies.Add(c);
+                        }
+                        catch { }
+                    }
             }
         }
-        //Удаление дублей
-        list_of_companies.Distinct();
+        
     }
     else
     {
@@ -768,18 +784,20 @@
     //сортировка
     Comparison<Company> x_comp = new Comparison<Company>(delegate( Company x, Company y) { return (x.Id.CompareTo(y.Id)); });
     list_of_companies.Sort(x_comp);
+    
+    //Удаление дублей
+    list_of_companies.Distinct();
+
     db_index.Dispose();
 
 }
-
-
 
 
 <!--- ВЕБ МОРДА ОСНОВНАЯ ЧАСТЬ --->
 
 <!-- веб часть -->
 <div class="Search">
-Поиск компаний  <input class="search_string" title="Поисковая строка" type="text" @bind-value=query_string @bind-value:event="oninput" />
+    Поиск компаний  <input class="search_string" title="Поисковая строка" type="text" @bind-value=query_string @bind-value:event="oninput" placeholder="Поисковая строка" />
 </div>
 
 
@@ -822,18 +840,33 @@
 
     @if (query_sub_page=="main")
     {
+      
          <div id="menu_about_firm">
-                    <div class="Header"> Связанные данные для
-                        @{
-                            // показ имени связанной строики
-                            if (Company_id != "")
-                            {
-                                db_index = new Database_structure();
-                                Company selected = db_index.Companies.Where(i => i.Id == Company_id).Single();
-                                db_index.Dispose();
-                                //@("«" + selected.Name +" | ИНН"+ selected.Inn +"»")
-                            }
+                    <div class="Header"> 
+                @{
+                    // показ имени связанной строики
+                    if (Company_id != "")
+                    {
+                        try
+                        {
+                            db_index = new Database_structure();
+                            Company selected = db_index.Companies.Where(i => i.Id == Company_id).Single();
+                            db_index.Dispose();
+
+                            @("«" + selected.Name + " | ИНН" + selected.Inn + "» | "
+                                                )
                         }
+                        catch
+                        {
+
+                            @("Запись с id "+ Company_id+" удалена!")
+                            ;
+                        }
+                    }
+                        }
+
+                      Фильтр для документов  <input class="search_string" @bind-value=Detail_docs @bind-value:event="oninput" placeholder="Поисковая строка">
+
                     </div>
 
                 <div class="card_layout">

@@ -161,9 +161,6 @@
                         string tmp_date = "";
                         tmp_date = c.Date.ToString(__DATE_MASK);
 
-
-                    
-
                         <tr class="Editor">
                             <td>
                                 <input type="text" value="@c.Num" @onclick="(e=>{ Selected_document = c.Id;  })" @onchange="(e=> {  f.Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
@@ -179,7 +176,7 @@
                             <td>
                                 <input type="url" value="@c.Url" @onclick="(e=>{ Selected_document = c.Id;  })" @onchange="(e=> {  f.Set_value(NameX[3], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
                             </td>
-                            <td>
+                            <td align="center">
                                 @if (Allow_delete)
                                 {
                                     <button class="delete_button" title="Удалить запись @c.Num @tmp_date" @onclick="(e=> { f.Delete_Document(c.Id.ToString()) ;} )">-</button>
@@ -238,7 +235,7 @@
 
             @if (list_of_capital.Count>0)
             {
-            <div class="card">
+            <div class="card_mini">
                 <table>
                     <tr class="card_title">
                         @foreach (String n in NameX)
@@ -327,9 +324,9 @@
                                     <td>
                                         <textarea @onclick="(e=>{ Acquisition_id=c.Id; })" @onchange="(e=> {  f.Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })" value="@c.Description">  </textarea>
                                     </td>
-                                 
 
-                                    <td>
+
+                                    <td align="center">
                                         <button @onclick="(e=> { f.Add_Document_for_Acq(c.Id.ToString()) ; _FLAG_show_doc_editor= true;} )"> +Документ </button>
                                     </td>
 
@@ -411,11 +408,11 @@
                                 <td>
                                     <input type="text" value="@c.Method" @onclick="(e=>{ Invest_id=c.Id; })"  @onchange="(e=> {  f.Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
                                 </td>
-                                <td>
+                                    <td align="center">
                                     <textarea class="card_editor" type="text" rows="2" value="@c.Source" @onclick="(e=>{ Invest_id=c.Id; })"  @onchange="(e=> {  f.Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
                                 </td>
 
-                                    <td>
+                                    <td align="center">
                                         <button @onclick="(e=> { f.Add_Document_for_Invest(c.Id.ToString()) ; _FLAG_show_doc_editor= true;} )"> +Документ </button>
                                     </td>
                         
@@ -502,12 +499,12 @@
                         <td>
                              <input type="date" value="@tmp_date" @onclick="(e=>{ Deal_id=c.Id; })" @onchange="(e=> {  f.Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
                          </td>
-                         <td>  
+                        <td align="center">
                             <textarea class="card_editor" type="text" rows="2" @onclick="(e=>{ Deal_id=c.Id; })" value="@c.Description" @onchange="(e=> {  f.Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
                          </td>
                          
-                         <td >
-                                <button class="button" title="Добавить документ к сделке от @c.Date.ToString()" @onclick="(e=> { f.Add_Document_for_Deal(c.Id.ToString()) ; _FLAG_show_doc_editor= true;} )">+Документ</button>
+                         <td align="center">
+                                <button class="button" title="Добавить документ к сделке от @c.Date.ToString()" @onclick="(e=> { f.Add_Document_for_Deal(c.Id.ToString()) ; _FLAG_show_doc_editor= true;} )"> +Документ </button>
                         </td>
 
                          <td>

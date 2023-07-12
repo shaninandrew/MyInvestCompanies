@@ -205,6 +205,25 @@ input {
     display: block;
 }
 
+.card_mini {
+    background: #f7eacf;
+    display: flex;
+    flex: 1 1 auto;
+    flex-basis: 42%;
+    width: 400px;
+    margin: 3px 3px 3px 3px;
+    border: 2px #706e6e;
+    padding: 2px 2px 2px 2px;
+    border-spacing: 2px 2px;
+    vertical-align: top;
+    align-content: start;
+    min-height: 100px;
+    height: auto;
+    align-items: start;
+    border-radius: 2px;
+    display: block;
+}
+
 
 .button {
     cursor: pointer;
@@ -270,6 +289,7 @@ button {
     border-radius: 3 px 3 px 3 px 3 px;
     font-size: 12pt;
     text-align: center;
+    
 }
 
 button:hover {
@@ -288,7 +308,13 @@ button:hover {
 }
 
 textarea {
-    width:100%;
-    font-size:6 mm;
-    height:50px;
+    width: 92%;
+    font-size: 9 pt;
+    height: 70 px;
+    min-width: 90%;
+    width: fit-content;
+    border-radius: 5 px 5 px 5 px 5 px;
+    font-size: 12pt;
+    text-align: center;
+   
 }

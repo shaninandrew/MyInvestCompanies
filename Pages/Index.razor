@@ -377,12 +377,7 @@
                         }
                     </div>
                 }
-
-
             </div>
-
-
-
         }
 
         if (table_name == "Investitions")
@@ -787,7 +782,6 @@
     
     //Удаление дублей
     list_of_companies.Distinct();
-
     db_index.Dispose();
 
 }
@@ -796,6 +790,7 @@
 <!--- ВЕБ МОРДА ОСНОВНАЯ ЧАСТЬ --->
 
 <!-- веб часть -->
+<div style="height:35%">
 <div class="Search">
     Поиск компаний  <input class="search_string" title="Поисковая строка" type="text" @bind-value=query_string @bind-value:event="oninput" placeholder="Поисковая строка" />
 </div>
@@ -806,7 +801,7 @@
 </div>
 
 <div class="Control">
-<!--- делаем через лябмду - иначе кнопка запускается автоматом -->
+<!--- делаем через лямбду - иначе кнопка запускается автоматом -->
     <button class="button" @onclick="(e)=>{  f.Add_company(null); }">Добавить компанию </button> 
     <button class="button" @onclick="(e)=>{  Switch_delete(); }"> Разрешить/запретить удаление </button>
     | Тестовая инфа: @Company_id
@@ -814,9 +809,10 @@
 <br />
 
 <!-- компании -->
-<div class="scroll">
-    <div style="height:300px;  background:#00000068 ; ">
-        <!-- вывод списка -->
+<div class="scroll" style="min-height:100px; height:10%;">
+    <div style="height:10%; min-height:100px;  background:#00000068 ; ">
+    <nav>    
+    <!-- вывод списка -->
         <table  style="width:100%">
         @foreach (Company c in list_of_companies)
                 {
@@ -827,11 +823,13 @@
             Console.WriteLine("Оk ...");
             GC.Collect()          ;
         }
+       </nav>
     </div>
 </div>
+<!-- top -->
+</div>
 
-
-    <div class="menu">
+<div class="menu" style="height:65%;max-height:800px 65%;">
             <div class="menu_header">
                 <button class="button"              @onclick="set_main_page"    > Данные о фирме</button> 
                 <button class="button"              @onclick="set_holders_page" > Данные о владельцах</button> 
@@ -841,7 +839,7 @@
     @if (query_sub_page=="main")
     {
       
-         <div id="menu_about_firm">
+         <div class="sub_workplace" id="menu_about_firm">
                     <div class="Header"> 
                 @{
                     // показ имени связанной строики

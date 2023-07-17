@@ -61,13 +61,23 @@
 
         string table = "Companies";
         <!--  @onmouseover="(e=> { Company_id = c.Id; } -->
-        
-        
+
+
         string  class_x="Editor";
         if (Selected_company_id!=null)
         {
             if (c.Id == Selected_company_id)
-                {  class_x="Editor_selected"; }
+            {  
+                class_x="Editor_selected"; 
+            }
+        }
+        else
+        {
+            
+            Deal_id = "";
+            Invest_id = "";
+            Acquisition_id = "";
+            Detail_docs = "";
         }
 
         <tr class=@class_x>

@@ -432,7 +432,7 @@ namespace MyInvestCompanies.модель_данных
 
                     if (name == "Org")
                     {
-                        t.Org = false;
+                       
                         t.Org = (e.Value.ToString() == "1") || (e.Value.ToString() == "TRUE") || (e.Value.ToString() == "True");
 
                     }

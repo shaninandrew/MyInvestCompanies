@@ -31,10 +31,6 @@
     /// </summary>
     public static string Detail_docs = "";
 
-
-
-
-
     /// Переключалка  
     public static void Switch_delete()
     { 
@@ -45,7 +41,6 @@
     public Functions f = new Functions();
 
     public static string Selected_document = "";
-
 
 }
 
@@ -74,10 +69,10 @@
         else
         {
             
-            Deal_id = "";
+            /*Deal_id = "";
             Invest_id = "";
             Acquisition_id = "";
-            Detail_docs = "";
+            Detail_docs = "";*/
         }
 
         <tr class=@class_x>
@@ -744,19 +739,24 @@
         list_of_companies = new List<Company>();
         list_of_companies.Clear();
 
+        //режим запрос на слова
+        List<string> query = query_string.Split(" ", StringSplitOptions.RemoveEmptyEntries).Distinct<string>().ToList();
 
-        foreach (Company c in (from comp in db_index.Companies
-                               where (comp.Name + comp.Inn + comp.Address + comp.Description + comp.Fact_Address).IndexOf (query_string)>-1
-                               orderby comp.Id
-                               select comp
-                              ).Distinct().ToList<Company>().AsParallel()
-                    )
+
+        foreach (string q in query.AsParallel())
+            foreach (Company c in (from comp in db_index.Companies
+                                   where  (comp.Name + comp.Inn + comp.Address + comp.Description + comp.Fact_Address).IndexOf(q)>-1
+                                   orderby comp.Id
+                                   select  comp
+
+                                  )
+                        )
             {
-                /*
-             *
-             * .Where<Company>(cx =>
-
-                                  (
+                                  /*
+                                         *
+                                         * .Where<Company>(cx =>
+                                         * 
+                                         (
                                          ((cx.Name == null) ? "" :cx.Name) +
                                          ((cx.Inn == null) ? "" : cx.Inn) +
                                          (( cx.Description==null)?"" :cx.Description)+
@@ -766,9 +766,9 @@
                                          ).ToLower().IndexOf(query_string.ToLower()) > -1
 
 
-                              )
-             *
-             */
+             )
+                *
+                */
 
 
                 //where((comp.Inn.ToString() + comp.Name.ToString() + comp.KPP.ToString() + comp.Description.ToString()).ToString().IndexOf(query_string, StringComparison.OrdinalIgnoreCase) > -1)
@@ -776,7 +776,8 @@
                 list_of_companies.Add(c);
 
             }
-       
+        list_of_companies = list_of_companies.Distinct().ToList();
+
         //поиск по реквизитам владельца
         foreach (Owner o in db_index.Owners.ToList<Owner>().AsParallel())
         {
@@ -846,7 +847,7 @@
         @foreach (Company c in list_of_companies)
                 {
                 ShowRowEditor_company(c, Company_id);
-            }
+                }
         </table>
         @{
             Console.WriteLine("Оk ...");

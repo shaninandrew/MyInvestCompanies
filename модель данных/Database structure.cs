@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: https://pvs-studio.com
+
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.EntityFrameworkCore.Query;
@@ -90,6 +93,7 @@ namespace MyInvestCompanies.модель_данных
             Address = "г. Ая ул. Ленина д. 00";
             Fact_Address = "г. Ая ул. Ленина д. 00";
             Description = "Описание";
+            Founded = DateTime.Now;
         }
 
     }

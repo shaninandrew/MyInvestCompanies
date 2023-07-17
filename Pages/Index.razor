@@ -731,23 +731,44 @@
     List<Company> list_of_companies = null;
     Console.Write("Отображение редактора ...");
 
-    if ((query_string != "") && (query_string.Length > 0)  )
+    if ((query_string != "") && (query_string.Length > 0))
     {
         list_of_companies = new List<Company>();
         list_of_companies.Clear();
 
-        foreach (Company c in ( from comp in db_index.Companies 
+
+        foreach (Company c in (from comp in db_index.Companies
+                               where (comp.Name + comp.Inn + comp.Address + comp.Description + comp.Fact_Address).IndexOf (query_string)>-1
                                orderby comp.Id
                                select comp
-                              ).Where<Company>(cx=> cx.Name.IndexOf(query_string)>-1 ).Distinct().ToList<Company>().AsParallel()
-                )
-        {
-            //where((comp.Inn.ToString() + comp.Name.ToString() + comp.KPP.ToString() + comp.Description.ToString()).ToString().IndexOf(query_string, StringComparison.OrdinalIgnoreCase) > -1)
-            //
-            list_of_companies.Add(c);
+                              ).Distinct().ToList<Company>().AsParallel()
+                    )
+            {
+                /*
+             *
+             * .Where<Company>(cx =>
 
-        }
+                                  (
+                                         ((cx.Name == null) ? "" :cx.Name) +
+                                         ((cx.Inn == null) ? "" : cx.Inn) +
+                                         (( cx.Description==null)?"" :cx.Description)+
+                                         (( cx.Fact_Address == null)? "": cx.Fact_Address) +
+                                         ((cx.Address == null) ? "" : cx.Address)
 
+                                         ).ToLower().IndexOf(query_string.ToLower()) > -1
+
+
+                              )
+             *
+             */
+
+
+                //where((comp.Inn.ToString() + comp.Name.ToString() + comp.KPP.ToString() + comp.Description.ToString()).ToString().IndexOf(query_string, StringComparison.OrdinalIgnoreCase) > -1)
+                //
+                list_of_companies.Add(c);
+
+            }
+       
         //поиск по реквизитам владельца
         foreach (Owner o in db_index.Owners.ToList<Owner>().AsParallel())
         {

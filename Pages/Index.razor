@@ -740,12 +740,12 @@
         list_of_companies.Clear();
 
         //режим запрос на слова
-        List<string> query = query_string.Split(" ", StringSplitOptions.RemoveEmptyEntries).Distinct<string>().ToList();
+        List<string> query = query_string.ToLower().Split(" ", StringSplitOptions.RemoveEmptyEntries).Distinct<string>().ToList();
 
 
         foreach (string q in query.AsParallel())
             foreach (Company c in (from comp in db_index.Companies
-                                   where  (comp.Name + comp.Inn + comp.Address + comp.Description + comp.Fact_Address).IndexOf(q)>-1
+                                   where  (comp.Name + comp.Inn + comp.Address + comp.Description + comp.Fact_Address).ToLower().IndexOf(q)>-1
                                    orderby comp.Id
                                    select  comp
 

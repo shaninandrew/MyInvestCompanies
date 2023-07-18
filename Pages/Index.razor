@@ -567,7 +567,7 @@
                 <div class="Control">
                     <Button class="button" title="Добавляет документ" @onclick="(e=>{ f.Add_Document (id); })">+Документ</Button>
 
-                    Поиск по документам <input @bind-value="Detail_docs" @bind-value:event="oninput" placeholder="Поисковая строка"  />
+                    Поиск по документам <input @bind-value="Detail_docs" @bind-value:event="oninput" placeholder="Поисковая строка: через <пробел> можно искать по разным признакам: черные желтые "  />
                     
                 </div>
             }
@@ -742,62 +742,115 @@
         //режим запрос на слова
         List<string> query = query_string.ToLower().Split(" ", StringSplitOptions.RemoveEmptyEntries).Distinct<string>().ToList();
 
+    /*
+    foreach (string q in query.AsParallel())
+    foreach (Company c in (from comp in db_index.Companies
+    where q[0] == '-' ? (comp.Name + " " + comp.Inn + " " + comp.Address + " " + comp.Description + " " + comp.Fact_Address).ToLower().IndexOf(q.Remove(0, 1)) <0 :
+        (comp.Name + " " + comp.Inn + " " + comp.Address + " " + comp.Description + " " + comp.Fact_Address).ToLower().IndexOf(q) > -1
+        orderby comp.Id
+        select  comp
 
-        foreach (string q in query.AsParallel())
-            foreach (Company c in (from comp in db_index.Companies
-                                   where  (comp.Name + comp.Inn + comp.Address + comp.Description + comp.Fact_Address).ToLower().IndexOf(q)>-1
-                                   orderby comp.Id
-                                   select  comp
+                            )
+                            )
+                            {
+                            /*
+                            *
+        * .Where<Company>(cx =>
+        * 
+        (
+              ((cx.Name == null) ? "" :cx.Name) +
+              ((cx.Inn == null) ? "" : cx.Inn) +
+              (( cx.Description==null)?"" :cx.Description)+
+              (( cx.Fact_Address == null)? "": cx.Fact_Address) +
+              ((cx.Address == null) ? "" : cx.Address)
 
-                                  )
-                        )
-            {
-                                  /*
-                                         *
-                                         * .Where<Company>(cx =>
-                                         * 
-                                         (
-                                         ((cx.Name == null) ? "" :cx.Name) +
-                                         ((cx.Inn == null) ? "" : cx.Inn) +
-                                         (( cx.Description==null)?"" :cx.Description)+
-                                         (( cx.Fact_Address == null)? "": cx.Fact_Address) +
-                                         ((cx.Address == null) ? "" : cx.Address)
-
-                                         ).ToLower().IndexOf(query_string.ToLower()) > -1
-
-
-             )
-                *
-                */
+              ).ToLower().IndexOf(query_string.ToLower()) > -1
 
 
-                //where((comp.Inn.ToString() + comp.Name.ToString() + comp.KPP.ToString() + comp.Description.ToString()).ToString().IndexOf(query_string, StringComparison.OrdinalIgnoreCase) > -1)
-                //
-                list_of_companies.Add(c);
+              )
 
-            }
-        list_of_companies = list_of_companies.Distinct().ToList();
+              //where((comp.Inn.ToString() + comp.Name.ToString() + comp.KPP.ToString() + comp.Description.ToString()).ToString().IndexOf(query_string, StringComparison.OrdinalIgnoreCase) > -1)
+        //
+        list_of_companies.Add(c);
 
-        //поиск по реквизитам владельца
-        foreach (Owner o in db_index.Owners.ToList<Owner>().AsParallel())
-        {
-            string t = o.Inn + o.Name + o.Address + o.KPP + o.Email + o.PhoneNumber;
-            if (t.IndexOf(query_string, StringComparison.OrdinalIgnoreCase) > -1)
-            {
-
-                List<HolderReestr> Holders = db_index.HolderReestrs.Where<HolderReestr>(h => h.Owner_Id == o.Id).ToList();
-                if (Holders.Count>0)
-                    foreach (HolderReestr h in Holders)
-                    {
-                        try
-                        {
-                            Company c = db_index.Companies.Where(cx => cx.Id == h.Company_Id).Single();
-                            list_of_companies.Add(c);
-                        }
-                        catch { }
-                    }
-            }
         }
+
+        */
+        //поиск по реквизитам владельца
+             // сразу о
+                         /* foreach( string q in query)
+        foreach (
+        Owner o in  (
+                    from o in db_index.Owners 
+                    where (o.Inn + o.Name + o.Address + o.KPP + o.Email + o.PhoneNumber).ToLower().IndexOf(q)>-1   
+                    select o
+                    )
+                    )
+                    {
+
+        List<HolderReestr> Holders = db_index.HolderReestrs.Where<HolderReestr>(h => h.Owner_Id == o.Id).ToList();
+        if (Holders.Count>0)
+            foreach (HolderReestr h in Holders)
+            {
+                try
+                    {
+                    Company c = db_index.Companies.Where(cx => cx.Id == h.Company_Id).Single();
+                    list_of_companies.Add(c);
+                }
+            catch { }
+        }
+
+         }
+         */
+
+
+         /*
+        * HolderReestr h =new HolderReestr();
+        h.Owner_Id
+        h.Company_Id
+        */
+
+        //Простой поиск по Join таблицам
+        foreach( string q in query)
+            foreach (
+                        Company c in ( 
+                                        from cx in db_index.Companies 
+                                        join hx in db_index.HolderReestrs on cx.Id equals hx.Company_Id
+                                        join ox in db_index.Owners on hx.Owner_Id equals ox.Id
+
+                                        where q[0] == '-' ? 
+                                            (
+                                                    (ox.Name + " " + ox.Inn + " " + ox.Address + " " + ox.Email).ToLower().IndexOf(q.Remove(0, 1)) > -1
+                                                    ||
+                                                    (cx.Name + " " + cx.Inn + " " + cx.KPP + " " + cx.Address + " " + cx.Description).ToLower().IndexOf(q.Remove(0, 1))>-1 
+                                            )
+                                        :
+                                        (
+                                            ((cx.Name + " " + cx.Inn + " " + cx.KPP + " " + cx.Address + " " + cx.Description + " " + ox.Name + " " + ox.Inn + " " + ox.Address + " " + ox.Email).ToLower().IndexOf(q) > -1)
+                                            ||
+                                            ((cx.Name + " " + cx.Inn + " " + cx.KPP + " " + cx.Address + " " + cx.Description).ToLower().IndexOf(q) > -1)
+                                         )
+                                        select cx
+
+                                       )
+                    )
+            {
+
+
+                if (q[0] == '-')
+                { 
+                    list_of_companies.Remove(c);
+                }
+                else
+                {
+                    
+                    list_of_companies.Add(c);
+                }
+
+            }
+
+
+
         
     }
     else
@@ -805,6 +858,7 @@
         list_of_companies = db_index.Companies.ToList<Company>(  );
     }
 
+    list_of_companies = list_of_companies.Distinct().ToList();
 
     //сортировка
     Comparison<Company> x_comp = new Comparison<Company>(delegate( Company x, Company y) { return (x.Id.CompareTo(y.Id)); });
@@ -822,7 +876,7 @@
 <!-- веб часть -->
 <div style="height:35%">
 <div class="Search">
-    Поиск компаний  <input class="search_string" title="Поисковая строка" type="text" @bind-value=query_string @bind-value:event="oninput" placeholder="Поисковая строка" />
+        Поиск компаний  <input class="search_string" title="Поисковая строка" type="text" @bind-value=query_string @bind-value:event="oninput" placeholder="Поисковая строка: через <пробел> можно искать по разным признакам, `-` перед словом означает выбросить: черные желтые -тяжелые" />
 </div>
 
 

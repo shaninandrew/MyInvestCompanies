@@ -28,7 +28,11 @@
     }
 
 
-
+main {
+height:100%;
+width:100%;
+overflow:hidden;
+}
 
 body {
     font-size: font-size: 12pt;
@@ -42,14 +46,21 @@ input[type="checkbox"] {
     height: 20px;
 }
 
+.menu_docs {
+    height: 100%;
+    min-height: 50px;
+    width: 100%;
+    overflow: hidden;
+}
+
 
 .menu {
 
     height:4%;
     min-height:50px;
     width:100%;
-    max-height:40%;
-    max-height:auto 400 px;
+    
+   
     overflow:hidden;
 }
 

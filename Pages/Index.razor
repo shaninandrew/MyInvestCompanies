@@ -574,7 +574,7 @@
 
             <div  style="width:auto; height:auto">
                
-               <div  style="height:510px">
+               <div  style="height:auto">
                  <div class="card_layout">
                   
                  <div class="card">
@@ -874,46 +874,46 @@
 <!--- ВЕБ МОРДА ОСНОВНАЯ ЧАСТЬ --->
 
 <!-- веб часть -->
-<div style="height:35%">
-<div class="Search">
-        Поиск компаний  <input class="search_string" title="Поисковая строка" type="text" @bind-value=query_string @bind-value:event="oninput" placeholder="Поисковая строка: через <пробел> можно искать по разным признакам, `-` перед словом означает выбросить: черные желтые -тяжелые" />
-</div>
-
-
-<div class="Header">
-Список компаний в базе данных
-</div>
-
-<div class="Control">
-<!--- делаем через лямбду - иначе кнопка запускается автоматом -->
-    <button class="button" @onclick="(e)=>{  f.Add_company(null); }">Добавить компанию </button> 
-    <button class="button" @onclick="(e)=>{  Switch_delete(); }"> Разрешить/запретить удаление </button>
-    | Тестовая инфа: @Company_id
-</div>
-<br />
-
-<!-- компании -->
-<div class="scroll" style="min-height:100px; height:10%;">
-    <div style="height:10%; min-height:100px;  background:#00000068 ; ">
-    <nav>    
-    <!-- вывод списка -->
-        <table  style="width:100%">
-        @foreach (Company c in list_of_companies)
-                {
-                ShowRowEditor_company(c, Company_id);
-                }
-        </table>
-        @{
-            Console.WriteLine("Оk ...");
-            GC.Collect()          ;
-        }
-       </nav>
+<div style="height:35%;  min-height:350px;">
+    <div class="Search">
+            Поиск компаний  <input class="search_string" title="Поисковая строка" type="text" @bind-value=query_string @bind-value:event="oninput" placeholder="Поисковая строка: через <пробел> можно искать по разным признакам, `-` перед словом означает выбросить: черные желтые -тяжелые" />
     </div>
-</div>
+
+
+    <div class="Header">
+    Список компаний в базе данных
+    </div>
+
+    <div class="Control">
+    <!--- делаем через лямбду - иначе кнопка запускается автоматом -->
+        <button class="button" @onclick="(e)=>{  f.Add_company(null); }">Добавить компанию </button> 
+        <button class="button" @onclick="(e)=>{  Switch_delete(); }"> Разрешить/запретить удаление </button>
+        | Тестовая инфа: @Company_id
+    </div>
+    <br />
+
+    <!-- компании -->
+    <div class="scroll" style="min-height:100px; ">
+        <div style="height:10%; min-height:100px;  background:#00000068 ; ">
+        <nav>    
+        <!-- вывод списка -->
+            <table  style="width:100%">
+            @foreach (Company c in list_of_companies)
+                    {
+                    ShowRowEditor_company(c, Company_id);
+                    }
+            </table>
+            @{
+                Console.WriteLine("Оk ...");
+                GC.Collect()          ;
+            }
+           </nav>
+        </div>
+    </div>
 <!-- top -->
 </div>
 
-<div class="menu" style="height:65%;max-height:800px 65%;">
+<div class="menu" style="height:65%;min-height:400px;">
             <div class="menu_header">
                 <button class="button"              @onclick="set_main_page"    > Данные о фирме</button> 
                 <button class="button"              @onclick="set_holders_page" > Данные о владельцах</button> 

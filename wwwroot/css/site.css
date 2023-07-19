@@ -23,9 +23,10 @@
     color: white;
 }
 
-    .blazor-error-boundary::after {
-        content: "An error has occurred."
-    }
+.blazor-error-boundary::after 
+{
+    content: "An error has occurred."
+}
 
 
 main {
@@ -74,14 +75,14 @@ input[type="checkbox"] {
 .scroll {
     scroll-behavior: smooth;
     scrollbar-3dlight-color: #e58c1f;
-    overflow-y: scroll;
+    overflow-y:scroll;
     overflow-x: auto;
-    overflow: auto;
     align-content: space-between;
     background: white;
     padding: 2px 2px 2px 2px;
     border-spacing: 2px 5px;
     width: 100%;
+    max-height: 400px;
 }
 
 .inside-scroll {
@@ -199,41 +200,61 @@ input {
     height: 100%;
     overflow: auto;
     overflow-y: scroll;
+    flex-wrap: wrap;
+    flex-direction: row;
 }
 
 
 .card_title {
-    color: #ffad1a;
+    color: #706e6e;
     background: black;
     align-content: center;
     text-align: center;
     width: 100%;
-    border-radius: 3 px 3 px 3px 3px;
 }
 
 
 .card {
     background: #f7eacf;
-    display: flex;
+    display: block;
     flex: 1 1 auto;
     flex-basis: 42%;
-    width:700px ;
-
+    width: 700px;
     margin: 3px 3px 3px 3px;
-    border: 2px #706e6e;
-
+    
     padding: 2px 2px 2px 2px;
     border-spacing: 2px 2px;
     vertical-align: top;
     align-content: start;
-
     min-height: 100px;
     height: auto;
-
     align-items: start;
     border-radius: 2px;
-    display: block;
+    flex-direction: row
+
+    
 }
+
+
+.card_scroll {
+    background: #f7eacf;
+    display: block;
+    flex: 1 1 auto;
+    flex-basis: 42%;
+    width: 100%;
+   
+    vertical-align: top;
+    align-content: start;
+    min-height: 300px;
+    height: 40%;
+    align-items: start;
+    border-radius: 2px;
+    flex-direction: row;
+    
+    overflow: auto;
+    overflow-y: scroll;
+}
+
 
 .card_mini {
     background: #f7eacf;
@@ -251,7 +272,7 @@ input {
     height: auto;
     align-items: start;
     border-radius: 2px;
-    display: block;
+
 }
 
 

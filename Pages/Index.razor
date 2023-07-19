@@ -160,7 +160,8 @@
 
         @if (docs.Count > 0)
         {
-            <table class="scroll" style="width:100%">
+            <!-- class="scroll" -->
+            <table  style="width:100%">
                     <tr class="card_title">
 
                     @foreach (String n in NameX)
@@ -260,7 +261,7 @@
             @if (list_of_capital.Count>0)
             {
             <div class="card_mini">
-                <table>
+                <table class="scroll">
                     <tr class="card_title">
                         @foreach (String n in NameX)
                         {
@@ -572,14 +573,11 @@
                 </div>
             }
 
-            <div  style="width:auto; height:auto">
-               
-             
-                 <div class="card_layout">
+
+            <div class="card_layout">
+                 <div class="card_scroll">
                   
-                 <div class="card">
-                    <div class="scroll">
-                    <div >
+                    
 
                                     @{
                                         Console.WriteLine($"Отбор данных {show_additional_editor}  запрос  {Detail_docs}  {company_id}");
@@ -682,11 +680,8 @@
 
                                         }
                                     } <!-- есть данные --->
-
-                                </div>
-                            </div>
-
-                        </div> <!--card-->
+                   
+                </div> <!--card-->
 
                         @if (show_additional_editor)
                         {
@@ -712,12 +707,12 @@
                             </div>
                         }
 
-                </div> <!-- card style- -->
+            </div> <!-- card style- -->
           
 
 
 
-            </div> <!--scroll-->
+
 
         }
 
@@ -913,7 +908,7 @@
 <!-- top -->
 </div>
 
-<div class="menu" style="height:65%;min-height:400px;">
+<div class="menu" style="height:65%;">
             <div class="menu_header">
                 <button class="button"              @onclick="set_main_page"    > Данные о фирме</button> 
                 <button class="button"              @onclick="set_holders_page" > Данные о владельцах</button> 
@@ -952,7 +947,7 @@
                     </div>
 
                 <div class="card_layout">
-                    <div style="Сard" >
+                    <div style="card" >
                             @{
                                 if (Company_id != null)
                                 {
@@ -962,7 +957,7 @@
                             }
                     </div>
 
-                    <div style="Card">
+                    <div style="card">
                         @{
                             if (Company_id != null)
                             {
@@ -973,7 +968,7 @@
                     </div>
 
 
-                    <div style="Card">
+                    <div style="card">
                         @{
                             if (Company_id != null)
                             {
@@ -983,7 +978,7 @@
                         }
                     </div>
 
-                <div style="Сard">
+                <div style="card">
                     @{
                         if (Company_id != null)
                         {
@@ -1036,7 +1031,7 @@
 
             
             <div class="card_layout">
-                <table width="100%">
+                <table width="100%" class="scroll">
                
                     @{
                          
@@ -1188,7 +1183,8 @@
     @if (query_sub_page == "docs")
     {
         <div id="menu_docs">
-            <div style="Card">
+            <div style="card">
+            dsfds
                 @{
                     if (Company_id != null)
                     {

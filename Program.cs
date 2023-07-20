@@ -29,13 +29,14 @@ ss.Cookie.Expiration = TimeSpan.FromDays(1);
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 
-string url = "https://localhost:5000";
+/*
+ * string url = "https://localhost:5000";
 
 ProcessStartInfo ps = new ProcessStartInfo();
 ps.UseShellExecute = true;
 ps.FileName = url;
 System.Diagnostics.Process.Start(ps);
-
+                 */
 app.Run();
 
 

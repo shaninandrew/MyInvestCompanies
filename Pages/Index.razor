@@ -158,10 +158,11 @@
         if (show_viewer)
           { NameX.Add("Url"); }
 
+        
         @if (docs.Count > 0)
         {
             <!-- class="scroll" -->
-            <table  style="width:100%">
+            <table  style="width:100%; overflow:scroll;">
                     <tr class="card_title">
 
                     @foreach (String n in NameX)
@@ -189,7 +190,7 @@
                             </td>
 
                             <td>
-                                <textarea class="card_editor" @onclick="(e=>{ Selected_document = c.Id;  })" type="text" rows="2" value="@c.Name" @onchange="(e=> {  f.Set_value(NameX[2], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
+                            <textarea class="doc_textarea" @onclick="(e=>{ Selected_document = c.Id;  })" type="text" rows="2" value="@c.Name" @onchange="(e=> {  f.Set_value(NameX[2], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
                             </td>
 
                             @if (show_viewer)
@@ -217,9 +218,10 @@
         }
         else
         {
-            @("Нет данных.")
+                @("Нет данных.")
 
-        }
+            }
+        
 
     } <!-- function -->
 
@@ -559,7 +561,6 @@
         {
             <div class="Header">
                 Документы связанные с @Company_title
-                
             </div>
 
             <!-- показывает кнопки создания документиов -->
@@ -568,144 +569,153 @@
                 <div class="Control">
                     <Button class="button" title="Добавляет документ" @onclick="(e=>{ f.Add_Document (id); })">+Документ</Button>
 
-                    Поиск по документам <input @bind-value="Detail_docs" @bind-value:event="oninput" placeholder="Поисковая строка: через <пробел> можно искать по разным признакам: черные желтые "  />
-                    
+                    Поиск по документам <input  class="search_string" @bind-value="Detail_docs" @bind-value:event="oninput" placeholder="Поисковая строка: через <пробел> можно искать по разным признакам: черные желтые "  />
                 </div>
             }
 
 
-            <div class="card_layout">
-                 <div class="card_scroll">
-                  
-                    
+            <div class="editor_layout">
+                
+                @{
+                    Console.WriteLine($"Отбор данных {show_additional_editor}  запрос  {Detail_docs}  {company_id}");
 
-                                    @{
-                                        Console.WriteLine($"Отбор данных {show_additional_editor}  запрос  {Detail_docs}  {company_id}");
+                    List<Document> list_of_docs = new List<Document>();
+                    //Документы от фирмы сразу напрямую
+                    foreach (Link l in ds.Links.Where<Link>(i => i.Parent_Id == company_id).ToList<Link>())
+                    {
+                        if (!show_additional_editor)
+                        {
+                            list_of_docs.AddRange(ds.Documents.Where<Document>
+                                ( 
+                                    (c => c.Id == l.Child_Id  && (c.Num+ c.Name).IndexOf(Detail_docs) > -1)
+                                ).ToArray<Document>());
 
-                                        List<Document> list_of_docs = new List<Document>();
-                                        //Документы от фирмы сразу напрямую
-                                        foreach (Link l in ds.Links.Where<Link>(i => i.Parent_Id == company_id).ToList<Link>())
-                                        {
-                                            if (!show_additional_editor)
-                                            {
-                                                list_of_docs.AddRange(ds.Documents.Where<Document>
-                                                    ( 
-                                                        (c => c.Id == l.Child_Id  && (c.Num+ c.Name).IndexOf(Detail_docs) > -1)
-                                                    ).ToArray<Document>());
+                        }
+                        else
+                        {
+                            list_of_docs.AddRange(ds.Documents.Where<Document>
+                                (c => c.Id == l.Child_Id));
 
-                                            }
-                                            else
-                                            {
-                                                list_of_docs.AddRange(ds.Documents.Where<Document>
-                                                    (c => c.Id == l.Child_Id));
+                        }
+                    }
 
-                                            }
-                                        }
-
-                                        //LINQ Join Доки + Связка + Сделка где id_company= Дело
-                                        foreach (Document docx in (from d in ds.Documents
-                                                                   join l in ds.Links on d.Id equals l.Child_Id
-                                                                   join deals in ds.Deals on l.Parent_Id equals deals.Id
-                                                                   where 
-                                                                    deals.Id_company == company_id
-                                                                   select d).ToList<Document>()
-                                                                )
-                                        { 
-                                            if (!show_additional_editor)
-                                            {
-                                                list_of_docs.Add(docx); 
-                                            }
-                                            else
-                                            {
-                                                if ((docx.Num + docx.Name).IndexOf(Detail_docs) > -1)
-                                                { list_of_docs.Add(docx); }
-                                            }
-                                        }
+                    //LINQ Join Доки + Связка + Сделка где id_company= Дело
+                    foreach (Document docx in (from d in ds.Documents
+                                                join l in ds.Links on d.Id equals l.Child_Id
+                                                join deals in ds.Deals on l.Parent_Id equals deals.Id
+                                                where 
+                                                deals.Id_company == company_id
+                                                select d).ToList<Document>()
+                                            )
+                    { 
+                        if (!show_additional_editor)
+                        {
+                            list_of_docs.Add(docx); 
+                        }
+                        else
+                        {
+                            if ((docx.Num + docx.Name).IndexOf(Detail_docs) > -1)
+                            { list_of_docs.Add(docx); }
+                        }
+                    }
 
 
-                                        //LINQ Join Доки + Связка + Сделка где id_company= Дело
-                                        foreach (Document docx in (from d in ds.Documents
-                                                                   join l in ds.Links on d.Id equals l.Child_Id
-                                                                   join inv in ds.Investitions on l.Parent_Id equals inv.Id
-                                                                   where  (inv.Id_company == company_id)
-                                                                   select d).ToList<Document>())
-                                        {
-                                            if (!show_additional_editor)
-                                            {
-                                                list_of_docs.Add(docx);
-                                            }
-                                            else
-                                            {
-                                                if ((docx.Num + docx.Name).IndexOf(Detail_docs) > -1)
-                                                { list_of_docs.Add(docx); }
-                                            }
+                    //LINQ Join Доки + Связка + Сделка где id_company= Дело
+                    foreach (Document docx in (from d in ds.Documents
+                                                join l in ds.Links on d.Id equals l.Child_Id
+                                                join inv in ds.Investitions on l.Parent_Id equals inv.Id
+                                                where  (inv.Id_company == company_id)
+                                                select d).ToList<Document>())
+                    {
+                        if (!show_additional_editor)
+                        {
+                            list_of_docs.Add(docx);
+                        }
+                        else
+                        {
+                            if ((docx.Num + docx.Name).IndexOf(Detail_docs) > -1)
+                            { list_of_docs.Add(docx); }
+                        }
 
-                                    }
+                }
 
 
-                            //LINQ Join Доки + Связка + Описание где id_company= Дело
-                            foreach (Document docx in (from d in ds.Documents
-                                                        join l in ds.Links on d.Id equals l.Child_Id
-                                                        join A in ds.Acquisitions on l.Parent_Id equals A.Id
-                                                        where (A.Id_company == company_id)
-                                                        select d).ToList<Document>()
-                                                        )
-                                        {
+                //LINQ Join Доки + Связка + Описание где id_company= Дело
+                foreach (Document docx in (from d in ds.Documents
+                                    join l in ds.Links on d.Id equals l.Child_Id
+                                    join A in ds.Acquisitions on l.Parent_Id equals A.Id
+                                    where (A.Id_company == company_id)
+                                    select d).ToList<Document>()
+                                    )
+                                {
                                             
-                                                if (!show_additional_editor)
-                                                {
-                                                    list_of_docs.Add(docx);
-                                                }
-                                                else
-                                                {
-                                                 if ((docx.Num + docx.Name).IndexOf (Detail_docs)>-1)
-                                                    list_of_docs.Add(docx);
-                                                }
-
-
-                                           
-                                        }
-
-
-                                        if (list_of_docs.Count == 0)
+                                        if (!show_additional_editor)
                                         {
-                                            @("Данных нет")
-                                            ;
-
+                                            list_of_docs.Add(docx);
                                         }
                                         else
                                         {
-
-                                            Show_Table_Docs_as_EditableList(list_of_docs, show_additional_editor);
-
+                                            if ((docx.Num + docx.Name).IndexOf (Detail_docs)>-1)
+                                            list_of_docs.Add(docx);
                                         }
-                                    } <!-- есть данные --->
-                   
-                </div> <!--card-->
 
-                        @if (show_additional_editor)
+
+                                           
+                                }
+
+
+                } <!-- есть данные --->
+
+                @{ string sp_style="height:400px;"; }
+                
+                @if (show_additional_editor)
+                {
+                    sp_style = "heigth:70%;";
+                }
+                
+
+                <div class="card_layout" style="@sp_style">
+
+                    @{
+                        if (list_of_docs.Count == 0)
                         {
-                            <div class="card">
-                                <div class="card_title">
-                                    @if (Selected_document != "")
-                                    {
-                                        @( "Выбранный документ : " + @Selected_document  )
+                            @("Данных нет") ;
 
-                                    }
-                                    else
-                                    {
-                                        @( "Выберите документ "   )
-                                    }
-
-                                </div>
-                                <div class="card_editor">
-                                    <div class="scroll">
-                                        Карточка редактор 
-                                    </div>
-                                </div>
-
-                            </div>
                         }
+                        else
+                        {
+                            Show_Table_Docs_as_EditableList(list_of_docs, show_additional_editor);
+
+                        }
+                    }
+                    
+                </div>
+           
+            
+
+            @if (show_additional_editor)
+            {
+                <div class="card">
+                    <div class="card_title">
+                        @if (Selected_document != "")
+                        {
+                            @( "Выбранный документ : " + @Selected_document  )
+
+                        }
+                        else
+                        {
+                            @( "Выберите документ "   )
+                        }
+
+                    </div>
+                    <div class="card_editor">
+                        <div class="scroll">
+                            Карточка редактор 
+                        </div>
+                    </div>
+
+                </div>
+            }
 
             </div> <!-- card style- -->
           
@@ -869,7 +879,7 @@
 <!--- ВЕБ МОРДА ОСНОВНАЯ ЧАСТЬ --->
 
 <!-- веб часть -->
-<div style="height:35%;  min-height:350px;">
+<div class="top_selector" >
     <div class="Search">
             Поиск компаний  <input class="search_string" title="Поисковая строка" type="text" @bind-value=query_string @bind-value:event="oninput" placeholder="Поисковая строка: через <пробел> можно искать по разным признакам, `-` перед словом означает выбросить: черные желтые -тяжелые" />
     </div>
@@ -978,21 +988,21 @@
                         }
                     </div>
 
-                <div style="card">
-                    @{
-                        if (Company_id != null)
-                        {
+                    <div style="card">
+                        @{
+                            if (Company_id != null)
+                            {
                             
-                            if (Company_id != "")
-                                Show_Table(Company_id, "Acquisitions", false);
+                                if (Company_id != "")
+                                    Show_Table(Company_id, "Acquisitions", false);
+                            }
                         }
-                    }
-                </div>
+                    </div>
 
 
                 </div>
          </div>
-     } <!-- main -->
+    } <!-- main -->
 
 
     @if (query_sub_page == "holders")
@@ -1182,9 +1192,9 @@
 
     @if (query_sub_page == "docs")
     {
-        <div id="menu_docs">
-            <div style="card">
-            dsfds
+        <div id="menu_docs" class="menu_docs">
+            <!--div style="card" -->
+            
                 @{
                     if (Company_id != null)
                     {
@@ -1192,7 +1202,7 @@
                             Show_Table(Company_id, "Documents",true);
                     }
                 }
-            </div>
+            <!--div-->
         </div>
     }
     

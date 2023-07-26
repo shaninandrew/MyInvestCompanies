@@ -33,6 +33,7 @@ main {
 height:100%;
 width:100%;
 overflow:hidden;
+font-size:4 mm;
 }
 
 body {
@@ -51,7 +52,9 @@ input[type="checkbox"] {
     height: 100%;
     min-height: 50px;
     width: 100%;
-    overflow: hidden;
+    overflow:clip;
+    overflow-y:clip;
+    display:inline-block;
 }
 
 
@@ -68,21 +71,23 @@ input[type="checkbox"] {
 .sub_workplace {
     height: 100%;
     min-height: 300px;
-    width: 100%;
+    width: inherit;
 
 }
 
 .scroll {
     scroll-behavior: smooth;
     scrollbar-3dlight-color: #e58c1f;
-    overflow-y:scroll;
+    overflow-y: scroll;
     overflow-x: auto;
     align-content: space-between;
+
     background: white;
+
     padding: 2px 2px 2px 2px;
     border-spacing: 2px 5px;
     width: 100%;
-    max-height: 400px;
+    
 }
 
 .inside-scroll {
@@ -175,7 +180,7 @@ input {
     color: black;
     font-weight: bold;
     height: 1 rem;
-    border-radius: 3 px 3 px;
+    
 }
 
 .Search {
@@ -193,15 +198,28 @@ input {
 }
 
 .card_layout {
-    border-radius: 3 px 3 px 3px 3px;
+    
     display: flex;
     background: white;
     color: black;
     height: 100%;
     overflow: auto;
-    overflow-y: scroll;
     flex-wrap: wrap;
     flex-direction: row;
+    width:100%;
+}
+
+
+.editor_layout {
+    display: flex;
+    background: white;
+    color: black;
+    height: 99%;
+    overflow: hidden;
+    width: 99%;
+    overflow-y: auto;
+    flex: auto;
+
 }
 
 
@@ -215,24 +233,23 @@ input {
 
 
 .card {
-    background: #f7eacf;
+    
     display: block;
     flex: 1 1 auto;
     flex-basis: 42%;
     width: 700px;
     margin: 3px 3px 3px 3px;
     
-    padding: 2px 2px 2px 2px;
-    border-spacing: 2px 2px;
+    padding: 5px 5px 5px 5px;
+    border-spacing: 5px 5px 5px 5px;
     vertical-align: top;
     align-content: start;
     min-height: 100px;
     height: auto;
     align-items: start;
-    border-radius: 2px;
+    
     flex-direction: row
 
-    
 }
 
 
@@ -242,17 +259,17 @@ input {
     flex: 1 1 auto;
     flex-basis: 42%;
     width: 100%;
-   
+
     vertical-align: top;
     align-content: start;
     min-height: 300px;
-    height: 40%;
+    height: 100%;
     align-items: start;
-    border-radius: 2px;
+    
     flex-direction: row;
     
-    overflow: auto;
     overflow-y: scroll;
+    overflow-x: auto;
 }
 
 
@@ -368,4 +385,45 @@ textarea {
     font-size: 12pt;
     text-align: center;
    
+}
+/* меню наверху*/
+.top_selector {
+    height: 35%;
+    min-height: 350px;
+    max-height:700px;
+    display:inline-block;
+    width:100%;
+}
+
+
+.doc_textarea {
+    height: 4%;
+    min-height: 150px;
+    max-height: 700px;
+    display: inline-block;
+    width: 100%;
+    border-radius: 5 px 5 px 5 px 5 px;
+}
+
+.menu_header {
+    font-size:5 mm;
+    min-height:70px;
+    height:7%;
+}
+
+
+td {
+    width:stretch;
+    vertical-align:top;
+}
+
+
+div.menu_docs {
+    height: 100%;
+    flex-wrap: wrap;
+    flex-direction: row;
+
+    display: block;
+    flex: 1 1 auto;
+    flex-basis: 50%;
 }

@@ -156,13 +156,13 @@
         NameX.Add("Date");
         NameX.Add("Name");
         if (show_viewer)
-          { NameX.Add("Url"); }
+                { NameX.Add("Url"); }
 
         
         @if (docs.Count > 0)
         {
             <!-- class="scroll" -->
-            <table  style="width:100%; overflow:scroll;">
+            <table  >
                     <tr class="card_title">
 
                     @foreach (String n in NameX)
@@ -263,7 +263,7 @@
             @if (list_of_capital.Count>0)
             {
             <div class="card_mini">
-                <table class="scroll">
+                <table >
                     <tr class="card_title">
                         @foreach (String n in NameX)
                         {
@@ -326,56 +326,56 @@
             List<string> NameX = new List<string>();
             NameX.Add("Description");
 
-            <div class="card">
-                <div class="scroll">
-                    <div style="height:300px;">
-                        <table style="width:100%">
-                            <tr class="card_title">
-                                @foreach (String n in NameX)
-                                {
-                                    <td>@n</td>
-                                }
-                                <td> </td>
-                                <td> </td>
+            
+            <div class="Scroll_list">
+                <div style="height:300px;">
+                    <table style="width:100%">
+                        <tr class="card_title">
+                            @foreach (String n in NameX)
+                            {
+                                <td>@n</td>
+                            }
+                            <td> </td>
+                            <td> </td>
+                        </tr>
+
+                        @foreach (Acquisition c in list_of_Acq)
+                        {
+                            string class_x = "Editor";
+                            if (c.Id == Acquisition_id)
+                                { class_x = "Editor_selected"; }
+
+                            <tr class="@class_x">
+                                <td>
+                                    <textarea @onclick="(e=>{ Acquisition_id=c.Id; })" @onchange="(e=> {  f.Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })" value="@c.Description">  </textarea>
+                                </td>
+
+
+                                <td align="center">
+                                    <button @onclick="(e=> { f.Add_Document_for_Acq(c.Id.ToString()) ; _FLAG_show_doc_editor= true;} )"> +Документ </button>
+                                </td>
+
+                                <td>
+                                    @if (Allow_delete)
+                                    {
+                                        <button class="delete_button" title="Удалить запись @c.Description" @onclick="(e=> { f.Delete_Acq (c.Id.ToString()) ;} )">-</button>
+                                    }
+                                </td>
+
+                                <td align="center">
+                                    <button class="button" title="Открыть панель редактирования документов" @onclick="(e=>{ _FLAG_show_doc_editor=!_FLAG_show_doc_editor; })"> * </button>
+                                </td>
+
                             </tr>
 
-                            @foreach (Acquisition c in list_of_Acq)
-                            {
-                                string class_x = "Editor";
-                                if (c.Id == Acquisition_id)
-                                    { class_x = "Editor_selected"; }
-
-                                <tr class="@class_x">
-                                    <td>
-                                        <textarea @onclick="(e=>{ Acquisition_id=c.Id; })" @onchange="(e=> {  f.Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })" value="@c.Description">  </textarea>
-                                    </td>
-
-
-                                    <td align="center">
-                                        <button @onclick="(e=> { f.Add_Document_for_Acq(c.Id.ToString()) ; _FLAG_show_doc_editor= true;} )"> +Документ </button>
-                                    </td>
-
-                                    <td>
-                                        @if (Allow_delete)
-                                        {
-                                            <button class="delete_button" title="Удалить запись @c.Description" @onclick="(e=> { f.Delete_Acq (c.Id.ToString()) ;} )">-</button>
-                                        }
-                                    </td>
-
-                                    <td align="center">
-                                        <button class="button" title="Открыть панель редактирования документов" @onclick="(e=>{ _FLAG_show_doc_editor=!_FLAG_show_doc_editor; })"> * </button>
-                                    </td>
-
-                                </tr>
-
-                            }
-                        </table>
-                    </div>
+                        }
+                    </table>
                 </div>
+            </div>
 
                 @if (_FLAG_show_doc_editor)
                 {
-                    <div class="card">
+                    <div class="card_editor">
 
                         @("Выбранное дело  (" + @Acquisition_id + ")")
                         @{
@@ -383,7 +383,7 @@
                         }
                     </div>
                 }
-            </div>
+            
         }
 
         if (table_name == "Investitions")
@@ -405,58 +405,58 @@
                 NameX.Add("Method");
                 NameX.Add("Source");
 
-                <div class="card">
-                <div class="scroll">
-                <div style="height:300px;">
-                        <table style="width:100%">
-                         <tr class="card_title">
-                            @foreach (String n in NameX)
-                            {
-                                <td>@n</td>
-                            }
-                            <td> </td>
-                            <td> </td>
-                        </tr>
-                
-                    @foreach (Invest c in list_of_Investitions)
-                    {
-                            string class_x = "Editor";
-                            if (c.Id == Invest_id)
-                                { class_x = "Editor_selected"; }
 
-                            <tr class=@class_x>
-                                <td>
-                                    <input type="text" value="@c.Method" @onclick="(e=>{ Invest_id=c.Id; })"  @onchange="(e=> {  f.Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
-                                </td>
-                                    <td align="center">
-                                    <textarea class="card_editor" type="text" rows="2" value="@c.Source" @onclick="(e=>{ Invest_id=c.Id; })"  @onchange="(e=> {  f.Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
-                                </td>
-
-                                    <td align="center">
-                                        <button @onclick="(e=> { f.Add_Document_for_Invest(c.Id.ToString()) ; _FLAG_show_doc_editor= true;} )"> +Документ </button>
-                                    </td>
-                        
-                                    <td>
-                                        @if (Allow_delete)
-                                        {
-                                            <button class="delete_button" title="Удалить запись @c.Method @c.Source" @onclick="(e=> { f.Delete_Investitions(c.Id.ToString()) ;} )">-</button>
-                                        }
-                                    </td>
-
-                                    <td align="center">
-                                     <button class="button" title="Открыть панель редактирования документов" @onclick="(e=>{ _FLAG_show_doc_editor=!_FLAG_show_doc_editor; })"> * </button>
-                                    </td>
-
+                <div class="Scroll_list">
+                    <div style="height:300px;">
+                            <table style="width:100%">
+                             <tr class="card_title">
+                                @foreach (String n in NameX)
+                                {
+                                    <td>@n</td>
+                                }
+                                <td> </td>
+                                <td> </td>
                             </tr>
+                
+                            @foreach (Invest c in list_of_Investitions)
+                            {
+                                    string class_x = "Editor";
+                                    if (c.Id == Invest_id)
+                                        { class_x = "Editor_selected"; }
+
+                                    <tr class=@class_x>
+                                        <td>
+                                            <input type="text" value="@c.Method" @onclick="(e=>{ Invest_id=c.Id; })"  @onchange="(e=> {  f.Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
+                                        </td>
+                                            <td align="center">
+                                            <textarea class="card_editor" type="text" rows="2" value="@c.Source" @onclick="(e=>{ Invest_id=c.Id; })"  @onchange="(e=> {  f.Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
+                                        </td>
+
+                                            <td align="center">
+                                                <button @onclick="(e=> { f.Add_Document_for_Invest(c.Id.ToString()) ; _FLAG_show_doc_editor= true;} )"> +Документ </button>
+                                            </td>
+                        
+                                            <td>
+                                                @if (Allow_delete)
+                                                {
+                                                    <button class="delete_button" title="Удалить запись @c.Method @c.Source" @onclick="(e=> { f.Delete_Investitions(c.Id.ToString()) ;} )">-</button>
+                                                }
+                                            </td>
+
+                                            <td align="center">
+                                             <button class="button" title="Открыть панель редактирования документов" @onclick="(e=>{ _FLAG_show_doc_editor=!_FLAG_show_doc_editor; })"> * </button>
+                                            </td>
+
+                                    </tr>
             
-                    }   
-                    </table>
+                            }   
+                            </table>
                     </div>
                 </div>
 
                     @if (_FLAG_show_doc_editor)
                     {
-                        <div class="card">
+                        <div class="card_editor">
                           
                             @("Выбранное дело  (" + @Invest_id + ")")
                             @{
@@ -466,7 +466,7 @@
                     }
                 
 
-             </div>
+            
         } <!-- if -->
 
         //Deals
@@ -489,64 +489,63 @@
             NameX.Add("Date");
             NameX.Add("Description");
             
-            <div class="scroll">
+            <div class="Scroll_list">
             <div style="height:300px;">
-            <div class="card">
-            <table style="width:100%" >
-                    <tr class="card_title">
-                    @foreach (String n in NameX)
-                    {
-                        <td>@n</td>
-                    }
-                    <td> </td>
-                    <td> </td>
-                </tr>
-
-                @foreach (Deal c in list_of_Deals)
-                {
-                        string tmp_date = "";
-
-                        if (c.Date.HasValue)
+           
+                <table style="width:100%" >
+                        <tr class="card_title">
+                        @foreach (String n in NameX)
                         {
-                            tmp_date = c.Date.Value.ToString(__DATE_MASK);
+                            <td>@n</td>
                         }
-
-                        string  class_x="Editor";
-                        if (c.Id == Deal_id)
-                            {  class_x="Editor_selected"; }
-
-                     <tr class=@class_x>
-                        <td>
-                             <input type="date" value="@tmp_date" @onclick="(e=>{ Deal_id=c.Id; })" @onchange="(e=> {  f.Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
-                         </td>
-                        <td align="center">
-                            <textarea class="card_editor" type="text" rows="2" @onclick="(e=>{ Deal_id=c.Id; })" value="@c.Description" @onchange="(e=> {  f.Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
-                         </td>
-                         
-                         <td align="center">
-                                <button class="button" title="Добавить документ к сделке от @c.Date.ToString()" @onclick="(e=> { f.Add_Document_for_Deal(c.Id.ToString()) ; _FLAG_show_doc_editor= true;} )"> +Документ </button>
-                        </td>
-
-                         <td>
-                          @if (Allow_delete)
-                                {
-                                    <button class="delete_button" title="Удалить запись @c.Date @c.Description" @onclick="(e=> { f.Delete_Deal(c.Id.ToString()) ;} )">-</button>
-                                }
-                         </td>
-
-                        <td align="center">
-                            <button class="button" title="Открыть панель редактирования документов" @onclick="(e=>{ _FLAG_show_doc_editor=!_FLAG_show_doc_editor; })"> * </button>
-                        </td>
+                        <td> </td>
+                        <td> </td>
                     </tr>
-                }    
-            </table>
-            </div>
+
+                    @foreach (Deal c in list_of_Deals)
+                    {
+                            string tmp_date = "";
+
+                            if (c.Date.HasValue)
+                            {
+                                tmp_date = c.Date.Value.ToString(__DATE_MASK);
+                            }
+
+                            string  class_x="Editor";
+                            if (c.Id == Deal_id)
+                                {  class_x="Editor_selected"; }
+
+                         <tr class=@class_x>
+                            <td>
+                                 <input type="date" value="@tmp_date" @onclick="(e=>{ Deal_id=c.Id; })" @onchange="(e=> {  f.Set_value(NameX[0], c.Id.ToString(), e.Value.ToString() , e,null, table); })">
+                             </td>
+                            <td align="center">
+                                <textarea class="card_editor" type="text" rows="2" @onclick="(e=>{ Deal_id=c.Id; })" value="@c.Description" @onchange="(e=> {  f.Set_value(NameX[1], c.Id.ToString(), e.Value.ToString() , e,null, table); })" />
+                             </td>
+                         
+                             <td align="center">
+                                    <button class="button" title="Добавить документ к сделке от @c.Date.ToString()" @onclick="(e=> { f.Add_Document_for_Deal(c.Id.ToString()) ; _FLAG_show_doc_editor= true;} )"> +Документ </button>
+                            </td>
+
+                             <td>
+                              @if (Allow_delete)
+                                    {
+                                        <button class="delete_button" title="Удалить запись @c.Date @c.Description" @onclick="(e=> { f.Delete_Deal(c.Id.ToString()) ;} )">-</button>
+                                    }
+                             </td>
+
+                            <td align="center">
+                                <button class="button" title="Открыть панель редактирования документов" @onclick="(e=>{ _FLAG_show_doc_editor=!_FLAG_show_doc_editor; })"> * </button>
+                            </td>
+                        </tr>
+                    }    
+                </table>
             </div>
             </div>
 
             if (_FLAG_show_doc_editor)
             {
-                <div class="card">
+                <div class="card_editor">
                         @("Выбранное дело  (" + @Deal_id+ ")")
                         @{ Show_Table(Deal_id, "Documents",false);}
                 </div>
@@ -574,79 +573,79 @@
             }
 
 
-            <div class="editor_layout">
+         
                 
-                @{
-                    Console.WriteLine($"Отбор данных {show_additional_editor}  запрос  {Detail_docs}  {company_id}");
+           
+            Console.WriteLine($"Отбор данных {show_additional_editor}  запрос  {Detail_docs}  {company_id}");
 
-                    List<Document> list_of_docs = new List<Document>();
-                    //Документы от фирмы сразу напрямую
-                    foreach (Link l in ds.Links.Where<Link>(i => i.Parent_Id == company_id).ToList<Link>())
-                    {
-                        if (!show_additional_editor)
-                        {
-                            list_of_docs.AddRange(ds.Documents.Where<Document>
-                                ( 
-                                    (c => c.Id == l.Child_Id  && (c.Num+ c.Name).IndexOf(Detail_docs) > -1)
-                                ).ToArray<Document>());
-
-                        }
-                        else
-                        {
-                            list_of_docs.AddRange(ds.Documents.Where<Document>
-                                (c => c.Id == l.Child_Id));
-
-                        }
-                    }
-
-                    //LINQ Join Доки + Связка + Сделка где id_company= Дело
-                    foreach (Document docx in (from d in ds.Documents
-                                                join l in ds.Links on d.Id equals l.Child_Id
-                                                join deals in ds.Deals on l.Parent_Id equals deals.Id
-                                                where 
-                                                deals.Id_company == company_id
-                                                select d).ToList<Document>()
-                                            )
-                    { 
-                        if (!show_additional_editor)
-                        {
-                            list_of_docs.Add(docx); 
-                        }
-                        else
-                        {
-                            if ((docx.Num + docx.Name).IndexOf(Detail_docs) > -1)
-                            { list_of_docs.Add(docx); }
-                        }
-                    }
-
-
-                    //LINQ Join Доки + Связка + Сделка где id_company= Дело
-                    foreach (Document docx in (from d in ds.Documents
-                                                join l in ds.Links on d.Id equals l.Child_Id
-                                                join inv in ds.Investitions on l.Parent_Id equals inv.Id
-                                                where  (inv.Id_company == company_id)
-                                                select d).ToList<Document>())
-                    {
-                        if (!show_additional_editor)
-                        {
-                            list_of_docs.Add(docx);
-                        }
-                        else
-                        {
-                            if ((docx.Num + docx.Name).IndexOf(Detail_docs) > -1)
-                            { list_of_docs.Add(docx); }
-                        }
+            List<Document> list_of_docs = new List<Document>();
+            //Документы от фирмы сразу напрямую
+            foreach (Link l in ds.Links.Where<Link>(i => i.Parent_Id == company_id).ToList<Link>())
+            {
+                if (!show_additional_editor)
+                {
+                    list_of_docs.AddRange(ds.Documents.Where<Document>
+                        ( 
+                            (c => c.Id == l.Child_Id  && (c.Num+ c.Name).IndexOf(Detail_docs) > -1)
+                        ).ToArray<Document>());
 
                 }
+                else
+                {
+                    list_of_docs.AddRange(ds.Documents.Where<Document>
+                        (c => c.Id == l.Child_Id));
 
+                }
+            }
 
-                //LINQ Join Доки + Связка + Описание где id_company= Дело
-                foreach (Document docx in (from d in ds.Documents
-                                    join l in ds.Links on d.Id equals l.Child_Id
-                                    join A in ds.Acquisitions on l.Parent_Id equals A.Id
-                                    where (A.Id_company == company_id)
-                                    select d).ToList<Document>()
+            //LINQ Join Доки + Связка + Сделка где id_company= Дело
+            foreach (Document docx in (from d in ds.Documents
+                                        join l in ds.Links on d.Id equals l.Child_Id
+                                        join deals in ds.Deals on l.Parent_Id equals deals.Id
+                                        where 
+                                        deals.Id_company == company_id
+                                        select d).ToList<Document>()
                                     )
+            { 
+                if (!show_additional_editor)
+                {
+                    list_of_docs.Add(docx); 
+                }
+                else
+                {
+                    if ((docx.Num + docx.Name).IndexOf(Detail_docs) > -1)
+                    { list_of_docs.Add(docx); }
+                }
+            }
+
+
+            //LINQ Join Доки + Связка + Сделка где id_company= Дело
+            foreach (Document docx in (from d in ds.Documents
+                                        join l in ds.Links on d.Id equals l.Child_Id
+                                        join inv in ds.Investitions on l.Parent_Id equals inv.Id
+                                        where  (inv.Id_company == company_id)
+                                        select d).ToList<Document>())
+                                    {
+                                        if (!show_additional_editor)
+                                        {
+                                            list_of_docs.Add(docx);
+                                        }
+                                        else
+                                        {
+                                            if ((docx.Num + docx.Name).IndexOf(Detail_docs) > -1)
+                                            { list_of_docs.Add(docx); }
+                                        }
+
+                                }
+
+
+        //LINQ Join Доки + Связка + Описание где id_company= Дело
+        foreach (Document docx in (from d in ds.Documents
+                            join l in ds.Links on d.Id equals l.Child_Id
+                            join A in ds.Acquisitions on l.Parent_Id equals A.Id
+                            where (A.Id_company == company_id)
+                            select d).ToList<Document>()
+                            )
                                 {
                                             
                                         if (!show_additional_editor)
@@ -664,43 +663,56 @@
                                 }
 
 
-                } <!-- есть данные --->
+            
 
-                @{ string sp_style="height:400px;"; }
+                string sp_style="height:25vh;"; 
                 
                 @if (show_additional_editor)
                 {
-                    sp_style = "heigth:70%;";
+                    sp_style = "heigth:100%;";
                 }
                 
 
-                <div class="card_layout" style="@sp_style">
+          <div id ="docs_type" style="@sp_style">
+               
+          @{
+                    if (list_of_docs.Count == 0)
+                    {
+                        @("Данных нет")
+                        ;
 
-                    @{
-                        if (list_of_docs.Count == 0)
-                        {
-                            @("Данных нет") ;
-
-                        }
-                        else
-                        {
-                            Show_Table_Docs_as_EditableList(list_of_docs, show_additional_editor);
-
-                        }
                     }
-                    
-                </div>
-           
-            
+                    else
+                    {
 
+                        string stylex = "Scroll_list";
+                        if (show_additional_editor)
+                        {  
+                            stylex = "Scroll_list_full" ;
+                        }
+
+                        <div class="card_scroll">
+                            <div class=@stylex style="@sp_style">
+                                @{Show_Table_Docs_as_EditableList(list_of_docs, show_additional_editor); }
+                            </div>
+
+                            @if (show_additional_editor)
+                                {
+                                }
+                        </div>
+
+                    }
+           }
+
+                
             @if (show_additional_editor)
             {
+
                 <div class="card">
                     <div class="card_title">
                         @if (Selected_document != "")
                         {
                             @( "Выбранный документ : " + @Selected_document  )
-
                         }
                         else
                         {
@@ -712,19 +724,17 @@
                         <div class="scroll">
                             Карточка редактор 
                         </div>
+                        <div> 
+                            Карточка
+                        </div>
+
                     </div>
 
                 </div>
             }
+          </div>
 
-            </div> <!-- card style- -->
-          
-
-
-
-
-
-        }
+        } 
 
         if (ds!=null)
         {
@@ -918,7 +928,7 @@
 <!-- top -->
 </div>
 
-<div class="menu" style="height:65%;">
+<div class="menu" >
             <div class="menu_header">
                 <button class="button"              @onclick="set_main_page"    > Данные о фирме</button> 
                 <button class="button"              @onclick="set_holders_page" > Данные о владельцах</button> 
@@ -956,7 +966,7 @@
 
                     </div>
 
-                <div class="card_layout">
+                <div id="menu_card" class="card_layout">
                     <div style="card" >
                             @{
                                 if (Company_id != null)

@@ -32,15 +32,18 @@
 main {
 height:100%;
 width:100%;
-overflow:hidden;
-font-size:4 mm;
+overflow:clip;
+font-size:5 mm;
 }
 
 body {
-    font-size: font-size: 12pt;
+    font-size: 5 mm;
     font-family: Tahoma;
     color: white;
     background: black;
+    overflow: clip;
+    overflow-x: clip;
+    overflow-y: clip;
 }
 
 input[type="checkbox"] {
@@ -53,19 +56,18 @@ input[type="checkbox"] {
     min-height: 50px;
     width: 100%;
     overflow:clip;
-    overflow-y:clip;
+    overflow-y:hidden;
     display:inline-block;
 }
 
 
 .menu {
 
-    height:4%;
+    height:70vh;
     min-height:50px;
     width:100%;
-    
-   
-    overflow:hidden;
+
+    overflow:clip;
 }
 
 .sub_workplace {
@@ -79,7 +81,7 @@ input[type="checkbox"] {
     scroll-behavior: smooth;
     scrollbar-3dlight-color: #e58c1f;
     overflow-y: scroll;
-    overflow-x: auto;
+    overflow-x: clip;
     align-content: space-between;
 
     background: white;
@@ -87,6 +89,7 @@ input[type="checkbox"] {
     padding: 2px 2px 2px 2px;
     border-spacing: 2px 5px;
     width: 100%;
+    height:100%;
     
 }
 
@@ -109,7 +112,7 @@ input:focus {
     height: 1 rem;
     width: 4 rem auto;
     font: Tahoma;
-    font-size: 12pt;
+    
     border-radius: 3 px 3 px;
 }
 
@@ -121,7 +124,7 @@ input {
     height: 1 rem;
     width: 4 rem auto;
     font: Tahoma;
-    font-size: 12pt;
+    
     border-radius: 3 px 3 px;
     margin: 2px;
     width:contain 200px;
@@ -136,7 +139,7 @@ input {
     height: 1 rem;
     
     font: Tahoma;
-    font-size: 12pt;
+    
     border-radius: 3 px 3 px;
     margin: 2px;
     width: 97%;
@@ -178,6 +181,7 @@ input {
     padding: 2px 2px 2px 2px;
     background: #ffad1a;
     color: black;
+
     font-weight: bold;
     height: 1 rem;
     
@@ -198,15 +202,15 @@ input {
 }
 
 .card_layout {
-    
-    display: flex;
+   
     background: white;
     color: black;
-    height: 100%;
-    overflow: auto;
     flex-wrap: wrap;
     flex-direction: row;
     width:100%;
+    display: flex;
+    height:100%;
+   
 }
 
 
@@ -215,16 +219,17 @@ input {
     background: white;
     color: black;
     height: 99%;
-    overflow: hidden;
+   
     width: 99%;
-    overflow-y: auto;
+   
     flex: auto;
+    
 
 }
 
 
 .card_title {
-    color: #706e6e;
+    color: #ffad1a;
     background: black;
     align-content: center;
     text-align: center;
@@ -233,13 +238,13 @@ input {
 
 
 .card {
-    
     display: block;
     flex: 1 1 auto;
-    flex-basis: 42%;
-    width: 700px;
+    flex-basis: 25%;
+    min-width: 400px;
+    max-width: 450px;
+    width: 25 hv;
     margin: 3px 3px 3px 3px;
-    
     padding: 5px 5px 5px 5px;
     border-spacing: 5px 5px 5px 5px;
     vertical-align: top;
@@ -247,29 +252,25 @@ input {
     min-height: 100px;
     height: auto;
     align-items: start;
-    
-    flex-direction: row
-
+    flex-direction: row;
+    border: groove;
+   
 }
 
 
 .card_scroll {
-    background: #f7eacf;
+    background: inherit;
     display: block;
     flex: 1 1 auto;
-    flex-basis: 42%;
+    flex-basis: 49%;
     width: 100%;
-
     vertical-align: top;
     align-content: start;
     min-height: 300px;
-    height: 100%;
+    height: inherit;
     align-items: start;
+    flex-direction: col;
     
-    flex-direction: row;
-    
-    overflow-y: scroll;
-    overflow-x: auto;
 }
 
 
@@ -278,7 +279,9 @@ input {
     display: flex;
     flex: 1 1 auto;
     flex-basis: 42%;
-    width: 400px;
+    width: 25 hv;
+    min-width:350px;
+
     margin: 3px 3px 3px 3px;
     border: 2px #706e6e;
     padding: 2px 2px 2px 2px;
@@ -301,7 +304,7 @@ input {
     min-width: 230 px;
     width:contain;
     border-radius: 5 px 5 px 5 px 5 px;
-    font-size: 12pt;
+    
     text-align: center;
     display: inline-block;
     padding: 5px 10px;
@@ -315,19 +318,19 @@ input[type=button] {
     min-width: 230 px;
     width: contain;
     border-radius: 5 px 5 px 5 px 5 px;
-    font-size: 12pt;
+
     text-align: center;
     display: inline-block;
     padding: 5px 10px;
 }
 
 input[type=text] {
-    cursor:default;
+    cursor: default;
     height: 90 px;
     min-width: 230 px;
     width: 92%;
     border-radius: 5 px 5 px 5 px 5 px;
-    font-size: 12pt;
+
     text-align: left;
     display: inline-block;
     padding: 5px 5px;
@@ -341,23 +344,20 @@ button {
     min-width: 130 px;
     width:fit-content;
     border-radius: 5 px 5 px 5 px 5 px;
-    font-size: 12pt;
+    
     text-align: center;
     display: inline-block;
 }
 
 
-.delete_button 
-{
+.delete_button {
     cursor: pointer;
     background: black;
     color: #ffad1a;
     height: 70 px;
     width: 70 px;
-    border-radius: 3 px 3 px 3 px 3 px;
-    font-size: 12pt;
+    border-radius: 5 px 5 px 5 px 5 px;
     text-align: center;
-    
 }
 
 button:hover {
@@ -373,42 +373,42 @@ button:hover {
     border-radius: 10px;
     min-width: 120 px;
     width: auto;
+    overflow:clip;
 }
 
 textarea {
-    width: 92%;
+
     font-size: 9 pt;
-    height: 70 px;
+    height: 4 vh;
     min-width: 90%;
     width: fit-content;
     border-radius: 5 px 5 px 5 px 5 px;
-    font-size: 12pt;
+    
     text-align: center;
    
 }
 /* меню наверху*/
 .top_selector {
-    height: 35%;
+    height: 30vh;
     min-height: 350px;
-    max-height:700px;
     display:inline-block;
     width:100%;
 }
 
 
 .doc_textarea {
-    height: 4%;
-    min-height: 150px;
-    max-height: 700px;
+    height: 2vh;
+    min-height: 70px;
     display: inline-block;
-    width: 100%;
+    width: 95%;
     border-radius: 5 px 5 px 5 px 5 px;
 }
 
 .menu_header {
-    font-size:5 mm;
-    min-height:70px;
-    height:7%;
+    font-size:7 mm;
+    min-height:12mm;
+    height:auto;
+   
 }
 
 
@@ -419,11 +419,56 @@ td {
 
 
 div.menu_docs {
-    height: 100%;
+    height: 95%;
     flex-wrap: wrap;
     flex-direction: row;
 
     display: block;
     flex: 1 1 auto;
     flex-basis: 50%;
+}
+
+#menu_card {
+    overflow:hidden;
+    overflow-y: scroll;
+    overflow-x:hidden;
+    height: 65vh;
+}
+
+
+#docs_type {
+    width: 100%;
+    flex: 1 1 auto;
+    flex-basis: 49%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    flex-direction: row;
+    display: flex;
+}
+
+
+
+table{
+    width:100%;
+}
+
+
+.Scroll_list {
+    display: inline-block;
+    width: 100%;
+    height: 4 vh;
+    max-height: 400 px;
+    overflow: hidden;
+    overflow-y: scroll;
+    overflow-x:hidden;
+}
+
+.Scroll_list_full {
+    height: 46vh;
+    display: inline-block;
+    width: 100%;
+    min-height: 390px;
+    overflow: hidden;
+    overflow-y: scroll;
+    overflow-x: hidden;
 }

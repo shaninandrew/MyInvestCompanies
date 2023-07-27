@@ -120,6 +120,7 @@ namespace MyInvestCompanies.модель_данных
 
             Company c = new Company();
             c.Name = "???";
+            c.Founded = DateTime.UtcNow;
             db.Companies.Add(c);
             db.SaveChanges();
 
